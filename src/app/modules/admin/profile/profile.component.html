@@ -1,0 +1,193 @@
+<div class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden">
+<div class="sm:overflow-y-auto">
+
+
+    <!-- Header -->
+    <div class="flex flex-col shadow bg-card">
+
+        <!-- Cover image -->
+        <div class="p-12">
+            <!--<img
+                class="h-30 lg:h-60"
+                src="assets/images/profile/law_firm_cover_lette.jpg"
+                alt="Cover image">-->
+        </div>
+
+        <!-- User info -->
+        <div class="flex flex-col flex-0 lg:flex-row items-center max-w-5xl w-full mx-auto px-8 lg:h-18 bg-card">
+
+            <!-- Avatar -->
+            <div class="-mt-26 lg:-mt-22 rounded-full">
+                <div class="profile-img-container">
+                    <img
+                    class="w-32 h-32 rounded-full ring-4 ring-bg-card image"
+                    src="assets/images/avatars/male-04.jpg"
+                    alt="User avatar">
+                    <div class="overlay">
+                        <a href="#" class="icon" title="Change">
+                            <mat-icon class="camera_alt">camera_alt</mat-icon>
+                        </a>
+                    </div>
+                    
+                </div>
+                
+            </div>
+
+            <!-- Details -->
+            <div class="flex flex-col items-center lg:items-start mt-4 lg:mt-0 lg:ml-8">
+                <div class="text-lg font-bold leading-none">{{authService.user$?.displayName}}</div>
+                <div class="text-secondary">Beirut - Lebanon</div>
+            </div>
+
+            <!-- Separator -->
+            <div class="hidden lg:flex h-8 mx-8 border-l-2"></div>
+
+            <!-- Stats -->
+            <div class="flex items-center mt-6 lg:mt-0 space-x-6">
+                <div class="flex flex-col items-center">
+                    <span class="font-bold">Email</span>
+                    <span class="text-sm font-medium text-secondary">{{authService.user$?.email}}</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="font-bold">Phone</span>
+                    <span class="text-sm font-medium text-secondary">+96170134281</span>
+                </div>
+            </div>
+
+            <!-- Menu -->
+            <!--<div class="flex items-center mt-8 mb-4 lg:m-0 lg:ml-auto space-x-6">
+                <a
+                    class="font-medium"
+                    [routerLink]="['./']">
+                    Home
+                </a>
+                <a
+                    class="text-secondary"
+                    [routerLink]="['./']">
+                    About
+                </a>
+                <a
+                    class="text-secondary"
+                    [routerLink]="['./']">
+                    Followers
+                </a>
+                <a
+                    class="text-secondary"
+                    [routerLink]="['./']">
+                    Gallery
+                </a>
+            </div>-->
+
+        </div>
+
+    </div>
+
+    <!-- Main -->
+    <div class="flex flex-col justify-center w-full max-w-5xl mx-auto p-6 sm:p-8">
+
+        <!-- Column -->
+        <div class="lg:flex flex-col items-start mr-8 ">
+
+            <!-- Profile -->
+            <fuse-card class="flex flex-col w-full p-8 ">
+                <div class="text-2xl font-semibold leading-tight">My Profile</div>
+                
+                <hr class="w-full border-t my-6">
+                <form>
+                <div class="grid sm:grid-cols-4 gap-6 w-full">
+                    <div class="sm:col-span-2">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                        <mat-label>
+                            <ng-container *transloco="let translate">
+                                <span>{{translate('First-Name')}}</span>
+                            </ng-container>
+                        </mat-label>
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
+                        <input matInput #firstName>
+                      
+                       
+                    </mat-form-field>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                        <mat-label>
+                            <ng-container *transloco="let translate">
+                                <span>{{translate('Last-Name')}}</span>
+                            </ng-container>
+                        </mat-label>
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
+                        <input matInput #lastName>
+                      
+                       
+                    </mat-form-field>
+                    </div>  
+                </div>
+                <div class="grid sm:grid-cols gap-6 w-full">
+                    <div class="sm:col-span-2">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                        <mat-label>
+                            <ng-container *transloco="let translate">
+                                <span>Address</span>
+                            </ng-container>
+                        </mat-label>
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:location-marker'" matPrefix></mat-icon>
+                        <input matInput #address>
+                      
+                       
+                    </mat-form-field>
+                    </div> 
+                </div>
+                <div class="grid sm:grid-cols-4 gap-6 w-full">
+                    <div class="sm:col-span-2">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                        <mat-label>
+                            <ng-container *transloco="let translate">
+                                <span>Phone</span>
+                            </ng-container>
+                        </mat-label>
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:phone'" matPrefix></mat-icon>
+                        <input matInput #phone>
+                      
+                       
+                    </mat-form-field>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                        <mat-label>
+                            <ng-container *transloco="let translate">
+                                <span>Profession</span>
+                            </ng-container>
+                        </mat-label>
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
+                        <input matInput #profession>
+                      
+                       
+                    </mat-form-field>
+                    </div>  
+                </div>
+                <!-- Divider -->
+        <div class="mt-11 mb-10 border-t"></div>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-end">
+            <button
+                mat-stroked-button
+                type="button">
+                Cancel
+            </button>
+            <button
+                class="ml-4"
+                mat-flat-button
+                type="button"
+                [color]="'primary'">Save
+            </button>
+        </div>
+            </form>
+            </fuse-card>
+        </div>
+
+        
+
+    </div>
+</div>
+</div>
