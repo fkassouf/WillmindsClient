@@ -88,6 +88,7 @@ export class AuthSignInComponent implements OnInit
                             accessToken : result.accessToken,
                             name : result.displayName,
                             refreshToken : result.refreshToken,
+                            roles : result.roles,
                             status : 'online'
                         };
                         localStorage.setItem('user', JSON.stringify(user));

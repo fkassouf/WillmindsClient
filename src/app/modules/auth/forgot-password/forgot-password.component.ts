@@ -4,6 +4,7 @@ import { finalize } from 'rxjs';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
+import { AuthenticationService } from 'app/core/auth/authentication.service';
 
 @Component({
     selector     : 'auth-forgot-password',
@@ -26,7 +27,7 @@ export class AuthForgotPasswordComponent implements OnInit
      * Constructor
      */
     constructor(
-        private _authService: AuthService,
+        private _authService: AuthenticationService,
         private _formBuilder: UntypedFormBuilder
     )
     {
@@ -83,23 +84,24 @@ export class AuthForgotPasswordComponent implements OnInit
                     this.showAlert = true;
                 })
             )
-            .subscribe(
-                (response) => {
-
+            .subscribe(response=>{
+                if(response?.success)
+                {
                     // Set the alert
                     this.alert = {
                         type   : 'success',
                         message: 'Password reset sent! You\'ll receive an email if you are registered on our system.'
                     };
-                },
-                (response) => {
-
-                    // Set the alert
-                    this.alert = {
+                }
+                else
+                {
+                     // Set the alert
+                     this.alert = {
                         type   : 'error',
-                        message: 'Email does not found! Are you sure you are already a member?'
+                        message: response?.error
                     };
                 }
-            );
+            });
+           
     }
 }

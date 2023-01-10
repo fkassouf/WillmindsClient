@@ -25,6 +25,7 @@
     "Password" : "Mot de passe",
     "Password-Required" : "Le mot de passe est requis",
     "Forgot-Password" : "Vous avez oublié votre mot de passe",
+    "Reset-Password" : "Réinitialiser le mot de passe",
     "Already-Have-Account" : "Vous avez déjà un compte?",
     "First-Name" : "Prénom",
     "Last-Name" : "Nom",
@@ -38,6 +39,9 @@
     "Disable" : "Déactiver",
     "No-Data-Found" : "Aucune donnée n'a été trouvée",
     "User-Created-Successfully" : "Utilisateur créé avec succès",
-    "Records-Per-Page" : "Enregistrements par page"
+    "Records-Per-Page" : "Enregistrements par page",
+    "Enter-Email" : "Entrez votre email ci-dessous",
+    "Send-Reset-Link" : "Envoyer le lien de réinitialisation",
+    "Return-To" : "Retourner à"
  
 }

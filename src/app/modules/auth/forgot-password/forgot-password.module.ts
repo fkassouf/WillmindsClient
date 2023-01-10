@@ -8,6 +8,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FuseCardModule } from '@fuse/components/card';
 import { FuseAlertModule } from '@fuse/components/alert';
 import { SharedModule } from 'app/shared/shared.module';
+import { TranslocoModule } from '@ngneat/transloco';
 import { AuthForgotPasswordComponent } from 'app/modules/auth/forgot-password/forgot-password.component';
 import { authForgotPasswordRoutes } from 'app/modules/auth/forgot-password/forgot-password.routing';
 
@@ -17,6 +18,7 @@ import { authForgotPasswordRoutes } from 'app/modules/auth/forgot-password/forgo
     ],
     imports     : [
         RouterModule.forChild(authForgotPasswordRoutes),
+        TranslocoModule,
         MatButtonModule,
         MatFormFieldModule,
         MatIconModule,

@@ -25,6 +25,7 @@
     "Password" : "Password",
     "Password-Required" : "Password is required",
     "Forgot-Password" : "Forgot password",
+    "Reset-Password" : "Reset password",
     "Welcome-To" : "Welcome to",
     "Already-Have-Account" : "Already have an account?",
     "First-Name" : "First Name",
@@ -39,5 +40,8 @@
     "Disable" : "Disable",
     "No-Data-Found" : "No data found",
     "User-Created-Successfully" : "User created Successfully",
-    "Records-Per-Page" : "Records per page"
+    "Records-Per-Page" : "Records per page",
+    "Enter-Email" : "Enter you email below",
+    "Send-Reset-Link" : "Send reset link",
+    "Return-To" : "Return to"
 }

@@ -52,7 +52,7 @@ export class AuthenticationService
      */
     forgotPassword(email: string): Observable<any>
     {
-        return this._httpClient.post('api/auth/forgot-password', email);
+        return this._httpClient.post(environment.api + '/Account/resetnewtokenpassword?email=' + email, null);
     }
 
     /**
@@ -60,9 +60,9 @@ export class AuthenticationService
      *
      * @param password
      */
-    resetPassword(password: string): Observable<any>
+    resetPassword(credentials : {userId : any, token : any, newPassword : any}): Observable<any>
     {
-        return this._httpClient.post('api/auth/reset-password', password);
+        return this._httpClient.post(environment.api + '/Account/ResetPassword', credentials);
     }
 
     /**

@@ -9,4 +9,5 @@ export interface User
     accessToken? : string;
     refreshToken? : string;
     validTo : Date;
+    roles : any[];
 }

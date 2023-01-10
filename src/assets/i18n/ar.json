@@ -25,6 +25,7 @@
     "Password" : "كلمة السر",
     "Password-Required" : "كلمة السر مطلوبة",
     "Forgot-Password" : "هل نسيت كلمة المرور",
+    "Reset-Password" : "إعادة تعيين كلمة المرور",
     "Welcome-To" : "مرحبا بك في",
     "Already-Have-Account" : "هل لديك حساب؟",
     "First-Name" : "الاسم",
@@ -39,6 +40,9 @@
     "Disable" : "تعطيل",
     "No-Data-Found" : "لم يتم العثور على بيانات",
     "User-Created-Successfully" : "تم إنشاء الحساب بنجاح",
-    "Records-Per-Page" : "عدد السجلات في الصفحة"
+    "Records-Per-Page" : "عدد السجلات في الصفحة",
+    "Enter-Email" : "أدخل بريدك الإلكتروني أدناه",
+    "Send-Reset-Link" : "أرسل رابط إعادة التعيين",
+    "Return-To" : "الرجوع الى"
     
 }
