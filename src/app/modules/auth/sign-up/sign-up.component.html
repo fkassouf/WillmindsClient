@@ -1,8 +1,7 @@
-<div class="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-auto min-w-0">
-    <div class="md:flex md:items-center md:justify-end w-full sm:w-auto md:h-full md:w-1/2 py-8 px-4 sm:p-12 md:p-16 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none sm:bg-card">
-        <div class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0">
+<div class="flex flex-col flex-auto min-w-0">
+    <div class="flex-auto p-6 sm:p-10">
             <!-- Logo -->
-            <div>
+            <div class="w-48">
                 <img src="assets/images/logo/willminds_reslove_light.png">
             </div>
 
@@ -37,45 +36,29 @@
 
             <!-- Sign Up form -->
             <form
-                class="mt-8"
+            class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden"
                 [formGroup]="signUpForm"
                 #signUpNgForm="ngForm">
-
+                <p class="text-lg font-medium">Sign Up</p>
                 <!-- Name field -->
+                <div class="grid grid-cols-2 gap-6 w-full">
                 <mat-form-field class="w-full">
                     <mat-label>
                         <ng-container *transloco="let translate">
-                            {{translate('First-Name')}}
+                            {{translate('Full-Name')}}
                         </ng-container>
                     </mat-label>
                     <input
-                        id="firstName"
+                        id="fullName"
                         matInput
-                        [formControlName]="'firstName'">
-                    <mat-error *ngIf="signUpForm.get('firstName').hasError('required')">
+                        [formControlName]="'fullName'">
+                    <mat-error *ngIf="signUpForm.get('fullName').hasError('required')">
                         <ng-container *transloco="let translate">
-                            {{translate('First-Name-Required')}}
+                            {{translate('Full-Name-Required')}}
                         </ng-container>
                     </mat-error>
                 </mat-form-field>
 
-                 <!-- Name field -->
-                 <mat-form-field class="w-full">
-                    <mat-label>
-                        <ng-container *transloco="let translate">
-                            {{translate('Last-Name')}}
-                        </ng-container>
-                    </mat-label>
-                    <input
-                        id="lastName"
-                        matInput
-                        [formControlName]="'lastName'">
-                    <mat-error *ngIf="signUpForm.get('lastName').hasError('required')">
-                        <ng-container *transloco="let translate">
-                            {{translate('Last-Name-Required')}}
-                        </ng-container>
-                    </mat-error>
-                </mat-form-field>
 
                 <!-- Email field -->
                 <mat-form-field class="w-full">
@@ -99,31 +82,146 @@
                         </ng-container>
                     </mat-error>
                 </mat-form-field>
-
-                
-
-                <!-- ToS and PP -->
-                <!--<div class="inline-flex items-end w-full mt-1.5">
-                    <mat-checkbox
-                        class="-ml-2"
-                        [color]="'primary'"
-                        [formControlName]="'agreements'">
-                        <span>I agree with</span>
-                        <a
-                            class="ml-1 text-primary-500 hover:underline"
-                            [routerLink]="['./']">Terms
-                        </a>
-                        <span>and</span>
-                        <a
-                            class="ml-1 text-primary-500 hover:underline"
-                            [routerLink]="['./']">Privacy Policy
-                        </a>
-                    </mat-checkbox>
-                </div>-->
-
+            </div>
+            <div class="grid grid-cols-3 gap-6 w-full">
+                <!-- Nationality field -->
+                <mat-form-field class="w-full">
+                    <mat-label>
+                        <ng-container *transloco="let translate">
+                            {{translate('Nationality')}}
+                        </ng-container>
+                    </mat-label>
+                    <mat-select formControlName="nationality">
+                        <mat-select-trigger>{{signUpForm.get('nationality').value}}</mat-select-trigger>
+                            <mat-option class="custom-search-input">
+                            <lib-mat-select-search
+                                [list]="countries"
+                                [searchProperties]="['name']"
+                                (filtered)="filteredCountries = $event">
+                            </lib-mat-select-search>
+                            </mat-option>
+                        <mat-option *ngFor="let country of filteredCountries" [value]="country.name" >
+                            <span>{{country.name}}</span>
+                        </mat-option>
+                        
+                      </mat-select>
+                      <mat-icon matSuffix *ngIf="signUpForm.get('nationality').value" (click)="signUpForm.get('nationality').setValue(null)">close</mat-icon>
+                    <mat-error *ngIf="signUpForm.get('email').hasError('required')">
+                        <ng-container *transloco="let translate">
+                            {{translate('Nationality-Required')}}
+                        </ng-container>
+                    </mat-error>
+                    
+                </mat-form-field>
+                 <!-- Profession field -->
+                 <mat-form-field class="w-full">
+                    <mat-label>
+                        <ng-container *transloco="let translate">
+                            {{translate('Profession')}}
+                        </ng-container>
+                    </mat-label>
+                    <input
+                        id="profession"
+                        matInput
+                        [formControlName]="'profession'">
+                    <mat-error *ngIf="signUpForm.get('profession').hasError('required')">
+                        <ng-container *transloco="let translate">
+                            {{translate('Profession-Required')}}
+                        </ng-container>
+                    </mat-error>
+                   
+                </mat-form-field>
+                <!-- DOB field -->
+                <mat-form-field class="w-full">
+                    <mat-label>
+                        <ng-container *transloco="let translate">
+                            {{translate('Date-Of-Birth')}}
+                        </ng-container>
+                    </mat-label>
+                    <input
+                        id="dob"
+                        [matDatepicker]="pickerDob"
+                        matInput
+                        [formControlName]="'dob'">
+                        <mat-datepicker-toggle
+                            matSuffix
+                            [for]="pickerDob"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerDob></mat-datepicker>
+                    <mat-error *ngIf="signUpForm.get('dob').hasError('required')">
+                        <ng-container *transloco="let translate">
+                            {{translate('Date-Of-Birth-Required')}}
+                        </ng-container>
+                    </mat-error>
+                   
+                </mat-form-field>
+            </div>
+            <div class="grid grid-cols-2 gap-6 w-full">
+                <!-- phone field -->
+                <div class="w-full">
+                <mat-label>Phone *</mat-label>
+                <br>
+                <ngx-intl-tel-input
+                [cssClass]="'custom'"
+                [preferredCountries]="preferredCountries"
+                [enableAutoCountrySelect]="true"
+                [enablePlaceholder]="true"
+                [searchCountryFlag]="true"
+                [searchCountryField]="[
+                SearchCountryField.Iso2,
+                SearchCountryField.Name
+                ]"
+                [selectFirstCountry]="false"
+                [selectedCountryISO]="CountryISO.Lebanon"
+                [maxLength]="15"
+                [phoneValidation]="true"
+                [separateDialCode]="separateDialCode"
+                [numberFormat]="PhoneNumberFormat.National"
+                name="phone"
+                formControlName="phone"
+            >
+            </ngx-intl-tel-input>
+            <mat-error *ngIf="submitted && signUpForm.get('phone').hasError('required')">
+                <ng-container *transloco="let translate">
+                    {{translate('Phone-Required')}}
+                </ng-container>
+            </mat-error>
+            <mat-error *ngIf="submitted && signUpForm.get('phone').hasError('validatePhoneNumber')">
+                <ng-container *transloco="let translate">
+                    {{translate('Invalid-Phone')}}
+                </ng-container>
+            </mat-error>
+        </div>
+                <!-- address field -->
+                <mat-form-field class="w-full">
+                    <mat-label>
+                        <ng-container *transloco="let translate">
+                            {{translate('Address')}}
+                        </ng-container>
+                    </mat-label>
+                    <input
+                        id="address"
+                       
+                        matInput
+                        [formControlName]="'address'">
+               
+                    <mat-error *ngIf="signUpForm.get('address').hasError('required')">
+                        <ng-container *transloco="let translate">
+                            {{translate('Address-Required')}}
+                        </ng-container>
+                    </mat-error>
+                   
+                </mat-form-field>
+            </div>
+               
+            <div class="flex items-center justify-end border-t -mx-8 mt-8 px-8 py-5 bg-gray-50 dark:bg-gray-700">
+                <button mat-button type="button" (click)="backToSignin()">
+                    <ng-container *transloco="let translate">
+                        {{translate('Return-To')}} {{translate('Sign-In')}}
+                    </ng-container>
+                </button>
                 <!-- Submit button -->
                 <button
-                    class="fuse-mat-button-large w-full mt-6"
+                   
                     mat-flat-button
                     [color]="'primary'"
                     [disabled]="signUpForm.disabled"
@@ -138,43 +236,8 @@
                         [diameter]="24"
                         [mode]="'indeterminate'"></mat-progress-spinner>
                 </button>
-
+            </div>
             </form>
         </div>
-    </div>
-    <div class="relative hidden md:flex flex-auto items-center justify-center w-1/2 h-full p-16 lg:px-28 overflow-hidden bg-gray-800 dark:border-l">
-        <!-- Background - @formatter:off -->
-        <!-- Rings -->
-        <svg class="absolute inset-0 pointer-events-none"
-             viewBox="0 0 960 540" width="100%" height="100%" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-            <g class="text-gray-700 opacity-25" fill="none" stroke="currentColor" stroke-width="100">
-                <circle r="234" cx="196" cy="23"></circle>
-                <circle r="234" cx="790" cy="491"></circle>
-            </g>
-        </svg>
-        <!-- Dots -->
-        <svg class="absolute -top-16 -right-16 text-gray-700"
-             viewBox="0 0 220 192" width="220" height="192" fill="none">
-            <defs>
-                <pattern id="837c3e70-6c3a-44e6-8854-cc48c737b659" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                    <rect x="0" y="0" width="4" height="4" fill="currentColor"></rect>
-                </pattern>
-            </defs>
-            <rect width="220" height="192" fill="url(#837c3e70-6c3a-44e6-8854-cc48c737b659)"></rect>
-        </svg>
-        <!-- @formatter:on -->
-        <!-- Content -->
-        <div class="z-10 relative w-full max-w-2xl">
-            <div class="text-7xl font-bold leading-none text-gray-100">
-                <div><ng-container *transloco="let translate">
-                    <span>{{translate('Welcome-To')}}</span>
-                </ng-container></div>
-                <div>Willminds Resolve</div>
-            </div>
-            <div class="mt-6 text-lg tracking-tight leading-6 text-gray-400">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </div>
-           
-        </div>
-    </div>
+ 
 </div>

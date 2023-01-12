@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of} from 'rxjs';
 import { environment } from 'environments/environment';
 import { User } from '../user/user.types';
+import { Account } from 'app/modules/auth/models';
 
 @Injectable({
     providedIn: 'root'
@@ -97,9 +98,9 @@ export class AuthenticationService
      *
      * @param user
      */
-    signUp(user: { name: string; email: string; firstName: string; lastName: string }): Observable<any>
+    signUpAsAccount(account : Account): Observable<any>
     {
-        return this._httpClient.post<any>(environment.api + '/Account/Register', user);
+        return this._httpClient.post<any>(environment.api + '/Account/Register', account);
     }
 
     /**
@@ -111,6 +112,16 @@ export class AuthenticationService
     {
         return this._httpClient.post('api/auth/unlock-session', credentials);
     }
+
+     /**
+     * Get countries
+     *
+     * 
+     */
+     getCountries(): Observable<any>
+     {
+         return this._httpClient.get<any>(environment.api + '/Account/GetCountries');
+     }
 
    
 }

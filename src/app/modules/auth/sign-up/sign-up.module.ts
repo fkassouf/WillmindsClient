@@ -12,6 +12,13 @@ import { SharedModule } from 'app/shared/shared.module';
 import { AuthSignUpComponent } from 'app/modules/auth/sign-up/sign-up.component';
 import { authSignupRoutes } from 'app/modules/auth/sign-up/sign-up.routing';
 import { TranslocoModule } from '@ngneat/transloco';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
+import { MatSelectSearchModule } from 'mat-select-search';
+
 
 @NgModule({
     declarations: [
@@ -26,8 +33,14 @@ import { TranslocoModule } from '@ngneat/transloco';
         MatIconModule,
         MatInputModule,
         MatProgressSpinnerModule,
+        MatSelectModule,
+        MatDatepickerModule,
+        MatMomentDateModule,
+        NgxMatSelectSearchModule,
+        MatSelectSearchModule,
         FuseCardModule,
         FuseAlertModule,
+        NgxIntlTelInputModule,
         SharedModule
     ]
 })

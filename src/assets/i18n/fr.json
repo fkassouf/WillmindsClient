@@ -29,6 +29,8 @@
     "Already-Have-Account" : "Vous avez déjà un compte?",
     "First-Name" : "Prénom",
     "Last-Name" : "Nom",
+    "Full-Name" : "Nom et prénom",
+    "Full-Name-Required" : "Nom et prénom sont requis",
     "Create-User" : "Créer un utilisateur",
     "First-Name-Required" : "Le prénom est requis",
     "Last-Name-Required" : "Le nom est requis",
@@ -42,6 +44,21 @@
     "Records-Per-Page" : "Enregistrements par page",
     "Enter-Email" : "Entrez votre email ci-dessous",
     "Send-Reset-Link" : "Envoyer le lien de réinitialisation",
-    "Return-To" : "Retourner à"
+    "Return-To" : "Retourner à",
+    "Nationality" : "Nationalité",
+    "Nationality-Required" : "La Nationalité est requise",
+    "Profession" : "Métier",
+    "Profession-Required" : "Le métier est requis",
+    "Date-Of-Birth" : "Date de naissance",
+    "Date-Of-Birth-Required" : "Date de naissance est requis",
+    "Phone" : "Téléphone",
+    "Phone-Required" : "Le téléphone est requis",
+    "Address" : "Adresse",
+    "Address-Required" : "l'Address est requis",
+    "Invalid-Phone" : "Téléphone invalide",
+    "Role" : "Rôle",
+    "Enabled" : "Activé",
+    "Disabled" : "Désactivé",
+    "Operation-Completed-Sucessfully" : "Opération terminée avec succès"
  
 }

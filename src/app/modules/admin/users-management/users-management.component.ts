@@ -2,9 +2,10 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
+import { TranslocoService } from '@ngneat/transloco';
 import { AuthenticationService } from 'app/core/auth/authentication.service';
 import { ToastrService } from 'ngx-toastr';
-import { merge, tap } from 'rxjs';
+import { merge, take, tap } from 'rxjs';
 import { AdminService } from '../admin.service';
 import { UsersDataSource } from '../datasources/users-datasource';
 import { UsersFilter } from '../models/user-filter';
@@ -17,21 +18,21 @@ import { UsersFilter } from '../models/user-filter';
 export class UsersManagementComponent implements OnInit, AfterViewInit {
   breadCrumbItems!: Array<{}>;
   dataSource: UsersDataSource;
-  displayedColumns= ["email", "firstName", "lastName", "isEnabled"];
+  displayedColumns= ["email", "fullName", "role", "isEnabled"];
   usersFilter : UsersFilter = new UsersFilter();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private adminService : AdminService, private authService : AuthenticationService, 
-    private tostr : ToastrService, private router : Router){}
+    private tostr : ToastrService, private router : Router, private _translocoService : TranslocoService){}
 
   ngOnInit(): void {
        
     this.breadCrumbItems = [
        { label: 'Users-Management', active: true, url : '/admin/users-management' }
     ];
-
+    
     this.dataSource = new UsersDataSource(this.adminService);
     this.dataSource.getUsers(this.usersFilter, 'email', 'asc', 0, 10);
 
@@ -59,10 +60,10 @@ export class UsersManagementComponent implements OnInit, AfterViewInit {
   /*Toggle user status*/
   toggleStatus(event : any, user : any)
   {
-      this.adminService.deactivate(event.checked, user.id).subscribe(resp=>{
+      this.adminService.activate(event.checked, user.id).subscribe(resp=>{
         if(resp.success)
         {
-           this.tostr.success(user.email + (event.checked? ' enabled ' : ' disabled ') + ' successfully');
+           this.showToastrSuccess();
            this.loadUsersPage();
         }
         else
@@ -70,6 +71,14 @@ export class UsersManagementComponent implements OnInit, AfterViewInit {
           this.tostr.error(resp.message);
         }
       })
+  }
+
+  showToastrSuccess()
+  {
+    this._translocoService.selectTranslate('Operation-Completed-Sucessfully').pipe(take(1))
+    .subscribe((translation : any) => {
+      this.tostr.success(translation);
+    });
   }
 
   addNewUser()

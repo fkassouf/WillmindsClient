@@ -22,14 +22,14 @@ export class AdminService
     {
         const headers = {'content-type' : 'application/json'};
         let body = JSON.stringify(dataTableRequest);
-        let url = environment.api + '/User/GetUsers';
+        let url = environment.api + '/Admin/GetUsers';
         return this._httpClient.post<any>(url, body, {headers : headers});
     }
 
-    deactivate(deactivate : boolean, id : string) : Observable<any>
+    activate(active : boolean, id : string) : Observable<any>
     {
         const headers = {'content-type' : 'application/json'};
-        let url = environment.api + '/User/Deactivate?id=' + id + '&status=' + deactivate;
+        let url = environment.api + '/SuperAdmin/SetActive?id=' + id + '&status=' + active;
         return this._httpClient.post<any>(url, null);
     }
 

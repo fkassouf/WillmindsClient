@@ -18,14 +18,17 @@ import { FuseCardModule } from '@fuse/components/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
+import { SuperAdminGuard } from 'app/core/auth/guards/superadmin.guard';
 
 const routes: Route[] = [
     {
         path: 'users-management',
+        canActivate : [SuperAdminGuard],
         component: UsersManagementComponent,
     },
     {
         path: 'new-user',
+        canActivate : [SuperAdminGuard],
         component: NewUserComponent,
     },
     {

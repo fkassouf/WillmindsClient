@@ -30,6 +30,8 @@
     "Already-Have-Account" : "هل لديك حساب؟",
     "First-Name" : "الاسم",
     "Last-Name" : "الشهرة",
+    "Full-Name" : "الاسم والشهرة",
+    "Full-Name-Required" : "الاسم والشهرة مطلوبان",
     "Create-User" : "إنشاء حساب",
     "First-Name-Required" : "الاسم مطلوب",
     "Last-Name-Required" : "الشهرة مطلوبة",
@@ -43,6 +45,21 @@
     "Records-Per-Page" : "عدد السجلات في الصفحة",
     "Enter-Email" : "أدخل بريدك الإلكتروني أدناه",
     "Send-Reset-Link" : "أرسل رابط إعادة التعيين",
-    "Return-To" : "الرجوع الى"
+    "Return-To" : "الرجوع الى",
+    "Nationality" : "الجنسية",
+    "Nationality-Required" : "الجنسية مطلوبة",
+    "Profession" : "المهنة",
+    "Profession-Required" : "المهنة مطلوبة",
+    "Date-Of-Birth" : "تاريخ الولادة",
+    "Date-Of-Birth-Required" : "تاريخ الولادة مطلوب",
+    "Phone" : "الهاتف",
+    "Phone-Required" : "الهاتف مطلوب",
+    "Address" : "العنوان",
+    "Address-Required" : "العنوان مطلوب",
+    "Invalid-Phone" : "رقم هاتف غير صحيح",
+    "Role" : "الوظيفة",
+    "Enabled" : "مفعل",
+    "Disabled" : "غير مفعل",
+    "Operation-Completed-Sucessfully" : "إكمال العملية بنجاح"
     
 }

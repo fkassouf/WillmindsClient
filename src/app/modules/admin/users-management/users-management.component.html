@@ -45,26 +45,27 @@
                             </ng-container></mat-header-cell>
                             <mat-cell *matCellDef="let user">{{user.email}}</mat-cell>
                         </ng-container>
-                        <ng-container matColumnDef="firstName">
+                        <ng-container matColumnDef="fullName">
                             <mat-header-cell *matHeaderCellDef mat-sort-header>
                                 <ng-container *transloco="let translate">
-                                    <span>{{translate("First-Name")}}</span>
+                                    <span>{{translate("Full-Name")}}</span>
                                 </ng-container>
                             </mat-header-cell>
-                            <mat-cell *matCellDef="let user">{{user.firstName}}</mat-cell>
+                            <mat-cell *matCellDef="let user">{{user.fullName}}</mat-cell>
                         </ng-container>
-                        <ng-container matColumnDef="lastName">
+                        <ng-container matColumnDef="role">
                             <mat-header-cell *matHeaderCellDef mat-sort-header>
                                 <ng-container *transloco="let translate">
-                                    <span>{{translate("Last-Name")}}</span>
+                                    <span>{{translate("Role")}}</span>
                                 </ng-container>
                             </mat-header-cell>
-                            <mat-cell *matCellDef="let user">{{user.lastName}}</mat-cell>
+                            <mat-cell *matCellDef="let user">{{user.role}}</mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="isEnabled">
                             <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell>
                             <mat-cell *matCellDef="let user">
                                 <mat-slide-toggle
+                                *ngIf="user.email !== authService.user$?.email"
                                 color="primary"
                                 [checked]="user.isEnabled"
                                 (change)="toggleStatus($event, user)">

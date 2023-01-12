@@ -1,7 +1,7 @@
 export enum ROLES
 {
-    SUPERADMIN = "SUPERADMIN",
-    ADMIN = "ADMIN",
-    MEDIATOR = "MEDIATOR",
-    USER = "USER"
+    SUPERADMIN = "SuperAdmin",
+    ADMIN = "Admin",
+    MEDIATOR = "Mediator",
+    USER = "Entity"
 }

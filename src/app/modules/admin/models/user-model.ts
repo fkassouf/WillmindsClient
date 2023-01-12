@@ -2,8 +2,7 @@ export interface UserModel
 {
     id : string;
     email : string;
-    displayName : string;
-    firstName : string;
-    lastName : string;
+    fullName : string;
+    role : string;
     isEnabled : boolean;
 }

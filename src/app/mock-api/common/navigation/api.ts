@@ -3,24 +3,50 @@ import { cloneDeep } from 'lodash-es';
 import { FuseNavigationItem } from '@fuse/components/navigation';
 import { FuseMockApiService } from '@fuse/lib/mock-api';
 import { compactNavigation, defaultNavigation, futuristicNavigation, horizontalNavigation } from 'app/mock-api/common/navigation/data';
+import { AuthenticationService } from 'app/core/auth/authentication.service';
+import { ROLES } from 'app/core/enums/core-enum';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NavigationMockApi
 {
-    private readonly _compactNavigation: FuseNavigationItem[] = compactNavigation;
-    private readonly _defaultNavigation: FuseNavigationItem[] = defaultNavigation;
-    private readonly _futuristicNavigation: FuseNavigationItem[] = futuristicNavigation;
-    private readonly _horizontalNavigation: FuseNavigationItem[] = horizontalNavigation;
+    private _compactNavigation: FuseNavigationItem[] = compactNavigation;
+    private _defaultNavigation: FuseNavigationItem[] = defaultNavigation;
+    private _futuristicNavigation: FuseNavigationItem[] = futuristicNavigation;
+    private _horizontalNavigation: FuseNavigationItem[] = horizontalNavigation;
 
     /**
      * Constructor
      */
-    constructor(private _fuseMockApiService: FuseMockApiService)
+    constructor(private _fuseMockApiService: FuseMockApiService, private authService : AuthenticationService)
     {
         // Register Mock API handlers
         this.registerHandlers();
+        
+        //if not super admin role remove users management from menu
+      
+        if(this.authService.user$?.roles[0] !== ROLES.SUPERADMIN)
+        {
+            let indexOfUsersManagementHorizontal = this._horizontalNavigation.indexOf({
+                id   : 'users-management',
+                title: 'Users Management',
+                type : 'basic',
+                icon : 'heroicons_outline:users',
+                link : '/admin/users-management'
+            });
+            this._horizontalNavigation.splice(indexOfUsersManagementHorizontal, 1);
+
+            let indexOfUsersManagementDefault = this._defaultNavigation.indexOf({
+                id   : 'users-management',
+                title: 'Users Management',
+                type : 'basic',
+                icon : 'heroicons_outline:users',
+                link : '/admin/users-management'
+            });
+
+            this._defaultNavigation.splice(indexOfUsersManagementDefault, 1);
+        }
     }
 
     // -----------------------------------------------------------------------------------------------------

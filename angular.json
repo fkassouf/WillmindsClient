@@ -54,8 +54,10 @@
                             "src/@fuse/styles/themes.scss",
                             "src/styles/vendors.scss",
                             "src/@fuse/styles/main.scss",
+                            "./node_modules/intl-tel-input/build/css/intlTelInput.css",
                             "src/styles/styles.scss",
                             "src/styles/tailwind.scss"
+                            
                         ],
                         "scripts": []
                     },
@@ -125,6 +127,7 @@
                             "src/assets"
                         ],
                         "styles": [
+                            "./node_modules/intl-tel-input/build/css/intlTelInput.css",
                             "src/styles/styles.scss"
                         ],
                         "scripts": []

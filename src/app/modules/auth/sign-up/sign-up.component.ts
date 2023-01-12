@@ -5,6 +5,10 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
 import { AuthenticationService } from 'app/core/auth/authentication.service';
+import { PhoneCountries, PhoneCountry } from 'app/modules/common/models';
+import { CountryISO, PhoneNumberFormat, SearchCountryField } from 'ngx-intl-tel-input';
+
+import { Account, Country } from '../models';
 
 @Component({
     selector     : 'auth-sign-up',
@@ -21,7 +25,17 @@ export class AuthSignUpComponent implements OnInit
         message: ''
     };
     signUpForm: FormGroup;
+    submitted : boolean = false;
     showAlert: boolean = false;
+    countries : Country[] = [];
+    filteredCountries : Country[] = [];
+    filter : string = '';
+
+    separateDialCode = false;
+	SearchCountryField = SearchCountryField;
+	CountryISO = CountryISO;
+    PhoneNumberFormat = PhoneNumberFormat;
+	preferredCountries: CountryISO[] = [CountryISO.Lebanon];
 
     /**
      * Constructor
@@ -45,11 +59,19 @@ export class AuthSignUpComponent implements OnInit
     {
         // Create the form
         this.signUpForm = this._formBuilder.group({
-                firstName : ['', Validators.required],
-                lastName : ['', Validators.required],
-                email     : ['', [Validators.required, Validators.email]],
+                fullName : ['', Validators.required],
+                email : ['', [Validators.required, Validators.email]],
+                nationality : [null, [Validators.required]],
+                profession : [null, [Validators.required]],
+                dob : [null, [Validators.required]],
+                phone : [null, [Validators.required]],
+                address : [null, [Validators.required]]
+               
+
             }
         );
+        
+        this.getCountries();
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -61,6 +83,8 @@ export class AuthSignUpComponent implements OnInit
      */
     signUp(): void
     {
+        this.submitted = true;
+        
         // Do nothing if the form is invalid
         if ( this.signUpForm.invalid )
         {
@@ -72,9 +96,24 @@ export class AuthSignUpComponent implements OnInit
 
         // Hide the alert
         this.showAlert = false;
+        let dob = new Date(this.signUpForm.get('dob').value._d).toUTCString();
+        /**Convert to UTC date */
+        var utcDate = this.removeTime(new Date(dob));
+        let countryName = this.signUpForm.get('nationality').value;
+        let country = this.countries.filter(x=>x.name.toUpperCase() === countryName.toUpperCase())[0];
+        let body : Account = {
+            email : this.signUpForm.get('email').value,
+            fullName : this.signUpForm.get('fullName').value,
+            nationalityId : country?.id,
+            profession : this.signUpForm.get('profession').value,
+            dob : utcDate,
+            telephone : this.signUpForm.get('phone').value.e164Number,
+            address : this.signUpForm.get('address').value
+        };
 
+       
         // Sign up
-        this._authService.signUp(this.signUpForm.value).subscribe(resp=>{
+        this._authService.signUpAsAccount(body).subscribe(resp=>{
             if(resp.success)
             {
                 this.signUpForm.enable();
@@ -109,5 +148,42 @@ export class AuthSignUpComponent implements OnInit
             }
         });
                 
+    }
+
+    removeTime(date : Date) {
+        return new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate()
+        );
+      }
+
+    getCountries()
+    {
+        this._authService.getCountries().subscribe(resp=>{
+            if(resp?.success)
+            {
+                this.countries = resp?.result;
+                this.filteredCountries = resp?.result;
+            }
+        });
+    }
+
+    filterMyCountries(event : any)
+    {
+        this.filter += event.key;
+        this.filteredCountries = this.countries.filter(c => c.name.indexOf(this.filter.toUpperCase()) != -1);
+
+    }
+
+    clearCountriesFilter()
+    {
+        this.filter = '';
+        this.filteredCountries = this.countries;
+    }
+
+    backToSignin()
+    {
+        this._router.navigate(['/sign-in']);
     }
 }

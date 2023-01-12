@@ -57,7 +57,7 @@ export class NewUserComponent implements OnInit{
          this.showAlert = false;
  
          // Sign up
-         this._authService.signUp(this.signUpForm.value).subscribe(resp=>{
+         this._authService.signUpAsAccount(this.signUpForm.value).subscribe(resp=>{
              if(resp.success)
              {
                  this.signUpForm.enable();
