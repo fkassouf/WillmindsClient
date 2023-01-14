@@ -60,5 +60,25 @@
     "Role" : "Role",
     "Enabled" : "Enabled",
     "Disabled" : "Disabled",
-    "Operation-Completed-Sucessfully" : "Operation completed successfully"
+    "Operation-Completed-Sucessfully" : "Operation completed successfully",
+    "Title" : "Title",
+    "Job-Title" : "Job title",
+    "Firm" : "Firm",
+    "Accrediation" : "Accrediation",
+    "Jurisdiction" : "Jurisdiction",
+    "LinkedInUrl" : "LinkedIn Url",
+    "ConductMediation" : "Conduct Mediation",
+    "ExperienceYears" : "Years of experience",
+    "MediationNumber" : "Mediation Number",
+    "MediationHours" : "Mediation Hours",
+    "MediationMembership" : "Mediation Membership",
+    "OtherExperience" : "Other Experience",
+    "TrainingDev" : "Training Dev",
+    "OtherMatters" : "Other Matters",
+    "OtherMediationsAreas" : "Other Mediation Areas",
+    "OtherDisputeAreas" : "Other Dispute Areas",
+    "Mediation-Disputes" : "Mediation Disputes",
+    "Mediation-Expertises" : "Mediation Expertises",
+    "Field-Required" : "Field required"
+    
 }

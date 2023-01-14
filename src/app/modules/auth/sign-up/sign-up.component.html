@@ -23,6 +23,21 @@
                 </a>
             </div>
 
+            <!-- Main -->
+            <div class="flex flex-col justify-center w-full max-w-5xl mx-auto p-6 sm:p-8 sm:overflow-y-auto">
+
+            <!-- Column -->
+            <div class="lg:flex flex-col items-start mr-8 ">
+
+            <!-- Profile -->
+            <fuse-card class="flex flex-col w-full p-8 ">
+                <div class="text-2xl font-semibold leading-tight">
+                    <ng-container *transloco="let translate">
+                        {{translate('Sign-up')}}
+                    </ng-container>
+                </div>
+                
+                <hr class="w-full border-t my-6">
             <!-- Alert -->
             <fuse-alert
                 class="mt-8"
@@ -35,13 +50,12 @@
             </fuse-alert>
 
             <!-- Sign Up form -->
-            <form
-            class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden"
+            <form            
                 [formGroup]="signUpForm"
                 #signUpNgForm="ngForm">
-                <p class="text-lg font-medium">Sign Up</p>
+                
                 <!-- Name field -->
-                <div class="grid grid-cols-2 gap-6 w-full">
+                <div class="grid sm:grid-cols-2 gap-3 w-full">
                 <mat-form-field class="w-full">
                     <mat-label>
                         <ng-container *transloco="let translate">
@@ -83,7 +97,7 @@
                     </mat-error>
                 </mat-form-field>
             </div>
-            <div class="grid grid-cols-3 gap-6 w-full">
+            <div class="grid sm:grid-cols-3 gap-3 w-full">
                 <!-- Nationality field -->
                 <mat-form-field class="w-full">
                     <mat-label>
@@ -155,10 +169,13 @@
                    
                 </mat-form-field>
             </div>
-            <div class="grid grid-cols-2 gap-6 w-full">
+            <div class="grid sm:grid-cols-2 gap-3 w-full">
                 <!-- phone field -->
                 <div class="w-full">
-                <mat-label>Phone *</mat-label>
+                <mat-label>
+                    <ng-container *transloco="let translate">
+                        {{translate('Phone')}}
+                    </ng-container> *</mat-label>
                 <br>
                 <ngx-intl-tel-input
                 [cssClass]="'custom'"
@@ -238,6 +255,10 @@
                 </button>
             </div>
             </form>
+            
+            </fuse-card>
+            </div>
+            </div>
         </div>
  
 </div>

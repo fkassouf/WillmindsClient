@@ -59,6 +59,25 @@
     "Role" : "Rôle",
     "Enabled" : "Activé",
     "Disabled" : "Désactivé",
-    "Operation-Completed-Sucessfully" : "Opération terminée avec succès"
+    "Operation-Completed-Sucessfully" : "Opération terminée avec succès",
+    "Title" : "Titre",
+    "Job-Title" : "Profession",
+    "Firm" : "Entreprise",
+    "Accrediation" : "Accréditation",
+    "Jurisdiction" : "Juridiction",
+    "LinkedInUrl" : "LinkedIn Url",
+    "ConductMediation" : "Mener une médiation",
+    "ExperienceYears" : "Années d'expérience",
+    "MediationNumber" : "Numéro de médiation",
+    "MediationHours" : "Heures de médiation",
+    "MediationMembership" : "Adhésion à la médiation",
+    "OtherExperience" : "Autre expérience",
+    "TrainingDev" : "Développeur de formation",
+    "OtherMatters" : "Autres sujets",
+    "OtherMediationsAreas" : "Autres domaines de médiation",
+    "OtherDisputeAreas" : "Autres domaines de litige",
+    "Mediation-Disputes" : "Différends de médiation",
+    "Mediation-Expertises" : "Expertises de médiation",
+    "Field-Required" : "Champ obligatoire"
  
 }

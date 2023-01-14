@@ -60,6 +60,25 @@
     "Role" : "الوظيفة",
     "Enabled" : "مفعل",
     "Disabled" : "غير مفعل",
-    "Operation-Completed-Sucessfully" : "إكمال العملية بنجاح"
+    "Operation-Completed-Sucessfully" : "إكمال العملية بنجاح",
+    "Title" : "اللقب",
+    "Job-Title" : "المسمى الوظيفي",
+    "Firm" : "المؤسسة",
+    "Accrediation" : "الاعتماد الاكاديمي",
+    "Jurisdiction" : "الاختصاص القضائي",
+    "LinkedInUrl" : "LinkedIn عنوان",
+    "ConductMediation" : "إجراء الوساطة",
+    "ExperienceYears" : "سنوات الخبرة",
+    "MediationNumber" : "رقم الوساطة",
+    "MediationHours" : "ساعات الوساطة",
+    "MediationMembership" : "عضوية الوساطة",
+    "OtherExperience" : "تجربة أخرى",
+    "TrainingDev" : "تطوير التدريب",
+    "OtherMatters" : "اشياء اخرى",
+    "OtherMediationsAreas" : "مجالات الوساطة الأخرى",
+    "OtherDisputeAreas" : "مناطق النزاع الأخرى",
+    "Mediation-Disputes" : "منازعات الوساطة",
+    "Mediation-Expertises" : "خبرات الوساطة",
+    "Field-Required" : "حقل مطلوب"
     
 }

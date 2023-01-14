@@ -3,9 +3,7 @@ import { NgForm, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
-import { AuthService } from 'app/core/auth/auth.service';
 import { AuthenticationService } from 'app/core/auth/authentication.service';
-import { PhoneCountries, PhoneCountry } from 'app/modules/common/models';
 import { CountryISO, PhoneNumberFormat, SearchCountryField } from 'ngx-intl-tel-input';
 
 import { Account, Country } from '../models';

@@ -18,7 +18,7 @@ export class LandingHomeComponent implements OnInit
 
     ngOnInit() : void {
         this.breadCrumbItems = [
-             { label: 'Home', active: true, url : '/customers/customer-subscription-form' }
+             { label: 'Home', active: true, url : '/' }
           ];
     }
 }

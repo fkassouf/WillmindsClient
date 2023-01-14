@@ -19,6 +19,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
 import { SuperAdminGuard } from 'app/core/auth/guards/superadmin.guard';
+import { MatSelectModule } from '@angular/material/select';
+import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
+import { MatSelectSearchModule } from 'mat-select-search';
+import { NgxDropzoneModule } from 'ngx-dropzone';
+import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 
 const routes: Route[] = [
     {
@@ -60,7 +65,12 @@ const routes: Route[] = [
         MatSlideToggleModule,
         MatMenuModule,
         MatTooltipModule,
+        MatSelectModule,
+        MatSelectSearchModule,
+        MatCheckboxModule,
         FuseCardModule,
+        NgxIntlTelInputModule,
+        NgxDropzoneModule,
         SharedModule
     ]
 })

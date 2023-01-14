@@ -16,45 +16,32 @@
 
     <!-- Main -->
     <div class="flex-auto p-3 sm:p-4 sm:overflow-y-auto">
-        <div class="max-w-3xl">
-        <form class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden"
-        [formGroup]="signUpForm" #signUpNgForm="ngForm" (ngSubmit)="signUp()">
-
-        <!-- Name field -->
+        
+            <fuse-card class="flex flex-col px-8 py-6 pb-4 shadow rounded" #fuseCardRole>
+    <div class="text-lg font-bold">
+        <ng-container *transloco="let translate">
+            <span>{{translate("Role")}}</span>
+        </ng-container>
+    </div>
+    <div class="mt-2">
         <mat-form-field class="w-full">
-            <mat-label>
-                <ng-container *transloco="let translate">
-                    {{translate('First-Name')}}
-                </ng-container>
-            </mat-label>
-            <input
-                id="firstName"
-                matInput
-                [formControlName]="'firstName'">
-            <mat-error *ngIf="signUpForm.get('firstName').hasError('required')">
-                <ng-container *transloco="let translate">
-                    {{translate('First-Name-Required')}}
-                </ng-container>
-            </mat-error>
+            <mat-select #selectedRole (selectionChange)="onRoleChanged()">
+             
+                <mat-option *ngFor="let r of roles" [value]="r" >
+                    <span>{{r}}</span>
+                </mat-option>
+                
+              </mat-select>  
+              <button mat-icon-button *ngIf="selectedRole.value" matSuffix (click)="this.selectedRole.value = null">
+                <mat-icon 
+                >close</mat-icon>  
+              </button>
+                      
         </mat-form-field>
-
-        <!-- Name field -->
-        <mat-form-field class="w-full">
-            <mat-label>
-                <ng-container *transloco="let translate">
-                    {{translate('Last-Name')}}
-                </ng-container>
-            </mat-label>
-                    <input
-                        id="lastName"
-                        matInput
-                        [formControlName]="'lastName'">
-                    <mat-error *ngIf="signUpForm.get('lastName').hasError('required')">
-                        <ng-container *transloco="let translate">
-                            {{translate('Last-Name-Required')}}
-                        </ng-container>
-                    </mat-error>
-                </mat-form-field>
+    </div>
+ </fuse-card>
+        <form class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden"
+        [formGroup]="signUpAdminForm" #signUpNgAdminForm="ngForm" (ngSubmit)="createAdminUser()" *ngIf="selectedRole.value === rolesEnum.ADMIN">
 
                 <!-- Email field -->
                 <mat-form-field class="w-full">
@@ -71,17 +58,35 @@
                         class="icon-size-5"
                         matSuffix
                         [svgIcon]="'heroicons_solid:mail'"></mat-icon>
-                    <mat-error *ngIf="signUpForm.get('email').hasError('required')">
+                    <mat-error *ngIf="signUpAdminForm.get('email').hasError('required')">
                         <ng-container *transloco="let translate">
                             {{translate('Email-Required')}}
                         </ng-container>
                     </mat-error>
-                    <mat-error *ngIf="signUpForm.get('email').hasError('email')">
+                    <mat-error *ngIf="signUpAdminForm.get('email').hasError('email')">
                         <ng-container *transloco="let translate">
                             {{translate('Email-Invalid')}}
                         </ng-container>
                     </mat-error>
                 </mat-form-field>
+                <!-- Full field -->
+                <mat-form-field class="w-full">
+                    <mat-label>
+                        <ng-container *transloco="let translate">
+                            {{translate('Full-Name')}}
+                        </ng-container>
+                    </mat-label>
+                    <input
+                        id="fullName"
+                        matInput
+                        [formControlName]="'fullName'">
+                    <mat-error *ngIf="signUpAdminForm.get('fullName').hasError('required')">
+                        <ng-container *transloco="let translate">
+                            {{translate('Full-Name-Required')}}
+                        </ng-container>
+                    </mat-error>
+                </mat-form-field>
+
                 <div class="flex items-center justify-end border-t -mx-8 mt-8 px-8 py-5 bg-gray-50 dark:bg-gray-700">
                     <button
                     type="button"
@@ -98,15 +103,476 @@
                     class="px-6 ml-3"
                     mat-flat-button
                     [color]="'primary'"
-                    [disabled]="signUpForm.disabled"
+                    [disabled]="signUpAdminForm.disabled"
                     >
-                    <span *ngIf="!signUpForm.disabled">
+                    <span *ngIf="!signUpAdminForm.disabled">
                         <ng-container *transloco="let translate">
                             {{translate('Create-User')}}
                         </ng-container>
                     </span>
                     <mat-progress-spinner
-                        *ngIf="signUpForm.disabled"
+                        *ngIf="signUpAdminForm.disabled"
+                        [diameter]="24"
+                        [mode]="'indeterminate'"></mat-progress-spinner>
+                </button>
+                
+                </div>
+            </form>
+            <!-- Mediator -->
+            <form class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden" 
+            [formGroup]="signUpMediatorForm"
+            *ngIf="selectedRole.value ==='Mediator'" #signUpNgMediatorForm="ngForm" (ngSubmit)="createMediatorUser()">
+                <div class="grid sm:grid-cols-1 w-full">
+                    <!--<img class="w-32 h-32 rounded-full ring-4 ring-bg-card image"
+                        src="assets/images/avatars/unknown.png">-->
+
+                        <ngx-dropzone (change)="onSelectProfileImage($event)" [accept]="'image/*'" [multiple]="false">
+                            <ngx-dropzone-label>Drop profile image here</ngx-dropzone-label>
+                            <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of addedImages" [file]="f" [removable]="true" (removed)="onRemoveProfileImage(f)">
+                                <!--<ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>-->
+                            </ngx-dropzone-image-preview>
+                        </ngx-dropzone>
+                       
+                </div>
+                <!-- Divider -->
+        <div class="mt-11 mb-10 border-t"></div>
+
+                <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
+                    <mat-form-field class="w-full">
+                        <mat-label>
+                            <ng-container *transloco="let translate">
+                                {{translate('Email')}}
+                            </ng-container>
+                        </mat-label>
+                        <input matInput formControlName="email">
+                        <mat-error *ngIf="signUpMediatorForm.get('email').hasError('required')">
+                            <ng-container *transloco="let translate">
+                                {{translate('Field-Required')}}
+                            </ng-container>
+                        </mat-error>
+                        <mat-error *ngIf="signUpMediatorForm.get('email').hasError('email')">
+                            <ng-container *transloco="let translate">
+                                {{translate('Email-Invalid')}}
+                            </ng-container>
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="w-full">
+                        <mat-label>
+                            <ng-container *transloco="let translate">
+                                {{translate('Title')}}
+                            </ng-container>
+                        </mat-label>
+                        <input matInput formControlName="title">
+                        <mat-error *ngIf="signUpMediatorForm.get('title').hasError('required')">
+                            <ng-container *transloco="let translate">
+                                {{translate('Field-Required')}}
+                            </ng-container>
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="w-full">
+                        <mat-label>
+                            <ng-container *transloco="let translate">
+                                {{translate('Full-Name')}}
+                            </ng-container>
+                        </mat-label>
+                        <input matInput formControlName="fullName">
+                        <mat-error *ngIf="signUpMediatorForm.get('fullName').hasError('required')">
+                            <ng-container *transloco="let translate">
+                                {{translate('Field-Required')}}
+                            </ng-container>
+                        </mat-error>
+                    </mat-form-field>
+                    
+                </div>
+           
+                <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
+                    <mat-form-field class="w-full">
+                        <mat-label>
+                            <ng-container *transloco="let translate">
+                                {{translate('Job-Title')}}
+                            </ng-container>
+                        </mat-label>
+                        <input matInput formControlName="jobTitle">
+                        <mat-error *ngIf="signUpMediatorForm.get('jobTitle').hasError('required')">
+                            <ng-container *transloco="let translate">
+                                {{translate('Field-Required')}}
+                            </ng-container>
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="w-full">
+                        <mat-label>
+                            <ng-container *transloco="let translate">
+                                {{translate('Firm')}}
+                            </ng-container>
+                        </mat-label>
+                        <input matInput formControlName="firm">
+                        <mat-error *ngIf="signUpMediatorForm.get('firm').hasError('required')">
+                            <ng-container *transloco="let translate">
+                                {{translate('Field-Required')}}
+                            </ng-container>
+                        </mat-error>
+                    </mat-form-field>
+                    <div class="w-full">
+                        <mat-label>
+                            <ng-container *transloco="let translate">
+                                {{translate('Phone')}}
+                            </ng-container>
+                        </mat-label>
+                        <br>
+                        <ngx-intl-tel-input
+                        [cssClass]="'custom'"
+                        [preferredCountries]="preferredCountries"
+                        [enableAutoCountrySelect]="true"
+                        [enablePlaceholder]="true"
+                        [searchCountryFlag]="true"
+                        [searchCountryField]="[
+                        SearchCountryField.Iso2,
+                        SearchCountryField.Name
+                        ]"
+                        [selectFirstCountry]="false"
+                        [selectedCountryISO]="CountryISO.Lebanon"
+                        [maxLength]="15"
+                        [phoneValidation]="true"
+                        [separateDialCode]="separateDialCode"
+                        [numberFormat]="PhoneNumberFormat.National"
+                        name="phone"
+                        formControlName="phone"
+                        >
+                    </ngx-intl-tel-input>
+                    <mat-error *ngIf="signUpMediatorForm.get('phone').hasError('required')">
+                        <ng-container *transloco="let translate">
+                            {{translate('Field-Required')}}
+                        </ng-container>
+                    </mat-error>
+                    <mat-error *ngIf="signUpMediatorForm.get('phone').hasError('validatePhoneNumber')">
+                        <ng-container *transloco="let translate">
+                            {{translate('Invalid-Phone')}}
+                        </ng-container>
+                    </mat-error>
+                    </div>
+                </div>
+                <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
+                    <mat-form-field class="w-full">
+                        <mat-label>
+                            <ng-container *transloco="let translate">
+                                {{translate('Nationality')}}
+                            </ng-container>
+                        </mat-label>
+                        <mat-select #nationality formControlName="nationalityId">
+                            <mat-select-trigger>{{nationality.value}}</mat-select-trigger>
+                                <mat-option class="custom-search-input">
+                                <lib-mat-select-search
+                                    [list]="countries"
+                                    [searchProperties]="['name']"
+                                    (filtered)="filteredCountries = $event">
+                                </lib-mat-select-search>
+                                </mat-option>
+                            <mat-option *ngFor="let country of filteredCountries" [value]="country.name" >
+                                <span>{{country.name}}</span>
+                            </mat-option>
+                            
+                          </mat-select>
+                          <mat-icon matSuffix *ngIf="nationality.value" (click)="nationality.value = null">close</mat-icon>
+                          <mat-error *ngIf="signUpMediatorForm.get('nationalityId').hasError('required')">
+                            <ng-container *transloco="let translate">
+                                {{translate('Field-Required')}}
+                            </ng-container>
+                        </mat-error>          
+                    </mat-form-field>
+                    <mat-form-field class="w-full">
+                        <mat-label>
+                            <ng-container *transloco="let translate">
+                                {{translate('Address')}}
+                            </ng-container>
+                        </mat-label>
+                        <input matInput formControlName="address">
+                        <mat-error *ngIf="signUpMediatorForm.get('address').hasError('required')">
+                            <ng-container *transloco="let translate">
+                                {{translate('Field-Required')}}
+                            </ng-container>
+                        </mat-error>   
+                    </mat-form-field>
+                    <mat-form-field class="w-full">
+                        <mat-label>
+                            <ng-container *transloco="let translate">
+                                {{translate('Accrediation')}}
+                            </ng-container>
+                        </mat-label>
+                        <input matInput formControlName="accrediation">
+                        <mat-error *ngIf="signUpMediatorForm.get('accrediation').hasError('required')">
+                            <ng-container *transloco="let translate">
+                                {{translate('Field-Required')}}
+                            </ng-container>
+                        </mat-error>   
+                    </mat-form-field>
+                </div>
+                <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
+                    <mat-form-field class="w-full">
+                        <mat-label>
+                            <ng-container *transloco="let translate">
+                                {{translate('Jurisdiction')}}
+                            </ng-container>
+                        </mat-label>
+                        <input matInput formControlName="jurisdiction">
+                        <mat-error *ngIf="signUpMediatorForm.get('jurisdiction').hasError('required')">
+                            <ng-container *transloco="let translate">
+                                {{translate('Field-Required')}}
+                            </ng-container>
+                        </mat-error>   
+                    </mat-form-field>
+                    <mat-form-field class="w-full">
+                        <mat-label>
+                            <ng-container *transloco="let translate">
+                                {{translate('LinkedInUrl')}}
+                            </ng-container>
+                        </mat-label>
+                        <input matInput formControlName="linkedInUrl">
+                        <mat-error *ngIf="signUpMediatorForm.get('linkedInUrl').hasError('required')">
+                            <ng-container *transloco="let translate">
+                                {{translate('Field-Required')}}
+                            </ng-container>
+                        </mat-error>
+                    </mat-form-field>
+                    <div class="w-full">
+                      <mat-slide-toggle color="primary" formControlName="conductMediation">
+                            <ng-container *transloco="let translate">
+                            {{translate('ConductMediation')}}
+                        </ng-container></mat-slide-toggle>
+                    </div>
+                </div>
+                <div class="grid sm:grid-cols-4 gap-3 pb-4 w-full">
+                    <mat-form-field class="w-full">
+                        <mat-label>
+                              <ng-container *transloco="let translate">
+                              {{translate('ExperienceYears')}}
+                              </ng-container></mat-label>
+                              <input matInput type="number" formControlName="experienceYears">
+                              <mat-error *ngIf="signUpMediatorForm.get('experienceYears').hasError('required')">
+                                <ng-container *transloco="let translate">
+                                    {{translate('Field-Required')}}
+                                </ng-container>
+                            </mat-error>
+                      </mat-form-field>
+                      <mat-form-field class="w-full">
+                        <mat-label>
+                              <ng-container *transloco="let translate">
+                              {{translate('MediationNumber')}}
+                              </ng-container></mat-label>
+                              <input matInput type="number" formControlName="mediationNumber">
+                              <mat-error *ngIf="signUpMediatorForm.get('mediationNumber').hasError('required')">
+                                <ng-container *transloco="let translate">
+                                    {{translate('Field-Required')}}
+                                </ng-container>
+                            </mat-error>
+                      </mat-form-field>
+                      <mat-form-field class="w-full">
+                       <mat-label>
+                              <ng-container *transloco="let translate">
+                              {{translate('MediationHours')}}
+                              </ng-container></mat-label>
+                              <input matInput type="number" formControlName="mediationHours">
+                              <mat-error *ngIf="signUpMediatorForm.get('mediationHours').hasError('required')">
+                                <ng-container *transloco="let translate">
+                                    {{translate('Field-Required')}}
+                                </ng-container>
+                            </mat-error>
+                      </mat-form-field>
+                      <mat-form-field class="w-full">
+                        <mat-label>
+                              <ng-container *transloco="let translate">
+                              {{translate('MediationMembership')}}
+                              </ng-container></mat-label>
+                              <input matInput formControlName="mediationMembership">
+                              <mat-error *ngIf="signUpMediatorForm.get('mediationMembership').hasError('required')">
+                                <ng-container *transloco="let translate">
+                                    {{translate('Field-Required')}}
+                                </ng-container>
+                            </mat-error>
+                      </mat-form-field>
+                </div>
+                <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
+                    <mat-form-field class="w-full">
+                        <mat-label>
+                              <ng-container *transloco="let translate">
+                              {{translate('OtherExperience')}}
+                              </ng-container></mat-label>
+                              <input matInput formControlName="otherExperience">
+                              <mat-error *ngIf="signUpMediatorForm.get('otherExperience').hasError('required')">
+                                <ng-container *transloco="let translate">
+                                    {{translate('Field-Required')}}
+                                </ng-container>
+                            </mat-error>
+                      </mat-form-field>
+                      <mat-form-field class="w-full">
+                        <mat-label>
+                              <ng-container *transloco="let translate">
+                              {{translate('TrainingDev')}}
+                              </ng-container></mat-label>
+                              <input matInput formControlName="trainingDev">
+                              <mat-error *ngIf="signUpMediatorForm.get('trainingDev').hasError('required')">
+                                <ng-container *transloco="let translate">
+                                    {{translate('Field-Required')}}
+                                </ng-container>
+                            </mat-error>
+                      </mat-form-field>
+                      <mat-form-field class="w-full">
+                        <mat-label>
+                              <ng-container *transloco="let translate">
+                              {{translate('OtherMatters')}}
+                              </ng-container></mat-label>
+                              <input matInput formControlName="otherMatters">
+                              <mat-error *ngIf="signUpMediatorForm.get('otherMatters').hasError('required')">
+                                <ng-container *transloco="let translate">
+                                    {{translate('Field-Required')}}
+                                </ng-container>
+                            </mat-error>
+                      </mat-form-field>
+                </div>
+                <div class="grid sm:grid-cols-2 gap-3 pb-4 w-full">
+                    <mat-form-field class="w-full">
+                        <mat-label>
+                            <ng-container *transloco="let translate">
+                                {{translate('Mediation-Expertises')}}
+                            </ng-container>
+                        </mat-label>
+                        <mat-select #mediationExpertise multiple formControlName="expertise">
+                            <mat-select-trigger>
+                                {{mediationExpertise.value?.[0]?.name || ''}}
+                                <span *ngIf="(mediationExpertise.value?.length || 0) > 1" class="example-additional-selection">
+                                  (+{{(mediationExpertise.value?.length || 0) - 1}} {{mediationExpertise.value?.length === 2 ? 'other' : 'others'}})
+                                </span>
+                              </mat-select-trigger>
+                                <mat-option class="custom-search-input">
+                                <lib-mat-select-search
+                                    [list]="mediationExpertises"
+                                    [searchProperties]="['name']"
+                                    (filtered)="filteredMediationExpertises = $event">
+                                </lib-mat-select-search>
+                                </mat-option>
+                            <mat-option *ngFor="let mediation of filteredMediationExpertises" [value]="mediation" >
+                                {{mediation.name}}
+                            </mat-option>
+                            
+                          </mat-select>
+                          <mat-icon matSuffix *ngIf="mediationExpertise.value" (click)="mediationExpertise.value = null">close</mat-icon>
+                          <mat-error *ngIf="signUpMediatorForm.get('expertise').hasError('required')">
+                            <ng-container *transloco="let translate">
+                                {{translate('Field-Required')}}
+                            </ng-container>
+                        </mat-error>         
+                    </mat-form-field>
+                    <mat-form-field class="w-full">
+                        <mat-label>
+                              <ng-container *transloco="let translate">
+                              {{translate('OtherMediationsAreas')}}
+                              </ng-container></mat-label>
+                              <input matInput formControlName="otherMediationsAreas">
+                              <mat-error *ngIf="signUpMediatorForm.get('otherMediationsAreas').hasError('required')">
+                                <ng-container *transloco="let translate">
+                                    {{translate('Field-Required')}}
+                                </ng-container>
+                            </mat-error>
+                      </mat-form-field>
+                      
+                </div>
+                <div class="grid sm:grid-cols-2 gap-3 pb-4 w-full">
+                    <mat-form-field class="w-full">
+                        <mat-label>
+                            <ng-container *transloco="let translate">
+                                {{translate('Mediation-Disputes')}}
+                            </ng-container>
+                        </mat-label>
+                        <mat-select #mediationDispute multiple formControlName="disputes">
+                            <mat-select-trigger>
+                                {{mediationDispute.value?.[0]?.name || ''}}
+                                <span *ngIf="(mediationDispute.value?.length || 0) > 1" class="example-additional-selection">
+                                  (+{{(mediationDispute.value?.length || 0) - 1}} {{mediationDispute.value?.length === 2 ? 'other' : 'others'}})
+                                </span>
+                              </mat-select-trigger>
+                                <mat-option class="custom-search-input">
+                                <lib-mat-select-search
+                                    [list]="disputes"
+                                    [searchProperties]="['name']"
+                                    (filtered)="filteredDisputes = $event">
+                                </lib-mat-select-search>
+                                </mat-option>
+                            <mat-option *ngFor="let d of filteredDisputes" [value]="d" >
+                                {{d.name}}
+                            </mat-option>
+                            
+                          </mat-select>
+                          <mat-icon matSuffix *ngIf="mediationDispute.value" (click)="mediationDispute.value = null">close</mat-icon>
+                          <mat-error *ngIf="signUpMediatorForm.get('disputes').hasError('required')">
+                            <ng-container *transloco="let translate">
+                                {{translate('Field-Required')}}
+                            </ng-container>
+                        </mat-error>        
+                    </mat-form-field>
+                    <mat-form-field class="w-full">
+                        <mat-label>
+                              <ng-container *transloco="let translate">
+                              {{translate('OtherDisputeAreas')}}
+                              </ng-container></mat-label>
+                              <input matInput formControlName="otherDisputeAreas">
+                              <mat-error *ngIf="signUpMediatorForm.get('otherDisputeAreas').hasError('required')">
+                                <ng-container *transloco="let translate">
+                                    {{translate('Field-Required')}}
+                                </ng-container>
+                            </mat-error>        
+                      </mat-form-field>
+                </div>
+                           <!-- Divider -->
+                <div class="mt-11 mb-10 border-t"></div>
+                <div class="grid sm:grid-cols-2 gap-3 pb-4 w-full">
+                    <table class="w-full text-md text-center text-gray-500 dark:text-gray-400">
+                        <thead>
+                            <tr>
+                                <th>Language</th>
+                                <th>Reading/Written</th>
+                                <th>Spoken</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let level of languageLevels; let i = index">
+                                <td class="px-6 py-4">
+                                    {{level.languageName}}
+                                </td>
+                                <td><mat-checkbox color="primary" [(ngModel)]="level.rw" [ngModelOptions]="{standalone: true}"></mat-checkbox></td>
+                                <td>
+                                    <mat-form-field class="w-full">
+                                        <input matInput [(ngModel)]="level.spoken" [ngModelOptions]="{standalone: true}">
+                                    </mat-form-field>
+                                  </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="flex items-center justify-end border-t -mx-8 mt-8 px-8 py-5 bg-gray-50 dark:bg-gray-700">
+                    <button
+                    type="button"
+                    mat-button
+                    (click)="cancel()">
+                    <ng-container *transloco="let translate">
+                        {{translate('Cancel')}}
+                    </ng-container>
+                   
+                </button>
+                <!--Submit-->
+                <button
+                    type="submit"
+                    class="px-6 ml-3"
+                    mat-flat-button
+                    [color]="'primary'"
+                    [disabled]="signUpMediatorForm.disabled"
+                    >
+                    <span *ngIf="!signUpMediatorForm.disabled">
+                        <ng-container *transloco="let translate">
+                            {{translate('Create-User')}}
+                        </ng-container>
+                    </span>
+                    <mat-progress-spinner
+                        *ngIf="signUpMediatorForm.disabled"
                         [diameter]="24"
                         [mode]="'indeterminate'"></mat-progress-spinner>
                 </button>
@@ -114,6 +580,4 @@
                 </div>
             </form>
         </div>
-            </div>
-
 </div>
