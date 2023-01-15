@@ -72,7 +72,9 @@ export class AdminService
      */
      createMediatorUser(account : RegisterMediator): Observable<any>
      {
-         return this._httpClient.post<any>(environment.api + '/Mediator/Create', account);
+         let fomData = new FormData();
+         fomData.append('model', JSON.stringify(account));
+         return this._httpClient.post<any>(environment.api + '/Mediator/Create', fomData);
      }
 
    

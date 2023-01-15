@@ -50,6 +50,7 @@
                             {{translate('Email')}}
                         </ng-container>
                     </mat-label>
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:mail'" matPrefix></mat-icon>
                     <input
                         id="email"
                         matInput
@@ -76,6 +77,7 @@
                             {{translate('Full-Name')}}
                         </ng-container>
                     </mat-label>
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
                     <input
                         id="fullName"
                         matInput
@@ -144,6 +146,7 @@
                                 {{translate('Email')}}
                             </ng-container>
                         </mat-label>
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:mail'" matPrefix></mat-icon>
                         <input matInput formControlName="email">
                         <mat-error *ngIf="signUpMediatorForm.get('email').hasError('required')">
                             <ng-container *transloco="let translate">
@@ -175,6 +178,7 @@
                                 {{translate('Full-Name')}}
                             </ng-container>
                         </mat-label>
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
                         <input matInput formControlName="fullName">
                         <mat-error *ngIf="signUpMediatorForm.get('fullName').hasError('required')">
                             <ng-container *transloco="let translate">
@@ -285,6 +289,7 @@
                                 {{translate('Address')}}
                             </ng-container>
                         </mat-label>
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:map'" matPrefix></mat-icon>
                         <input matInput formControlName="address">
                         <mat-error *ngIf="signUpMediatorForm.get('address').hasError('required')">
                             <ng-container *transloco="let translate">

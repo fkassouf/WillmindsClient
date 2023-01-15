@@ -82,11 +82,11 @@ export class AuthSignInComponent implements OnInit
                         
                         let user : User = {
                             id : result.id,
-                            displayName : result.displayName,
+                            displayName : result.fullName,
                             email : result.email,
                             validTo : result.validTo,
                             accessToken : result.accessToken,
-                            name : result.displayName,
+                            name : result.fullName,
                             refreshToken : result.refreshToken,
                             roles : result.roles,
                             status : 'online'

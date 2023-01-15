@@ -24,6 +24,8 @@ import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 import { MatSelectSearchModule } from 'mat-select-search';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
 const routes: Route[] = [
     {
@@ -71,6 +73,8 @@ const routes: Route[] = [
         FuseCardModule,
         NgxIntlTelInputModule,
         NgxDropzoneModule,
+        MatDatepickerModule,
+        MatMomentDateModule,
         SharedModule
     ]
 })

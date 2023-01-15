@@ -120,7 +120,7 @@
                         
                       </mat-select>
                       <mat-icon matSuffix *ngIf="signUpForm.get('nationality').value" (click)="signUpForm.get('nationality').setValue(null)">close</mat-icon>
-                    <mat-error *ngIf="signUpForm.get('email').hasError('required')">
+                    <mat-error *ngIf="signUpForm.get('nationality').hasError('required')">
                         <ng-container *transloco="let translate">
                             {{translate('Nationality-Required')}}
                         </ng-container>

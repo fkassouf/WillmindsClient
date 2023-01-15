@@ -48,10 +48,10 @@
                     <span class="font-bold">Email</span>
                     <span class="text-sm font-medium text-secondary">{{authService.user$?.email}}</span>
                 </div>
-                <div class="flex flex-col items-center">
+                <!--<div class="flex flex-col items-center">
                     <span class="font-bold">Phone</span>
-                    <span class="text-sm font-medium text-secondary">+96170134281</span>
-                </div>
+                    <span class="text-sm font-medium text-secondary"></span>
+                </div>-->
             </div>
 
             <!-- Menu -->
@@ -93,95 +93,187 @@
                 <div class="text-2xl font-semibold leading-tight">My Profile</div>
                 
                 <hr class="w-full border-t my-6">
-                <form>
-                <div class="grid sm:grid-cols-4 gap-6 w-full">
-                    <div class="sm:col-span-2">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                        <mat-label>
-                            <ng-container *transloco="let translate">
-                                <span>{{translate('First-Name')}}</span>
-                            </ng-container>
-                        </mat-label>
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
-                        <input matInput #firstName>
-                      
-                       
-                    </mat-form-field>
-                    </div>
-                    <div class="sm:col-span-2">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                        <mat-label>
-                            <ng-container *transloco="let translate">
-                                <span>{{translate('Last-Name')}}</span>
-                            </ng-container>
-                        </mat-label>
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
-                        <input matInput #lastName>
-                      
-                       
-                    </mat-form-field>
-                    </div>  
-                </div>
-                <div class="grid sm:grid-cols gap-6 w-full">
-                    <div class="sm:col-span-2">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                        <mat-label>
-                            <ng-container *transloco="let translate">
-                                <span>Address</span>
-                            </ng-container>
-                        </mat-label>
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:location-marker'" matPrefix></mat-icon>
-                        <input matInput #address>
-                      
-                       
-                    </mat-form-field>
-                    </div> 
-                </div>
-                <div class="grid sm:grid-cols-4 gap-6 w-full">
-                    <div class="sm:col-span-2">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                        <mat-label>
-                            <ng-container *transloco="let translate">
-                                <span>Phone</span>
-                            </ng-container>
-                        </mat-label>
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:phone'" matPrefix></mat-icon>
-                        <input matInput #phone>
-                      
-                       
-                    </mat-form-field>
-                    </div>
-                    <div class="sm:col-span-2">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                        <mat-label>
-                            <ng-container *transloco="let translate">
-                                <span>Profession</span>
-                            </ng-container>
-                        </mat-label>
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
-                        <input matInput #profession>
-                      
-                       
-                    </mat-form-field>
-                    </div>  
-                </div>
-                <!-- Divider -->
-        <div class="mt-11 mb-10 border-t"></div>
+                <form            
+                [formGroup]="updateProfileForm" (ngSubmit)="submitProfile()"
+                #updateProfileNgForm="ngForm">
+                
+                <!-- Name field -->
+                <div class="grid sm:grid-cols-1 gap-3 w-full">
+                <mat-form-field class="w-full">
+                    <mat-label>
+                        <ng-container *transloco="let translate">
+                            {{translate('Full-Name')}}
+                        </ng-container>
+                    </mat-label>
+                    <input
+                        id="fullName"
+                        matInput
+                        [formControlName]="'fullName'">
+                    <mat-error *ngIf="updateProfileForm.get('fullName').hasError('required')">
+                        <ng-container *transloco="let translate">
+                            {{translate('Full-Name-Required')}}
+                        </ng-container>
+                    </mat-error>
+                </mat-form-field>
 
-        <!-- Actions -->
-        <div class="flex items-center justify-end">
-            <button
-                mat-stroked-button
-                type="button">
-                Cancel
-            </button>
-            <button
-                class="ml-4"
-                mat-flat-button
-                type="button"
-                [color]="'primary'">Save
-            </button>
+            </div>
+            <div class="grid sm:grid-cols-3 gap-3 w-full">
+                <!-- Nationality field -->
+                <mat-form-field class="w-full">
+                    <mat-label>
+                        <ng-container *transloco="let translate">
+                            {{translate('Nationality')}}
+                        </ng-container>
+                    </mat-label>
+                    <mat-select formControlName="nationality">
+                        <mat-select-trigger>{{updateProfileForm.get('nationality').value}}</mat-select-trigger>
+                            <mat-option class="custom-search-input">
+                            <lib-mat-select-search
+                                [list]="countries"
+                                [searchProperties]="['name']"
+                                (filtered)="filteredCountries = $event">
+                            </lib-mat-select-search>
+                            </mat-option>
+                        <mat-option *ngFor="let country of filteredCountries" [value]="country.name" >
+                            <span>{{country.name}}</span>
+                        </mat-option>
+                        
+                      </mat-select>
+                      <mat-icon matSuffix *ngIf="updateProfileForm.get('nationality').value" (click)="updateProfileForm.get('nationality').setValue(null)">close</mat-icon>
+                    <mat-error *ngIf="updateProfileForm.get('nationality').hasError('required')">
+                        <ng-container *transloco="let translate">
+                            {{translate('Nationality-Required')}}
+                        </ng-container>
+                    </mat-error>
+                    
+                </mat-form-field>
+                 <!-- Profession field -->
+                 <mat-form-field class="w-full">
+                    <mat-label>
+                        <ng-container *transloco="let translate">
+                            {{translate('Profession')}}
+                        </ng-container>
+                    </mat-label>
+                    <input
+                        id="profession"
+                        matInput
+                        [formControlName]="'profession'">
+                    <mat-error *ngIf="updateProfileForm.get('profession').hasError('required')">
+                        <ng-container *transloco="let translate">
+                            {{translate('Profession-Required')}}
+                        </ng-container>
+                    </mat-error>
+                   
+                </mat-form-field>
+                <!-- DOB field -->
+                <mat-form-field class="w-full">
+                    <mat-label>
+                        <ng-container *transloco="let translate">
+                            {{translate('Date-Of-Birth')}}
+                        </ng-container>
+                    </mat-label>
+                    <input
+                        id="dob"
+                        [matDatepicker]="pickerDob"
+                        matInput
+                        [formControlName]="'dob'">
+                        <mat-datepicker-toggle
+                            matSuffix
+                            [for]="pickerDob"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerDob></mat-datepicker>
+                    <mat-error *ngIf="updateProfileForm.get('dob').hasError('required')">
+                        <ng-container *transloco="let translate">
+                            {{translate('Date-Of-Birth-Required')}}
+                        </ng-container>
+                    </mat-error>
+                   
+                </mat-form-field>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-3 w-full">
+                <!-- phone field -->
+                <div class="w-full">
+                <mat-label>
+                    <ng-container *transloco="let translate">
+                        {{translate('Phone')}}
+                    </ng-container> *</mat-label>
+                <br>
+                <ngx-intl-tel-input
+                [cssClass]="'custom'"
+                [preferredCountries]="preferredCountries"
+                [enableAutoCountrySelect]="true"
+                [enablePlaceholder]="true"
+                [searchCountryFlag]="true"
+                [searchCountryField]="[
+                SearchCountryField.Iso2,
+                SearchCountryField.Name
+                ]"
+                [selectFirstCountry]="false"
+                [selectedCountryISO]="CountryISO.Lebanon"
+                [maxLength]="15"
+                [phoneValidation]="true"
+                [separateDialCode]="separateDialCode"
+                [numberFormat]="PhoneNumberFormat.National"
+                name="phone"
+                formControlName="phone"
+            >
+            </ngx-intl-tel-input>
+            <mat-error *ngIf="submitted && updateProfileForm.get('phone').hasError('required')">
+                <ng-container *transloco="let translate">
+                    {{translate('Phone-Required')}}
+                </ng-container>
+            </mat-error>
+            <mat-error *ngIf="submitted && updateProfileForm.get('phone').hasError('validatePhoneNumber')">
+                <ng-container *transloco="let translate">
+                    {{translate('Invalid-Phone')}}
+                </ng-container>
+            </mat-error>
         </div>
+                <!-- address field -->
+                <mat-form-field class="w-full">
+                    <mat-label>
+                        <ng-container *transloco="let translate">
+                            {{translate('Address')}}
+                        </ng-container>
+                    </mat-label>
+                    <input
+                        id="address"
+                       
+                        matInput
+                        [formControlName]="'address'">
+               
+                    <mat-error *ngIf="updateProfileForm.get('address').hasError('required')">
+                        <ng-container *transloco="let translate">
+                            {{translate('Address-Required')}}
+                        </ng-container>
+                    </mat-error>
+                   
+                </mat-form-field>
+            </div>
+               
+            <div class="flex items-center justify-end border-t -mx-8 mt-8 px-8 py-5 bg-gray-50 dark:bg-gray-700">
+                <button mat-button type="button" (click)="backToLanding()">
+                    <ng-container *transloco="let translate">
+                        {{translate('Return-To')}} {{translate('Sign-In')}}
+                    </ng-container>
+                </button>
+                <!-- Submit button -->
+                <button
+                   
+                    mat-flat-button
+                    [color]="'primary'"
+                    [disabled]="updateProfileForm.disabled"
+                    type="submit">
+                    <span *ngIf="!updateProfileForm.disabled">
+                        <ng-container *transloco="let translate">
+                            {{translate('Update')}}
+                        </ng-container>
+                    </span>
+                    <mat-progress-spinner
+                        *ngIf="updateProfileForm.disabled"
+                        [diameter]="24"
+                        [mode]="'indeterminate'"></mat-progress-spinner>
+                </button>
+            </div>
             </form>
             </fuse-card>
         </div>
