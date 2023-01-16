@@ -256,7 +256,8 @@ export class NewUserComponent implements OnInit{
        this.fMediator.expertise.value?.forEach(el=>{
         expertises.push(el.id);
      });
-
+     let countryName = this.signUpMediatorForm.get('nationalityId').value;
+     let country = this.countries.filter(x=>x.name.toUpperCase() === countryName.toUpperCase())[0];
 
        let mediator : RegisterMediator = {
           accrediation : this.fMediator.accrediation.value,
@@ -275,7 +276,7 @@ export class NewUserComponent implements OnInit{
           mediationHours : this.fMediator.mediationHours.value,
           mediationMembership : this.fMediator.mediationMembership.value,
           mediationNumber : this.fMediator.mediationNumber.value,
-          nationalityId : this.fMediator.nationalityId.value.id,
+          nationalityId : country.id,
           otherDisputeAreas : this.fMediator.otherDisputeAreas.value,
           otherExperience :  this.fMediator.otherExperience.value,
           otherMatters : this.fMediator.otherMatters.value,
