@@ -24,29 +24,6 @@ export class NavigationMockApi
         // Register Mock API handlers
         this.registerHandlers();
         
-        //if not super admin role remove users management from menu
-      
-        if(this.authService.user$?.roles[0] !== ROLES.SUPERADMIN)
-        {
-            let indexOfUsersManagementHorizontal = this._horizontalNavigation.indexOf({
-                id   : 'users-management',
-                title: 'Users Management',
-                type : 'basic',
-                icon : 'heroicons_outline:users',
-                link : '/admin/users-management'
-            });
-            this._horizontalNavigation.splice(indexOfUsersManagementHorizontal, 1);
-
-            let indexOfUsersManagementDefault = this._defaultNavigation.indexOf({
-                id   : 'users-management',
-                title: 'Users Management',
-                type : 'basic',
-                icon : 'heroicons_outline:users',
-                link : '/admin/users-management'
-            });
-
-            this._defaultNavigation.splice(indexOfUsersManagementDefault, 1);
-        }
     }
 
     // -----------------------------------------------------------------------------------------------------

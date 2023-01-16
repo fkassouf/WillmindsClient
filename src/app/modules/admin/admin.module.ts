@@ -26,6 +26,8 @@ import { NgxDropzoneModule } from 'ngx-dropzone';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { UserFilterComponent } from './user-filter/user-filter.component';
+import { FuseDrawerModule } from '@fuse/components/drawer';
 
 const routes: Route[] = [
     {
@@ -48,7 +50,8 @@ const routes: Route[] = [
     declarations: [
         UsersManagementComponent,
         NewUserComponent,
-        ProfileComponent
+        ProfileComponent,
+        UserFilterComponent
     ],
     imports: [
         RouterModule.forChild(routes),
@@ -75,6 +78,7 @@ const routes: Route[] = [
         NgxDropzoneModule,
         MatDatepickerModule,
         MatMomentDateModule,
+        FuseDrawerModule,
         SharedModule
     ]
 })

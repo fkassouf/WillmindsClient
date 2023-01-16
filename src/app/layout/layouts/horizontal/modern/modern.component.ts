@@ -5,6 +5,8 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { FuseNavigationService, FuseVerticalNavigationComponent } from '@fuse/components/navigation';
 import { Navigation } from 'app/core/navigation/navigation.types';
 import { NavigationService } from 'app/core/navigation/navigation.service';
+import { AuthenticationService } from 'app/core/auth/authentication.service';
+import { ROLES } from 'app/core/enums/core-enum';
 
 @Component({
     selector     : 'modern-layout',
@@ -23,6 +25,7 @@ export class ModernLayoutComponent implements OnInit, OnDestroy
     constructor(
         private _activatedRoute: ActivatedRoute,
         private _router: Router,
+        private _authService : AuthenticationService,
         private _navigationService: NavigationService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _fuseNavigationService: FuseNavigationService
@@ -55,7 +58,31 @@ export class ModernLayoutComponent implements OnInit, OnDestroy
         this._navigationService.navigation$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((navigation: Navigation) => {
-                this.navigation = navigation;
+            this.navigation = navigation;
+
+            /*manage navigation privacy*/
+            if(this._authService.user$?.roles[0] !== ROLES.SUPERADMIN)
+            {
+                let indexOfUsersManagementHorizontal = this.navigation.horizontal.indexOf({
+                    id   : 'users-management',
+                    title: 'Users Management',
+                    type : 'basic',
+                    icon : 'heroicons_outline:users',
+                    link : '/admin/users-management'
+                });
+                this.navigation.horizontal.splice(indexOfUsersManagementHorizontal, 1);
+
+                let indexOfUsersManagementDefault = this.navigation.default.indexOf({
+                    id   : 'users-management',
+                    title: 'Users Management',
+                    type : 'basic',
+                    icon : 'heroicons_outline:users',
+                    link : '/admin/users-management'
+                });
+
+                this.navigation.default.splice(indexOfUsersManagementDefault, 1);
+            }
+
             });
 
         // Subscribe to media changes

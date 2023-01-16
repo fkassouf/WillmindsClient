@@ -77,5 +77,11 @@ export class AdminService
          return this._httpClient.post<any>(environment.api + '/Mediator/Create', fomData);
      }
 
+     /*get entity account by id */
+     getEntityById(id : number): Observable<any>
+     {
+        return this._httpClient.get<any>(environment.api + '/Entity/GetById?id=' + id);
+     }
+
    
 }
