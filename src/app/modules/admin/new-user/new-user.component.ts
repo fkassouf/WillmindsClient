@@ -268,7 +268,6 @@ export class NewUserComponent implements OnInit{
           expertise : expertises,
           firm : this.fMediator.firm.value,
           fullName : this.fMediator.fullName.value,
-          image : this.addedImages.length > 0 ? this.addedImages[0] : null,
           jobTitle : this.fMediator.jobTitle.value,
           jurisdiction : this.fMediator.jurisdiction.value,
           languageLevels : lv,
@@ -287,7 +286,8 @@ export class NewUserComponent implements OnInit{
 
        };
        //console.log(mediator);
-       this.adminService.createMediatorUser(mediator).subscribe(resp=>{
+       let image = this.addedImages.length > 0 ? this.addedImages[0] : null
+       this.adminService.createMediatorUser(mediator, image).subscribe(resp=>{
           if(resp.success)
           {
             this.signUpMediatorForm.enable();

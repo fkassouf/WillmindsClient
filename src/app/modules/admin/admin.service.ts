@@ -70,11 +70,15 @@ export class AdminService
      *
      * @param account
      */
-     createMediatorUser(account : RegisterMediator): Observable<any>
+     createMediatorUser(mediator : RegisterMediator, image : File | null): Observable<any>
      {
-         let fomData = new FormData();
-         fomData.append('model', JSON.stringify(account));
-         return this._httpClient.post<any>(environment.api + '/Mediator/Create', fomData);
+        const formData = new FormData();
+        formData.append('mediator', JSON.stringify(mediator));
+        if(image != null)
+        {
+            formData.append("image", image || '');
+        }
+         return this._httpClient.post<any>(environment.api + '/Mediator/Create', formData);
      }
 
      /*get entity account by id */

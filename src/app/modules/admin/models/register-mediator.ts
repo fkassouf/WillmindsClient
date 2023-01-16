@@ -26,5 +26,5 @@ export interface RegisterMediator
     languageLevels : LanguageLevel[];
     disputes : number[];
     expertise : number[];
-    image : File | null;
+    
 }
