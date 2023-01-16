@@ -90,7 +90,9 @@
 
             <!-- Profile -->
             <fuse-card class="flex flex-col w-full p-8 ">
-                <div class="text-2xl font-semibold leading-tight">My Profile</div>
+                <div class="text-2xl font-semibold leading-tight">My Profile
+                    
+                </div>
                 
                 <hr class="w-full border-t my-6">
                 <form            
@@ -103,13 +105,14 @@
                     <mat-label>
                         <ng-container *transloco="let translate">
                             {{translate('Full-Name')}}
+                           
                         </ng-container>
                     </mat-label>
                     <input
                         id="fullName"
                         matInput
-                        [formControlName]="'fullName'">
-                    <mat-error *ngIf="updateProfileForm.get('fullName').hasError('required')">
+                        formControlName="fullName">
+                    <mat-error *ngIf="updateProfileForm?.get('fullName').hasError('required')">
                         <ng-container *transloco="let translate">
                             {{translate('Full-Name-Required')}}
                         </ng-container>
@@ -126,7 +129,7 @@
                         </ng-container>
                     </mat-label>
                     <mat-select formControlName="nationality">
-                        <mat-select-trigger>{{updateProfileForm.get('nationality').value}}</mat-select-trigger>
+                        <mat-select-trigger>{{updateProfileForm?.get('nationality').value}}</mat-select-trigger>
                             <mat-option class="custom-search-input">
                             <lib-mat-select-search
                                 [list]="countries"
@@ -139,8 +142,8 @@
                         </mat-option>
                         
                       </mat-select>
-                      <mat-icon matSuffix *ngIf="updateProfileForm.get('nationality').value" (click)="updateProfileForm.get('nationality').setValue(null)">close</mat-icon>
-                    <mat-error *ngIf="updateProfileForm.get('nationality').hasError('required')">
+                      <mat-icon matSuffix *ngIf="updateProfileForm?.get('nationality').value" (click)="updateProfileForm?.get('nationality').setValue(null)">close</mat-icon>
+                    <mat-error *ngIf="updateProfileForm?.get('nationality').hasError('required')">
                         <ng-container *transloco="let translate">
                             {{translate('Nationality-Required')}}
                         </ng-container>
@@ -158,7 +161,7 @@
                         id="profession"
                         matInput
                         [formControlName]="'profession'">
-                    <mat-error *ngIf="updateProfileForm.get('profession').hasError('required')">
+                    <mat-error *ngIf="updateProfileForm?.get('profession').hasError('required')">
                         <ng-container *transloco="let translate">
                             {{translate('Profession-Required')}}
                         </ng-container>
@@ -181,7 +184,7 @@
                             matSuffix
                             [for]="pickerDob"></mat-datepicker-toggle>
                         <mat-datepicker #pickerDob></mat-datepicker>
-                    <mat-error *ngIf="updateProfileForm.get('dob').hasError('required')">
+                    <mat-error *ngIf="updateProfileForm?.get('dob').hasError('required')">
                         <ng-container *transloco="let translate">
                             {{translate('Date-Of-Birth-Required')}}
                         </ng-container>
@@ -217,12 +220,12 @@
                 formControlName="phone"
             >
             </ngx-intl-tel-input>
-            <mat-error *ngIf="submitted && updateProfileForm.get('phone').hasError('required')">
+            <mat-error *ngIf="submitted && updateProfileForm?.get('phone').hasError('required')">
                 <ng-container *transloco="let translate">
                     {{translate('Phone-Required')}}
                 </ng-container>
             </mat-error>
-            <mat-error *ngIf="submitted && updateProfileForm.get('phone').hasError('validatePhoneNumber')">
+            <mat-error *ngIf="submitted && updateProfileForm?.get('phone').hasError('validatePhoneNumber')">
                 <ng-container *transloco="let translate">
                     {{translate('Invalid-Phone')}}
                 </ng-container>
@@ -241,7 +244,7 @@
                         matInput
                         [formControlName]="'address'">
                
-                    <mat-error *ngIf="updateProfileForm.get('address').hasError('required')">
+                    <mat-error *ngIf="updateProfileForm?.get('address').hasError('required')">
                         <ng-container *transloco="let translate">
                             {{translate('Address-Required')}}
                         </ng-container>
@@ -261,15 +264,15 @@
                    
                     mat-flat-button
                     [color]="'primary'"
-                    [disabled]="updateProfileForm.disabled"
+                    [disabled]="updateProfileForm?.disabled"
                     type="submit">
-                    <span *ngIf="!updateProfileForm.disabled">
+                    <span *ngIf="!updateProfileForm?.disabled">
                         <ng-container *transloco="let translate">
                             {{translate('Update')}}
                         </ng-container>
                     </span>
                     <mat-progress-spinner
-                        *ngIf="updateProfileForm.disabled"
+                        *ngIf="updateProfileForm?.disabled"
                         [diameter]="24"
                         [mode]="'indeterminate'"></mat-progress-spinner>
                 </button>

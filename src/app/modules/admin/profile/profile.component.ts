@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthenticationService } from 'app/core/auth/authentication.service';
@@ -13,7 +13,7 @@ import { AdminService } from '../admin.service';
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProfileComponent
+export class ProfileComponent implements OnInit
 {
     @ViewChild('updateProfileNgForm') updateProfileNgForm: NgForm;
 
@@ -29,29 +29,54 @@ export class ProfileComponent
     PhoneNumberFormat = PhoneNumberFormat;
 	preferredCountries: CountryISO[] = [CountryISO.Lebanon];
     roles = ROLES;
+    currentAccount : any;
     /**
      * Constructor
      */
     constructor(public authService : AuthenticationService, private adminService : AdminService,
         private _formBuilder: FormBuilder, private _router : Router)
     {
-         // Create the form
-         this.updateProfileForm = this._formBuilder.group({
-            fullName : ['', Validators.required],
+        
+
+      
+    }
+
+    ngOnInit(): void {
+        this.updateProfileForm = this._formBuilder.group({
+            fullName : [null, Validators.required],
             nationality : [null, [Validators.required]],
             profession : [null, [Validators.required]],
             dob : [null, [Validators.required]],
             phone : [null, [Validators.required]],
             address : [null, [Validators.required]]
+            }
+        );
+        
+         // Create the form
+        this.authService.user$.roles[0] === ROLES.USER
+        {
+            this.getEntityAccount( this.authService.user$.id)
         }
-      );
-
-      this.getCountries();
     }
 
     getEntityAccount(id : any)
     {
-        
+        this.adminService.getEntityById(this.authService.user$.id)
+        .subscribe(resp=>{
+            if(resp.success)
+            {
+                this.currentAccount = resp.result;
+                console.log(this.currentAccount);
+           
+                this.updateProfileForm.controls.fullName.setValue(this.currentAccount.fullName);
+                this.getCountries(this.currentAccount.nationalityId);
+                this.updateProfileForm.controls.profession.setValue(this.currentAccount.profession);
+                this.updateProfileForm.controls.dob.setValue(this.currentAccount.dob);
+                this.updateProfileForm.controls.phone.setValue(this.currentAccount.telephone);
+                this.updateProfileForm.controls.address.setValue(this.currentAccount.address);
+            }
+           
+        });
     }
 
     removeTime(date : Date) {
@@ -62,13 +87,14 @@ export class ProfileComponent
         );
       }
 
-    getCountries()
+    getCountries(id)
     {
         this.authService.getCountries().subscribe(resp=>{
             if(resp?.success)
             {
                 this.countries = resp?.result;
                 this.filteredCountries = resp?.result;
+                this.updateProfileForm.controls.nationality.setValue(id);
             }
         });
     }
