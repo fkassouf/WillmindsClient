@@ -275,7 +275,7 @@ export class NewUserComponent implements OnInit{
           mediationHours : this.fMediator.mediationHours.value,
           mediationMembership : this.fMediator.mediationMembership.value,
           mediationNumber : this.fMediator.mediationNumber.value,
-          nationalityId : this.fMediator.nationalityId.value,
+          nationalityId : this.fMediator.nationalityId.value.id,
           otherDisputeAreas : this.fMediator.otherDisputeAreas.value,
           otherExperience :  this.fMediator.otherExperience.value,
           otherMatters : this.fMediator.otherMatters.value,
