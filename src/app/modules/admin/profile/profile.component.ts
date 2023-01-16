@@ -36,9 +36,7 @@ export class ProfileComponent implements OnInit
     constructor(public authService : AuthenticationService, private adminService : AdminService,
         private _formBuilder: FormBuilder, private _router : Router)
     {
-        
-
-      
+           
     }
 
     ngOnInit(): void {
