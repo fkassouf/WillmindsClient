@@ -2,8 +2,10 @@ import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthenticationService } from 'app/core/auth/authentication.service';
+import { ROLES } from 'app/core/enums/core-enum';
 import { Country } from 'app/modules/auth/models';
 import { CountryISO, PhoneNumberFormat, SearchCountryField } from 'ngx-intl-tel-input';
+import { AdminService } from '../admin.service';
 
 @Component({
     selector       : 'profile',
@@ -26,10 +28,11 @@ export class ProfileComponent
 	CountryISO = CountryISO;
     PhoneNumberFormat = PhoneNumberFormat;
 	preferredCountries: CountryISO[] = [CountryISO.Lebanon];
+    roles = ROLES;
     /**
      * Constructor
      */
-    constructor(public authService : AuthenticationService, 
+    constructor(public authService : AuthenticationService, private adminService : AdminService,
         private _formBuilder: FormBuilder, private _router : Router)
     {
          // Create the form
@@ -44,6 +47,11 @@ export class ProfileComponent
       );
 
       this.getCountries();
+    }
+
+    getEntityAccount(id : any)
+    {
+        
     }
 
     removeTime(date : Date) {

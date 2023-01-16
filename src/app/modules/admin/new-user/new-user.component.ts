@@ -286,7 +286,7 @@ export class NewUserComponent implements OnInit{
           trainingDev : this.fMediator.trainingDev.value
 
        };
-       console.log(mediator);
+       //console.log(mediator);
        this.adminService.createMediatorUser(mediator).subscribe(resp=>{
           if(resp.success)
           {

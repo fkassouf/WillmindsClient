@@ -86,4 +86,10 @@ export class UsersManagementComponent implements OnInit, AfterViewInit {
      this.router.navigate(['/admin/new-user']);
   }
 
+  searchList(filter : UsersFilter)
+  {
+     this.usersFilter = filter;
+     this.loadUsersPage();
+  }
+
 }
