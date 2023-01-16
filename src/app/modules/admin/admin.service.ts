@@ -81,10 +81,10 @@ export class AdminService
          return this._httpClient.post<any>(environment.api + '/Mediator/Create', formData);
      }
 
-     /*get entity account by id */
-     getEntityById(id : number): Observable<any>
+     /*get entity account by userId */
+     getEntityById(userId : any): Observable<any>
      {
-        return this._httpClient.get<any>(environment.api + '/Entity/GetById?id=' + id);
+        return this._httpClient.get<any>(environment.api + '/Entity/GetById?id=' + userId);
      }
 
    
