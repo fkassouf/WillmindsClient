@@ -36,9 +36,7 @@ export class ProfileComponent implements OnInit
     constructor(public authService : AuthenticationService, private adminService : AdminService,
         private _formBuilder: FormBuilder, private _router : Router)
     {
-        
-
-      
+           
     }
 
     ngOnInit(): void {
@@ -66,8 +64,6 @@ export class ProfileComponent implements OnInit
             if(resp.success)
             {
                 this.currentAccount = resp.result;
-                console.log(this.currentAccount);
-           
                 this.updateProfileForm.controls.fullName.setValue(this.currentAccount.fullName);
                 this.getCountries(this.currentAccount.nationalityId);
                 this.updateProfileForm.controls.profession.setValue(this.currentAccount.profession);
