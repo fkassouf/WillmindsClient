@@ -87,5 +87,11 @@ export class AdminService
         return this._httpClient.get<any>(environment.api + '/Entity/GetById?id=' + userId);
      }
 
+     updateEntityProfile(entity : any)
+     {
+        let url = environment.api + '/Entity/Update';
+        return this._httpClient.post<any>(url, entity);
+     }
+
    
 }

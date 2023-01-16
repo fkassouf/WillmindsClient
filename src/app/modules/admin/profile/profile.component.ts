@@ -1,10 +1,13 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslocoService } from '@ngneat/transloco';
 import { AuthenticationService } from 'app/core/auth/authentication.service';
 import { ROLES } from 'app/core/enums/core-enum';
 import { Country } from 'app/modules/auth/models';
 import { CountryISO, PhoneNumberFormat, SearchCountryField } from 'ngx-intl-tel-input';
+import { ToastrService } from 'ngx-toastr';
+import { finalize, take } from 'rxjs';
 import { AdminService } from '../admin.service';
 
 @Component({
@@ -15,13 +18,14 @@ import { AdminService } from '../admin.service';
 })
 export class ProfileComponent implements OnInit
 {
-    @ViewChild('updateProfileNgForm') updateProfileNgForm: NgForm;
+    @ViewChild('updateEntityProfileNgForm') updateEntityProfileNgForm: NgForm;
 
-    updateProfileForm: FormGroup;
+    updateEntityProfileForm: FormGroup;
     countries : Country[] = [];
     filteredCountries : Country[] = [];
     filter : string = '';
     submitted : boolean = false;
+    updating : boolean = false;
 
     separateDialCode = false;
 	SearchCountryField = SearchCountryField;
@@ -34,13 +38,14 @@ export class ProfileComponent implements OnInit
      * Constructor
      */
     constructor(public authService : AuthenticationService, private adminService : AdminService,
-        private _formBuilder: FormBuilder, private _router : Router)
+        private _formBuilder: FormBuilder, private _router : Router,
+         private _translocoService : TranslocoService, private toastr : ToastrService)
     {
            
     }
 
     ngOnInit(): void {
-        this.updateProfileForm = this._formBuilder.group({
+        this.updateEntityProfileForm = this._formBuilder.group({
             fullName : [null, Validators.required],
             nationality : [null, [Validators.required]],
             profession : [null, [Validators.required]],
@@ -63,13 +68,15 @@ export class ProfileComponent implements OnInit
         .subscribe(resp=>{
             if(resp.success)
             {
+                
                 this.currentAccount = resp.result;
-                this.updateProfileForm.controls.fullName.setValue(this.currentAccount.fullName);
+                
+                this.updateEntityProfileForm.controls.fullName.setValue(this.currentAccount.fullName);
                 this.getCountries(this.currentAccount.nationalityId);
-                this.updateProfileForm.controls.profession.setValue(this.currentAccount.profession);
-                this.updateProfileForm.controls.dob.setValue(this.currentAccount.dob);
-                this.updateProfileForm.controls.phone.setValue(this.currentAccount.telephone);
-                this.updateProfileForm.controls.address.setValue(this.currentAccount.address);
+                this.updateEntityProfileForm.controls.profession.setValue(this.currentAccount.profession);
+                this.updateEntityProfileForm.controls.dob.setValue(this.currentAccount.dob);
+                this.updateEntityProfileForm.controls.phone.setValue(this.currentAccount.telephone);
+                this.updateEntityProfileForm.controls.address.setValue(this.currentAccount.address);
             }
            
         });
@@ -90,7 +97,8 @@ export class ProfileComponent implements OnInit
             {
                 this.countries = resp?.result;
                 this.filteredCountries = resp?.result;
-                this.updateProfileForm.controls.nationality.setValue(id);
+                let country = this.countries.filter(x=>x.id == id)[0];
+                this.updateEntityProfileForm.controls.nationality.setValue(country);
             }
         });
     }
@@ -112,13 +120,56 @@ export class ProfileComponent implements OnInit
         this._router.navigate(['/']);
     }
 
+    get entityF()
+    {
+        return this.updateEntityProfileForm.controls;
+    }
+
     /*submit form*/
-    submitProfile()
+    submitEntityProfile()
     {
         this.submitted = true;
-        if(this.updateProfileForm.invalid)
+        if(this.updateEntityProfileForm.invalid)
         {
             return;
         }
+
+        // Disable the form
+        this.updateEntityProfileForm.disable();
+        this.updating = true;
+        let entity : any = {
+            id : this.currentAccount.id,
+            userId : this.authService.user$.id,
+            nationalityId : this.entityF.nationality.value.id,
+            fullName : this.entityF.fullName.value,
+            profession : this.entityF.profession.value,
+            dob : this.entityF.dob.value,
+            telephone : this.entityF.phone.value.e164Number,
+            email : this.currentAccount.email,
+            address : this.entityF.address.value,
+            isActive : true,
+        };
+        this.adminService.updateEntityProfile(entity)
+        .pipe(finalize(()=>{
+            this.updateEntityProfileForm.enable();
+            this.updating = false;
+        }))
+        .subscribe(resp=>{
+            if(resp.success)
+            {
+                this._translocoService.selectTranslate('Operation-Completed-Sucessfully').pipe(take(1))
+                 .subscribe((translation) => {
+ 
+                     this.toastr.success(translation);
+                  });
+
+                  this.getEntityAccount(this.authService.user$.id);
+
+            }
+            else
+            {
+                this.toastr.error(resp.message);
+            }
+        })
     }
 }
