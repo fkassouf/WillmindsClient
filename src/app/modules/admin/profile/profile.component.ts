@@ -64,8 +64,6 @@ export class ProfileComponent implements OnInit
             if(resp.success)
             {
                 this.currentAccount = resp.result;
-                console.log(this.currentAccount);
-           
                 this.updateProfileForm.controls.fullName.setValue(this.currentAccount.fullName);
                 this.getCountries(this.currentAccount.nationalityId);
                 this.updateProfileForm.controls.profession.setValue(this.currentAccount.profession);
