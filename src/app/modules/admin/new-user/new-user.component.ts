@@ -115,7 +115,7 @@ export class NewUserComponent implements OnInit{
       });
   }
 
-  /*Get country list*/
+  /*Get language list*/
   getLanguageList()
   {
       this.adminService.getLanguagesList().subscribe(resp=>{

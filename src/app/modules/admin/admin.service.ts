@@ -87,6 +87,12 @@ export class AdminService
         return this._httpClient.get<any>(environment.api + '/Entity/GetById?id=' + userId);
      }
 
+     /*get mediator account by userId */
+     getMediatorById(userId : any): Observable<any>
+     {
+        return this._httpClient.get<any>(environment.api + '/Mediator/GetById?userId=' + userId);
+     }
+
      updateEntityProfile(entity : any)
      {
         let url = environment.api + '/Entity/Update';
