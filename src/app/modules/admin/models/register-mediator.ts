@@ -2,6 +2,8 @@ import { LanguageLevel } from "./language-level";
 
 export interface RegisterMediator
 {
+    id : number;
+    userId : string;
     title : string;
     fullName : string;
     jobTitle : string;

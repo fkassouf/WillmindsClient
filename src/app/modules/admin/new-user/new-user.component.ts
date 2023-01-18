@@ -6,7 +6,7 @@ import { AuthenticationService } from 'app/core/auth/authentication.service';
 import { ROLES } from 'app/core/enums/core-enum';
 import { AdminAccount, Country } from 'app/modules/auth/models';
 import { ToastrService } from 'ngx-toastr';
-import { take } from 'rxjs';
+import { finalize, take } from 'rxjs';
 import { AdminService } from '../admin.service';
 import { CountryISO, PhoneNumberFormat, SearchCountryField } from 'ngx-intl-tel-input';
 import { LanguageModel } from '../models/language-model';
@@ -260,6 +260,8 @@ export class NewUserComponent implements OnInit{
      let country = this.countries.filter(x=>x.name.toUpperCase() === countryName.toUpperCase())[0];
 
        let mediator : RegisterMediator = {
+          id : 0,
+          userId : '',
           accrediation : this.fMediator.accrediation.value,
           address : this.fMediator.address.value,
           conductMediation : this.fMediator.conductMediation.value,
@@ -288,11 +290,15 @@ export class NewUserComponent implements OnInit{
        };
        //console.log(mediator);
        let image = this.addedImages.length > 0 ? this.addedImages[0] : null
-       this.adminService.createMediatorUser(mediator, image).subscribe(resp=>{
+       this.adminService.createMediatorUser(mediator, image)
+       .pipe(finalize(()=>{
+        this.signUpMediatorForm.enable();
+ 
+      }))
+       .subscribe(resp=>{
           if(resp.success)
           {
-            this.signUpMediatorForm.enable();
- 
+            
                  // Reset the form
                  this.signUpNgMediatorForm.resetForm();
  
@@ -304,6 +310,10 @@ export class NewUserComponent implements OnInit{
                   });
 
                   this.selectedRole.value = null;
+          }
+          else
+          {
+              this.toastr.error(resp.message);
           }
        })
 

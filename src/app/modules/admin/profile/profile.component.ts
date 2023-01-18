@@ -11,9 +11,11 @@ import { ToastrService } from 'ngx-toastr';
 import { finalize, take } from 'rxjs';
 import { AdminService } from '../admin.service';
 import { Dispute } from '../models/dispute';
+import { LanguageLevel } from '../models/language-level';
 import { LanguageModel } from '../models/language-model';
 import { MediationExpertise } from '../models/mediation-expertise';
 import { MediatorModel } from '../models/mediator-model';
+import { RegisterMediator } from '../models/register-mediator';
 
 @Component({
     selector       : 'profile',
@@ -348,6 +350,11 @@ export class ProfileComponent implements OnInit
         });
     }
 
+    get fMediator()
+    {
+        return this.updateMediatorProfileForm.controls;
+    }
+
     /* submit mediator profile */
     submitMediatorProfile()
     {
@@ -355,6 +362,82 @@ export class ProfileComponent implements OnInit
         {
             return;
         }
+
+        let lv : LanguageLevel[] = [];
+        this.languageLevels.forEach(el=>{
+            lv.push({
+                languageId : el.languageId,
+                mediatorId : null,
+                readingWritten : el.rw,
+                spoken : el.spoken
+            });
+        });
+
+
+        let disputes : number[]= [];
+        this.fMediator.disputes.value?.forEach(el=>{
+            disputes.push(el.id);
+        });
+
+        let expertises : number[] = [];
+        this.fMediator.expertise.value?.forEach(el=>{
+            expertises.push(el.id);
+        });
+
+        let mediator : RegisterMediator = {
+            id : this.currentMediatorAccount?.id,
+            userId : this.currentMediatorAccount?.userId,
+            accrediation : this.fMediator.accrediation.value,
+            address : this.fMediator.address.value,
+            conductMediation : this.fMediator.conductMediation.value,
+            disputes : disputes,
+            email : this.currentMediatorAccount?.email,
+            experienceYears : this.fMediator.experienceYears.value,
+            expertise : expertises,
+            firm : this.fMediator.firm.value,
+            fullName : this.fMediator.fullName.value,
+            jobTitle : this.fMediator.jobTitle.value,
+            jurisdiction : this.fMediator.jurisdiction.value,
+            languageLevels : lv,
+            linkedInUrl : this.fMediator.linkedInUrl.value,
+            mediationHours : this.fMediator.mediationHours.value,
+            mediationMembership : this.fMediator.mediationMembership.value,
+            mediationNumber : this.fMediator.mediationNumber.value,
+            nationalityId : this.fMediator.nationality.value.id,
+            otherDisputeAreas : this.fMediator.otherDisputeAreas.value,
+            otherExperience :  this.fMediator.otherExperience.value,
+            otherMatters : this.fMediator.otherMatters.value,
+            otherMediationsAreas : this.fMediator.otherMediationsAreas.value,
+            telephone : this.fMediator.phone.value?.e164Number,
+            title : this.fMediator.title.value,
+            trainingDev : this.fMediator.trainingDev.value
+  
+         };
+
+         //console.log(mediator);
+        this.updateMediatorProfileForm.disable();
+        this.adminService.updateMediatorProfile(mediator, this.updatedImage)
+        .pipe(finalize(()=>{
+            this.updateMediatorProfileForm.enable();
+        }))
+        .subscribe(resp=>{
+          if(resp.success)
+          {
+            
+                 // Set the toastr
+                 this._translocoService.selectTranslate('Profile-Update-Successfully').pipe(take(1))
+                 .subscribe((translation) => {
+ 
+                     this.toastr.success(translation);
+                  });
+
+                  this.getMediatorAccount();
+          }
+          else
+          {
+              this.toastr.error(resp.message);
+          }
+       })
     }
 
     openBrowseFile()
@@ -369,7 +452,7 @@ export class ProfileComponent implements OnInit
             this.profileImage.nativeElement.src= URL.createObjectURL(event.target.files[0]);
             this.updatedImage = event.target.files[0];
             this.profileImage.nativeElement.onload = function() {
-                URL.revokeObjectURL(this.profileImage.nativeElement.src) // free memory
+                URL.revokeObjectURL(this.profileImage?.nativeElement.src) // free memory
                 this.updatedImage = event.target.files[0];
             }
         }

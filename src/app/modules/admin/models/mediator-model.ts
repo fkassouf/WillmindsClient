@@ -2,6 +2,8 @@ import { LanguageLevel } from "./language-level";
 
 export interface MediatorModel
 {
+    id : number;
+    userId : string;
     title : string;
     fullName : string;
     jobTitle : string;

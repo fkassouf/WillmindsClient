@@ -99,5 +99,16 @@ export class AdminService
         return this._httpClient.post<any>(url, entity);
      }
 
+     updateMediatorProfile(mediator : RegisterMediator, image : File | null)
+     {
+      const formData = new FormData();
+      formData.append('mediator', JSON.stringify(mediator));
+      if(image != null)
+      {
+          formData.append("image", image || '');
+      }
+         return this._httpClient.post<any>(environment.api + '/Mediator/Update', formData);
+     }
+
    
 }
