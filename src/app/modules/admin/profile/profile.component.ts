@@ -116,16 +116,16 @@ export class ProfileComponent implements OnInit
      /*Get language list*/
   getLanguageList(levels : any[])
   {
-    
-      this.adminService.getLanguagesList().subscribe(resp=>{
+    this.adminService.getLanguagesList().subscribe(resp=>{
           if(resp?.success)
           {
               this.languages = resp?.result;
+              this.languageLevels = [];
               this.languages.forEach(lang=>{
                 this.languageLevels.push({
                   languageId : lang.id,
                   languageName : lang.name,
-                  rw : levels.filter(x=>x.languageId == lang.id).length > 0 ? true : false,
+                  rw : levels.filter(x=>x.languageId == lang.id)[0].readingWritten,
                   spoken : levels.filter(x=>x.languageId == lang.id).length > 0 ? levels.filter(x=>x.languageId == lang.id)[0].spoken : '',
                 })
               });
@@ -367,7 +367,7 @@ export class ProfileComponent implements OnInit
         this.languageLevels.forEach(el=>{
             lv.push({
                 languageId : el.languageId,
-                mediatorId : null,
+                mediatorId : this.currentMediatorAccount?.id,
                 readingWritten : el.rw,
                 spoken : el.spoken
             });
@@ -431,6 +431,7 @@ export class ProfileComponent implements OnInit
                      this.toastr.success(translation);
                   });
 
+                  
                   this.getMediatorAccount();
           }
           else
