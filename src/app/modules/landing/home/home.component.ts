@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
     selector     : 'landing-home',
@@ -12,7 +13,7 @@ export class LandingHomeComponent implements OnInit
     /**
      * Constructor
      */
-    constructor()
+    constructor(private router : Router)
     {
     }
 
@@ -20,5 +21,10 @@ export class LandingHomeComponent implements OnInit
         this.breadCrumbItems = [
              { label: 'Home', active: true, url : '/' }
           ];
+    }
+
+    requestMediation()
+    {
+        this.router.navigate(['/mediation/mediation-case']);
     }
 }

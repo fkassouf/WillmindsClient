@@ -80,5 +80,18 @@ export const appRoutes: Route[] = [
         children: [
             {path: 'admin', loadChildren: () => import('app/modules/admin/admin.module').then(m => m.AdminModule)},
         ]
+    },
+
+    // Mediation routes
+    {
+        path: '',
+        canActivate: [AuthGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: InitialDataResolver,
+        },
+        children: [
+            {path: 'mediation', loadChildren: () => import('app/modules/mediation/mediation.module').then(m => m.MediationModule)},
+        ]
     }
 ];

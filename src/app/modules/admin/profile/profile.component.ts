@@ -431,7 +431,7 @@ export class ProfileComponent implements OnInit
                      this.toastr.success(translation);
                   });
 
-                  
+                  this.updatedImage = null;
                   this.getMediatorAccount();
           }
           else
@@ -450,6 +450,7 @@ export class ProfileComponent implements OnInit
     {
         if(event.target.files.length > 0)
         {
+            console.log(event.target.files[0]);
             this.profileImage.nativeElement.src= URL.createObjectURL(event.target.files[0]);
             this.updatedImage = event.target.files[0];
             this.profileImage.nativeElement.onload = function() {
@@ -462,5 +463,18 @@ export class ProfileComponent implements OnInit
             this.updatedImage = null;
             this.profileImage.nativeElement.src= environment.serverPath + 'images/' + this.currentMediatorAccount?.image;
         }
+        this.cdRef.detectChanges();
+    }
+
+    undoImage()
+    {
+        this.updatedImage = null;
+        this.profileImage.nativeElement.src = environment.serverPath + 'images/' + this.currentMediatorAccount?.image;
+        this.cdRef.detectChanges();
+    }
+
+    cancel()
+    {
+        this._router.navigate(['/']);
     }
 }

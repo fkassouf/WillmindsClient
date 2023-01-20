@@ -6,6 +6,7 @@ import { SharedModule } from 'app/shared/shared.module';
 import { LandingHomeComponent } from 'app/modules/landing/home/home.component';
 import { landingHomeRoutes } from 'app/modules/landing/home/home.routing';
 import { TranslocoModule } from '@ngneat/transloco';
+import { FuseCardModule } from '@fuse/components/card';
 
 @NgModule({
     declarations: [
@@ -16,6 +17,7 @@ import { TranslocoModule } from '@ngneat/transloco';
         TranslocoModule,
         MatButtonModule,
         MatIconModule,
+        FuseCardModule,
         SharedModule
     ]
 })

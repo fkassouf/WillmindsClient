@@ -31,24 +31,40 @@
     opacity: 1;
   }
   
-  .icon {
+  .overlay-icon-left {
     color: white;
     font-size: 100px;
     position: absolute;
-    top: 70%;
-    left: 50%;
+    top: 95%;
+    left: 35%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+  .overlay-icon-right {
+    color: white;
+    font-size: 100px;
+    position: absolute;
+    top: 95%;
+    left: 40%;
     transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
     text-align: center;
   }
 
   .camera_alt{
-    opacity: 0.5;
+    opacity: 1;
+  }
+
+  .profile-image:hover
+  {
+    opacity: 0.3;
   }
   
   .camera_alt:hover {
-    color: #fff;
-    opacity: 1;
+    color: #fff !important;
+    opacity: 0.5;
   }
 
   ngx-intl-tel-input input {

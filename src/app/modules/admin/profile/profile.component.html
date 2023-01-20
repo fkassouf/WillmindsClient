@@ -20,18 +20,22 @@
             <div class="-mt-26 lg:-mt-22 rounded-full">
                 <div class="profile-img-container">
                     <img *ngIf="!currentMediatorAccount?.image"
-                    class="w-32 h-32 rounded-full ring-4 ring-bg-card image"
+                    class="w-32 h-32 rounded-full ring-4 ring-bg-card image profile-image"
                     src="assets/images/avatars/unknown.png"
                     alt="User avatar">
                     <img *ngIf="currentMediatorAccount?.image"
-                    class="w-32 h-32 rounded-full ring-4 ring-bg-card image"
+                    class="w-32 h-32 rounded-full ring-4 ring-bg-card image profile-image"
                     #profileImage
                     [src]="environment.serverPath + 'images/' + currentMediatorAccount?.image"
                     alt="User avatar">
                     <div class="overlay">
-                        <a class="icon" title="Change" (click)="openBrowseFile()">
-                            <mat-icon class="camera_alt">camera_alt</mat-icon>
-                        </a>
+                        <button mat-icon-button color="primary" class="overlay-icon-left camera_alt" title="Change" (click)="openBrowseFile()">
+                            <mat-icon>camera_alt</mat-icon>
+                        </button>
+                        <button *ngIf="updatedImage" mat-icon-button color="warn" (click)="undoImage()"
+                        class="overlay-icon-right camera_alt" title="Undo">
+                            <mat-icon>undo</mat-icon>
+                        </button>
                     </div>
                     <input type="file" id="file1" style="display:none" (change)="browseImage($event)">
                 </div>
