@@ -84,6 +84,7 @@ export class AuthSignInComponent implements OnInit
                             id : result.id,
                             displayName : result.fullName,
                             email : result.email,
+                            phoneNumber : result.phoneNumber,
                             validTo : result.validTo,
                             accessToken : result.accessToken,
                             name : result.fullName,

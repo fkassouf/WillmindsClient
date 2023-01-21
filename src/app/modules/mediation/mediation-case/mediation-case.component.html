@@ -34,6 +34,36 @@
                         <p class="text-secondary mb-6">
                             Details of the REQUESTING PARTY
                         </p>
+                        <div class="grid sm:grid-cols-4 gap-3 pb-4 w-full">
+                            <mat-form-field class="w-full">
+                                <mat-label>Primary Email</mat-label>
+                                <input matInput [value]="_authService.user$.email" readonly>
+                            </mat-form-field>
+                            <mat-form-field class="w-full">
+                                <mat-label>Primary Phone</mat-label>
+                                <input matInput [value]="_authService.user$.phoneNumber" readonly>
+                                <mat-icon
+                                    class="icon-size-5"
+                                    matPrefix
+                                    [svgIcon]="'heroicons_solid:phone'"></mat-icon>
+                            </mat-form-field>
+                            <mat-form-field class="w-full">
+                                <mat-label>Secondary Email</mat-label>
+                                <input matInput>
+                                <mat-icon
+                                    class="icon-size-5"
+                                    matPrefix
+                                    [svgIcon]="'heroicons_solid:mail'"></mat-icon>
+                            </mat-form-field>
+                            <mat-form-field class="w-full">
+                                <mat-label>Secondary Phone</mat-label>
+                                <input matInput>
+                                <mat-icon
+                                    class="icon-size-5"
+                                    matPrefix
+                                    [svgIcon]="'heroicons_solid:phone'"></mat-icon>
+                            </mat-form-field>
+                        </div>
                         <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
                             <mat-label>Do you have legal representation? If “Yes” please fill the details below</mat-label>
                         </div>
@@ -55,7 +85,7 @@
                                 <mat-icon
                                     class="icon-size-5"
                                     matPrefix
-                                    [svgIcon]="'heroicons_solid:email'"></mat-icon>
+                                    [svgIcon]="'heroicons_solid:mail'"></mat-icon>
                             </mat-form-field>
                         </div>
                         <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
@@ -67,7 +97,7 @@
                                     matPrefix
                                     [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
                             </mat-form-field>
-                            <mat-form-field class="w-full">
+                            <mat-form-field class="col-span-2 w-full">
                                 <mat-label>Address</mat-label>
                                 <input matInput>
                                 <mat-icon
@@ -83,8 +113,48 @@
                         <p class="text-lg font-medium"></p>
                         <p class="text-secondary mb-6">
                             Details of the SECOND PARTY
+                            <button mat-stroked-button [disabled]="otherParties.length > otherPartiesLimit"
+                            color="primary" (click)="addOtherParty()">
+                                Add more
+                               
+                            </button>
                         </p>
-                        <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
+                        <div class="grid sm:grid-cols-5 gap-3 pb-4 w-full" *ngFor="let p of otherParties; let i = index">
+                            <mat-form-field class="w-full">
+                                <mat-label>Firm Name</mat-label>
+                                <input matInput [value]="p.firmName">
+                                
+                            </mat-form-field>
+                         
+                            <mat-form-field class="w-full">
+                                <mat-label>Individual Full Name</mat-label>
+                                <input matInput [value]="p.fullName">
+                                
+                            </mat-form-field>
+                     
+                            <mat-form-field class="w-full">
+                                <mat-label>Email</mat-label>
+                                <input matInput [value]="p.email">
+                                <mat-icon
+                                    class="icon-size-5"
+                                    matPrefix
+                                    [svgIcon]="'heroicons_solid:mail'"></mat-icon>
+                            </mat-form-field>
+                            <mat-form-field class="w-full">
+                                <mat-label>Phone</mat-label>
+                                <input matInput [value]="p.phoneNumber">
+                                <mat-icon
+                                    class="icon-size-5"
+                                    matPrefix
+                                    [svgIcon]="'heroicons_solid:phone'"></mat-icon>
+                            </mat-form-field>
+                            <div class="w-full">
+                                <br>
+                                <button mat-icon-button color="warn" (click)="deleteOtherParty(i)" *ngIf="i > 0">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
+                            
                          </div>
         
                         <mat-divider class="mt-6 mb-10"></mat-divider>
@@ -94,18 +164,15 @@
                             If the matter is currently before court or arbitration and has been stayed to allow for mediation, please
                             provide the following details
                         </p>
-                        <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
-                            <mat-form-field class="w-full">
-                                <mat-label>Case Number</mat-label>
-                                <input matInput>
-                            </mat-form-field>
+                        <div class="grid sm:grid-cols-2 gap-3 pb-4 w-full">
+                            
                             <mat-form-field class="w-full">
                                 <mat-label>Stage at which the proceedings have reached</mat-label>
-                                <input matInput>
+                                <textarea rows="3" matInput></textarea>
                             </mat-form-field>
                             <mat-form-field class="w-full">
                                 <mat-label>Details of any hearing dates that have been set</mat-label>
-                                <input matInput>
+                                <textarea rows="3" matInput></textarea>
                             </mat-form-field>
                         </div>
                         <mat-divider class="mt-6 mb-10"></mat-divider>

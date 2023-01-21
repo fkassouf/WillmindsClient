@@ -81,6 +81,7 @@ export class AuthResetPasswordComponent implements OnInit
     ngOnInit(): void
     {
         this.activatedRoute.queryParams.subscribe(params => {
+          console.log(params);
                 if(!params.userId || !params.token)
                 {
                     this.router.navigate(['/']);
