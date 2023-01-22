@@ -28,14 +28,14 @@ export class MediationCaseComponent implements OnInit {
       this.title = 'New Mediation Request';
       this.otherParties.push(new OtherParty());
       this.mediationRequestForm = this._formBuilder.group({
-        secondaryEmail : new FormControl<string>(null, []),
-        secondaryPhone : new FormControl<any>(null, []),
-        lrFirmName : new FormControl<string>(null, []),
-        lrLawyerName : new FormControl<string>(null, []),
-        lrEmail : new FormControl<string>(null, []),
-        lrTelephone : new FormControl<any>(null, []),
-        lrAddress : new FormControl<string>(null, []),
-        partyList : new FormControl<any>([], []),
+        requesterSecondaryEmail : new FormControl<string>(null, []),
+        requesterSecondaryTelephone : new FormControl<any>(null, []),
+        legalRFirmName : new FormControl<string>(null, []),
+        legalRLawyerName : new FormControl<string>(null, []),
+        legalREmail : new FormControl<string>(null, []),
+        legalRTelephone : new FormControl<any>(null, []),
+        legalRAddress : new FormControl<string>(null, []),
+        //partyList : new FormControl<OtherParty>(null, []),
         processStageReached : new FormControl<string>(null, []),
         hearingDates : new FormControl<string>(null, []),
         allPartyAggreedToMediate : new FormControl<boolean>(false, []),

@@ -29,7 +29,8 @@
             <mat-tab-group mat-stretch-tabs class="mat-elevation-z4">
                 <!--Step 1 submit a request-->
                 <mat-tab label="Step 1"> 
-                    <form class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden">
+                    <form class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden"
+                    [formGroup]="mediationRequestForm">
                         <p class="text-lg font-medium">SECTION 1 - DETAILS OF THE PARTIES</p>
                         <p class="text-secondary mb-6">
                             Details of the REQUESTING PARTY
@@ -49,15 +50,15 @@
                             </mat-form-field>
                             <mat-form-field class="w-full">
                                 <mat-label>Secondary Email</mat-label>
-                                <input matInput>
+                                <input matInput formControlName="requesterSecondaryEmail">
                                 <mat-icon
                                     class="icon-size-5"
                                     matPrefix
                                     [svgIcon]="'heroicons_solid:mail'"></mat-icon>
                             </mat-form-field>
                             <mat-form-field class="w-full">
-                                <mat-label>Secondary Phone</mat-label>
-                                <input matInput>
+                                <mat-label>Secondary Telehone</mat-label>
+                                <input matInput formControlName="requesterSecondaryTelephone">
                                 <mat-icon
                                     class="icon-size-5"
                                     matPrefix
@@ -71,17 +72,17 @@
                             
                             <mat-form-field class="w-full">
                                 <mat-label>Firm Name</mat-label>
-                                <input matInput>
+                                <input matInput formControlName="legalRFirmName">
                                 
                             </mat-form-field>
                             <mat-form-field class="w-full">
                                 <mat-label>Lawyer Name</mat-label>
-                                <input matInput>
+                                <input matInput formControlName="legalRLawyerName">
                                 
                             </mat-form-field>
                             <mat-form-field class="w-full">
                                 <mat-label>Email</mat-label>
-                                <input matInput>
+                                <input matInput formControlName="legalREmail">
                                 <mat-icon
                                     class="icon-size-5"
                                     matPrefix
@@ -91,7 +92,7 @@
                         <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
                             <mat-form-field class="w-full">
                                 <mat-label>Telephone</mat-label>
-                                <input matInput>
+                                <input matInput formControlName="legalRTelephone">
                                 <mat-icon
                                     class="icon-size-5"
                                     matPrefix
@@ -99,7 +100,7 @@
                             </mat-form-field>
                             <mat-form-field class="col-span-2 w-full">
                                 <mat-label>Address</mat-label>
-                                <input matInput>
+                                <input matInput formControlName="legalRAddress">
                                 <mat-icon
                                     class="icon-size-5"
                                     matPrefix
@@ -119,10 +120,11 @@
                                
                             </button>
                         </p>
-                        <div class="grid sm:grid-cols-5 gap-3 pb-4 w-full" *ngFor="let p of otherParties; let i = index">
+                        <div *ngFor="let p of otherParties; let i = index">
+                        <div class="grid sm:grid-cols-4 gap-3 pb-4 w-full">
                             <mat-form-field class="w-full">
-                                <mat-label>Firm Name</mat-label>
-                                <input matInput [value]="p.firmName">
+                                <mat-label>Entity Name</mat-label>
+                                <input matInput [value]="p.entityName">
                                 
                             </mat-form-field>
                          
@@ -142,21 +144,53 @@
                             </mat-form-field>
                             <mat-form-field class="w-full">
                                 <mat-label>Phone</mat-label>
-                                <input matInput [value]="p.phoneNumber">
+                                <input matInput [value]="p.telephone">
                                 <mat-icon
                                     class="icon-size-5"
                                     matPrefix
                                     [svgIcon]="'heroicons_solid:phone'"></mat-icon>
                             </mat-form-field>
-                            <div class="w-full">
-                                <br>
-                                <button mat-icon-button color="warn" (click)="deleteOtherParty(i)" *ngIf="i > 0">
-                                    <mat-icon>delete</mat-icon>
-                                </button>
-                            </div>
+                            
                             
                          </div>
-        
+                         <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                            <mat-label>Do you know if the Second Party have legal representation? If “Yes”, please fill in the details below</mat-label>
+                        </div>
+                        <div class="grid sm:grid-cols-4 gap-3 pb-4 w-full">
+                            <mat-form-field class="w-full">
+                                <mat-label>Firm Name</mat-label>
+                                <input matInput [value]="p.lawyerFirmName">
+                            </mat-form-field>
+                            <mat-form-field class="w-full">
+                                <mat-label>Laywer Name</mat-label>
+                                <input matInput [value]="p.lawyerName">
+                                
+                            </mat-form-field>
+                            <mat-form-field class="w-full">
+                                <mat-label>Telephone</mat-label>
+                                <input matInput [value]="p.lawyerTelephone">
+                                
+                            </mat-form-field>
+                            <mat-form-field class="w-full">
+                                <mat-label>Email</mat-label>
+                                <input matInput [value]="p.lawyerEmail">
+                                
+                            </mat-form-field>
+                        </div>
+                        <div class="grid sm:grid-cols-4 gap-3 pb-4 w-full">
+                            <mat-form-field class="col-span-2 w-full">
+                                <mat-label>Address</mat-label>
+                                <input matInput [value]="p.lawyerAddress">
+                                
+                            </mat-form-field>
+                        </div>
+                         <div class="w-full">
+                            <button mat-raised-button color="warn" (click)="deleteOtherParty(i)" *ngIf="i > 0">
+                                Remove
+                            </button>
+                        </div>
+                         <mat-divider class="mt-6 mb-10" *ngIf="i < otherParties.length - 1"></mat-divider>
+                        </div>
                         <mat-divider class="mt-6 mb-10"></mat-divider>
         
                         <p class="text-lg font-medium">SECTION 2 - BRIEF DETAILS OF THE CLAIM</p>
@@ -168,11 +202,11 @@
                             
                             <mat-form-field class="w-full">
                                 <mat-label>Stage at which the proceedings have reached</mat-label>
-                                <textarea rows="3" matInput></textarea>
+                                <textarea rows="3" matInput formControlName="processStageReached"></textarea>
                             </mat-form-field>
                             <mat-form-field class="w-full">
                                 <mat-label>Details of any hearing dates that have been set</mat-label>
-                                <textarea rows="3" matInput></textarea>
+                                <textarea rows="3" matInput formControlName="hearingDates"></textarea>
                             </mat-form-field>
                         </div>
                         <mat-divider class="mt-6 mb-10"></mat-divider>
@@ -182,7 +216,7 @@
                         </p>
                         <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
                             <div class="w-full">
-                                <mat-checkbox color="primary">Have all Parties agreed to mediate this matter?
+                                <mat-checkbox color="primary" formControlName="allPartyAggreedToMediate">Have all Parties agreed to mediate this matter?
                                     If ‘Yes’, please provide evidence along with this completed form (contract clause or any submission
                                     agreement or written communications)
                                 </mat-checkbox>
@@ -198,7 +232,7 @@
                         </div>
                         <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
                             <div class="w-full">
-                                <mat-checkbox color="primary">Do you want the Center to send a Notice of
+                                <mat-checkbox color="primary" formControlName="sendNoticeToOtherParties">Do you want the Center to send a Notice of
                                     Mediation to the other party/parties to see if they are
                                     prepared to mediate?</mat-checkbox>
                             </div>
@@ -206,7 +240,7 @@
                         <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
                             <mat-form-field class="w-full">
                                 <mat-label>Please provide any relevant information below</mat-label>
-                                <textarea matInput rows="3"></textarea>
+                                <textarea matInput rows="3" formControlName="relevantInformation"></textarea>
                             </mat-form-field>
                         </div>
                         <div class="flex items-center justify-end border-t -mx-8 mt-8 px-8 py-5 bg-gray-50 dark:bg-gray-700">
