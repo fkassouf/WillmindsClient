@@ -80,6 +80,10 @@
     "Mediation-Expertises" : "Expertises de médiation",
     "Field-Required" : "Champ obligatoire",
     "Filter" : "Filtre",
-    "Profile-Updated-Successfully" : "Mise à jour du profil réussie"
+    "Profile-Updated-Successfully" : "Mise à jour du profil réussie",
+    "Entity-Name" : "Nom de l'entité",
+    "Entity-Name-Required" : "Nom de l'entité est requis",
+    "Country" : "Pays",
+    "Country-Required" : "Le pays est requis"
  
 }

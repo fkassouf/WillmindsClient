@@ -189,7 +189,7 @@
                     
                 </div>
            
-                <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
+                <div class="grid sm:grid-cols-4 gap-3 pb-4 w-full">
                     <mat-form-field class="w-full">
                         <mat-label>
                             <ng-container *transloco="let translate">
@@ -254,8 +254,6 @@
                         </ng-container>
                     </mat-error>
                     </div>
-                </div>
-                <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
                     <mat-form-field class="w-full">
                         <mat-label>
                             <ng-container *transloco="let translate">
@@ -278,6 +276,35 @@
                           </mat-select>
                           <mat-icon matSuffix *ngIf="nationality.value" (click)="nationality.value = null">close</mat-icon>
                           <mat-error *ngIf="signUpMediatorForm.get('nationalityId').hasError('required')">
+                            <ng-container *transloco="let translate">
+                                {{translate('Field-Required')}}
+                            </ng-container>
+                        </mat-error>          
+                    </mat-form-field>
+                </div>
+                <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
+                    <mat-form-field class="w-full">
+                        <mat-label>
+                            <ng-container *transloco="let translate">
+                                {{translate('Country')}}
+                            </ng-container>
+                        </mat-label>
+                        <mat-select #country formControlName="countryId">
+                            <mat-select-trigger>{{country.value}}</mat-select-trigger>
+                                <mat-option class="custom-search-input">
+                                <lib-mat-select-search
+                                    [list]="countries2"
+                                    [searchProperties]="['name']"
+                                    (filtered)="filteredCountries2 = $event">
+                                </lib-mat-select-search>
+                                </mat-option>
+                            <mat-option *ngFor="let country of filteredCountries2" [value]="country.name" >
+                                <span>{{country.name}}</span>
+                            </mat-option>
+                            
+                          </mat-select>
+                          <mat-icon matSuffix *ngIf="country.value" (click)="country.value = null">close</mat-icon>
+                          <mat-error *ngIf="signUpMediatorForm.get('countryId').hasError('required')">
                             <ng-container *transloco="let translate">
                                 {{translate('Field-Required')}}
                             </ng-container>

@@ -55,7 +55,7 @@
                 #signUpNgForm="ngForm">
                 
                 <!-- Name field -->
-                <div class="grid sm:grid-cols-2 gap-3 w-full">
+                <div class="grid sm:grid-cols-3 gap-3 w-full">
                 <mat-form-field class="w-full">
                     <mat-label>
                         <ng-container *transloco="let translate">
@@ -95,6 +95,24 @@
                             {{translate('Email-Invalid')}}
                         </ng-container>
                     </mat-error>
+                </mat-form-field>
+                 <!-- enttityName field -->
+                 <mat-form-field class="w-full">
+                    <mat-label>
+                        <ng-container *transloco="let translate">
+                            {{translate('Entity-Name')}}
+                        </ng-container>
+                    </mat-label>
+                    <input
+                        id="entityName"
+                        matInput
+                        [formControlName]="'entityName'">
+                    <mat-error *ngIf="signUpForm.get('entityName').hasError('required')">
+                        <ng-container *transloco="let translate">
+                            {{translate('Entity-Name-Required')}}
+                        </ng-container>
+                    </mat-error>
+                    
                 </mat-form-field>
             </div>
             <div class="grid sm:grid-cols-3 gap-3 w-full">
@@ -169,7 +187,58 @@
                    
                 </mat-form-field>
             </div>
-            <div class="grid sm:grid-cols-2 gap-3 w-full">
+            <div class="grid sm:grid-cols-3 gap-3 w-full">
+ <!-- Country field -->
+ <mat-form-field class="w-full">
+    <mat-label>
+        <ng-container *transloco="let translate">
+            {{translate('Country')}}
+        </ng-container>
+    </mat-label>
+    <mat-select formControlName="country">
+        <mat-select-trigger>{{signUpForm.get('country').value}}</mat-select-trigger>
+            <mat-option class="custom-search-input">
+            <lib-mat-select-search
+                [list]="countries2"
+                [searchProperties]="['name']"
+                (filtered)="filteredCountries2 = $event">
+            </lib-mat-select-search>
+            </mat-option>
+        <mat-option *ngFor="let country of filteredCountries2" [value]="country.name" >
+            <span>{{country.name}}</span>
+        </mat-option>
+        
+      </mat-select>
+      <mat-icon matSuffix *ngIf="signUpForm.get('country').value" (click)="signUpForm.get('country').setValue(null)">close</mat-icon>
+    <mat-error *ngIf="signUpForm.get('country').hasError('required')">
+        <ng-container *transloco="let translate">
+            {{translate('Country-Required')}}
+        </ng-container>
+    </mat-error>
+    
+</mat-form-field>
+        <!-- address field -->
+        <mat-form-field class="col-span-2 w-full">
+            <mat-label>
+                <ng-container *transloco="let translate">
+                    {{translate('Address')}}
+                </ng-container>
+            </mat-label>
+            <input
+                id="address"
+               
+                matInput
+                [formControlName]="'address'">
+       
+            <mat-error *ngIf="signUpForm.get('address').hasError('required')">
+                <ng-container *transloco="let translate">
+                    {{translate('Address-Required')}}
+                </ng-container>
+            </mat-error>
+           
+        </mat-form-field>
+            </div>
+            <div class="grid sm:grid-cols-3 gap-3 w-full">
                 <!-- phone field -->
                 <div class="w-full">
                 <mat-label>
@@ -208,26 +277,7 @@
                 </ng-container>
             </mat-error>
         </div>
-                <!-- address field -->
-                <mat-form-field class="w-full">
-                    <mat-label>
-                        <ng-container *transloco="let translate">
-                            {{translate('Address')}}
-                        </ng-container>
-                    </mat-label>
-                    <input
-                        id="address"
-                       
-                        matInput
-                        [formControlName]="'address'">
-               
-                    <mat-error *ngIf="signUpForm.get('address').hasError('required')">
-                        <ng-container *transloco="let translate">
-                            {{translate('Address-Required')}}
-                        </ng-container>
-                    </mat-error>
-                   
-                </mat-form-field>
+        
             </div>
                
             <div class="flex items-center justify-end border-t -mx-8 mt-8 px-8 py-5 bg-gray-50 dark:bg-gray-700">

@@ -243,6 +243,113 @@
                                 <textarea matInput rows="3" formControlName="relevantInformation"></textarea>
                             </mat-form-field>
                         </div>
+                        <mat-divider class="mt-6 mb-10"></mat-divider>
+                        <p class="text-lg font-medium">SECTION 4 – MEDIATION PROCESS</p>
+                        <p class="text-secondary mb-6">
+                            
+                        </p>
+                        <div class="grid sm:grid-cols-4 gap-3 pb-4 w-full">
+                            <div class="w-full">
+                                <mat-label>Preferred track of your mediation</mat-label>
+                                <mat-radio-group aria-label="Preferred track of your mediation" color="primary">
+                                    <mat-radio-button value="1" checked="true">Normal Track</mat-radio-button>
+                                    <mat-radio-button value="2">Fast Track</mat-radio-button>
+                                  </mat-radio-group>
+                            </div>
+                            <mat-form-field class="w-full">
+                                <mat-label>Preferred method of mediation</mat-label>
+                                <mat-select></mat-select>
+                            </mat-form-field>
+                            
+                            <div class="w-full">
+                                <mat-label>Preferred option for mediator(s)</mat-label>
+                                <mat-radio-group color="primary" aria-label="Preferred option for mediator(s)">
+                                    <mat-radio-button value="1" checked="true">By Parties</mat-radio-button>
+                                    <mat-radio-button value="2">By Center</mat-radio-button>
+                                  </mat-radio-group>
+                            </div>
+                            <mat-form-field class="w-full">
+                                <mat-label>Please language for mediation</mat-label>
+                                <mat-select></mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                            <div class="gap-3 w-full">
+                                <mat-label>Please provide details of any dates to avoid</mat-label>
+                                <button mat-stroked-button color="primary" (click)="addDateToAvoid()">
+                                    Add
+                                </button>
+                                <table>
+                                    <tbody>
+                                        <tr *ngFor="let d of datesToAvoid; let i = index">
+                                            <td>
+                                               
+                                              <input class="form-control" type="date" [value]="d">
+                                               
+                                            </td>
+                                            <td>
+                                                <button mat-icon-button color="warn" (click)="datesToAvoid.splice(i,1)">
+                                                    <mat-icon>remove_circle</mat-icon>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                        </div>
+                        <mat-divider class="mt-6 mb-10"></mat-divider>
+                        <p class="text-lg font-medium">SECTION 5 – BACKGROUND OF THE DISPUTE</p>
+                        <p class="text-secondary mb-6">
+                            
+                        </p>
+                        <div class="grid sm:grid-cols-4 gap-3 pb-4 w-full">
+                            <mat-form-field class="w-full">
+                                <mat-label>Category of the Dispute</mat-label>
+                                <mat-select></mat-select>
+                            </mat-form-field>
+                            <mat-form-field class="col-span-3 w-full">
+                                <mat-label>For dispute(s) involving monetary claims, please provide details of the amount in dispute</mat-label>
+                                <input matInput>
+                            </mat-form-field>
+                        </div>
+                        <p class="text-secondary mb-6"><strong>Please provide brief details of the dispute. 
+                            Include a summary of what occurred, the date(s) on which the dispute occurred, the names and titles of all individuals involved.</strong> You may attach a separate document setting out the nature of the dispute, but this must not exceed 10 pages.</p>
+                            <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                                <mat-form-field class="w-full">
+                                    
+                                    <textarea matInput rows="3"></textarea>
+                                </mat-form-field>
+                            </div>
+                            <p class="text-secondary mb-6"><strong>
+                                If you are attaching any additional documents alongside this completed form, please list them here
+                            </strong></p>
+                            <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                                <ngx-dropzone (change)="onMediationEvidencesSelect($event)">
+                                    <ngx-dropzone-label>Drop files here</ngx-dropzone-label>
+                                    <ngx-dropzone-preview *ngFor="let f of mediationEvidenceFiles" [removable]="true" (removed)="onMediationEvidencesRemove(f)">
+                                        <ngx-dropzone-label>{{ f.name }})</ngx-dropzone-label>
+                                    </ngx-dropzone-preview>
+                                </ngx-dropzone>
+                            </div>
+                            <p class="text-secondary mb-6"><strong>Please provide details of the relief requested (e.g., an amount of money damages or a description of other relief you seek).</strong></p>
+                                <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                                    <mat-form-field class="w-full">
+                                        
+                                        <textarea matInput rows="3"></textarea>
+                                    </mat-form-field>
+                                </div>
+                                <mat-divider class="mt-6 mb-10"></mat-divider>
+                                <p class="text-lg font-medium">SECTION 7 – ADDITIONAL INFORMATION</p>
+                                <p class="text-secondary mb-6">
+                                    Please provide any other information which you consider would be of assistance
+                                </p>
+                                <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                                    <mat-form-field class="w-full">
+                                        
+                                        <textarea matInput rows="3"></textarea>
+                                    </mat-form-field>
+                                </div>
                         <div class="flex items-center justify-end border-t -mx-8 mt-8 px-8 py-5 bg-gray-50 dark:bg-gray-700">
                             <button mat-button>
                                 Cancel
@@ -254,6 +361,7 @@
                                 Save
                             </button>
                         </div>
+                        
                     </form>
                 </mat-tab>
                 <mat-tab label="Step 2" [disabled]="true"> Content 2 </mat-tab>

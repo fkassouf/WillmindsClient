@@ -15,6 +15,7 @@ export class MediationCaseComponent implements OnInit {
   mediationEvidenceFiles : File[] = [];
   otherParties : OtherParty[] = [];
   otherPartiesLimit : number = 10;
+  datesToAvoid : any[] = [];
   /**
      * Constructor
      */
@@ -65,6 +66,12 @@ export class MediationCaseComponent implements OnInit {
   deleteOtherParty(index : any)
   {
       this.otherParties.splice(index, 1);
+  }
+
+  /*add Date to avoid*/
+  addDateToAvoid()
+  {
+     this.datesToAvoid.push('');
   }
 
 }

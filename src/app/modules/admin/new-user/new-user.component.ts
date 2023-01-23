@@ -34,6 +34,8 @@ export class NewUserComponent implements OnInit{
 
   countries : Country[];
   filteredCountries : Country[];
+  countries2 : Country[];
+  filteredCountries2 : Country[];
 
   addedImages: File[] = [];
   languages : LanguageModel[] = [];
@@ -74,6 +76,7 @@ export class NewUserComponent implements OnInit{
           fullName : [null, Validators.required],
           email : [null, [Validators.required, Validators.email]],
           firm : [null, []],
+          countryId : [null, [Validators.required]],
           address : [null, [Validators.required]],
           phone : [null, [Validators.required]],
           accrediation : [null, []],
@@ -111,6 +114,8 @@ export class NewUserComponent implements OnInit{
           {
               this.countries = resp?.result;
               this.filteredCountries = resp?.result;
+              this.countries2 = resp?.result;
+              this.filteredCountries2 = resp?.result;
           }
       });
   }
@@ -256,13 +261,17 @@ export class NewUserComponent implements OnInit{
        this.fMediator.expertise.value?.forEach(el=>{
         expertises.push(el.id);
      });
-     let countryName = this.signUpMediatorForm.get('nationalityId').value;
+     let nationalityName = this.signUpMediatorForm.get('nationalityId').value;
+     let nationality = this.countries.filter(x=>x.name.toUpperCase() === nationalityName.toUpperCase())[0];
+
+     let countryName = this.signUpMediatorForm.get('countryId').value;
      let country = this.countries.filter(x=>x.name.toUpperCase() === countryName.toUpperCase())[0];
 
        let mediator : RegisterMediator = {
           id : 0,
           userId : '',
           accrediation : this.fMediator.accrediation.value,
+          countryId : country.id,
           address : this.fMediator.address.value,
           conductMediation : this.fMediator.conductMediation.value,
           disputes : disputes,
@@ -278,7 +287,7 @@ export class NewUserComponent implements OnInit{
           mediationHours : this.fMediator.mediationHours.value,
           mediationMembership : this.fMediator.mediationMembership.value,
           mediationNumber : this.fMediator.mediationNumber.value,
-          nationalityId : country.id,
+          nationalityId : nationality.id,
           otherDisputeAreas : this.fMediator.otherDisputeAreas.value,
           otherExperience :  this.fMediator.otherExperience.value,
           otherMatters : this.fMediator.otherMatters.value,

@@ -27,6 +27,9 @@ export class AuthSignUpComponent implements OnInit
     showAlert: boolean = false;
     countries : Country[] = [];
     filteredCountries : Country[] = [];
+
+    countries2 : Country[] = [];
+    filteredCountries2 : Country[] = [];
     filter : string = '';
 
     separateDialCode = false;
@@ -57,12 +60,14 @@ export class AuthSignUpComponent implements OnInit
     {
         // Create the form
         this.signUpForm = this._formBuilder.group({
+                entityName : ['', []],
                 fullName : ['', Validators.required],
                 email : ['', [Validators.required, Validators.email]],
                 nationality : [null, [Validators.required]],
                 profession : [null, [Validators.required]],
                 dob : [null, [Validators.required]],
                 phone : [null, [Validators.required]],
+                country : [null, [Validators.required]],
                 address : [null, [Validators.required]]
                
 
@@ -97,15 +102,19 @@ export class AuthSignUpComponent implements OnInit
         let dob = new Date(this.signUpForm.get('dob').value._d).toUTCString();
         /**Convert to UTC date */
         var utcDate = this.removeTime(new Date(dob));
-        let countryName = this.signUpForm.get('nationality').value;
+        let nationalityName = this.signUpForm.get('nationality').value;
+        let nationality = this.countries.filter(x=>x.name.toUpperCase() === nationalityName.toUpperCase())[0];
+        let countryName = this.signUpForm.get('country').value;
         let country = this.countries.filter(x=>x.name.toUpperCase() === countryName.toUpperCase())[0];
         let body : Account = {
             email : this.signUpForm.get('email').value,
+            entityName : this.signUpForm.get('entityName').value,
             fullName : this.signUpForm.get('fullName').value,
-            nationalityId : country?.id,
+            nationalityId : nationality?.id,
             profession : this.signUpForm.get('profession').value,
             dob : utcDate,
             telephone : this.signUpForm.get('phone').value.e164Number,
+            countryId : country?.id,
             address : this.signUpForm.get('address').value
         };
 
@@ -122,7 +131,7 @@ export class AuthSignUpComponent implements OnInit
                 // Set the alert
                 this.alert = {
                     type   : 'success',
-                    message: 'Account created successfully, kindly check your inbox'
+                    message: 'Account created successfully, a password has been sent to your inbox'
                 };
 
                 // Show the alert
@@ -163,6 +172,8 @@ export class AuthSignUpComponent implements OnInit
             {
                 this.countries = resp?.result;
                 this.filteredCountries = resp?.result;
+                this.countries2 = resp?.result;
+                this.filteredCountries2 = resp?.result;
             }
         });
     }

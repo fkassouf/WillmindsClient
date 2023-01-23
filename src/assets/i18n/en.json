@@ -81,6 +81,10 @@
     "Mediation-Expertises" : "Mediation Expertises",
     "Field-Required" : "Field required",
     "Filter" : "Filter",
-    "Profile-Updated-Successfully" : "Profile updated successfully"
+    "Profile-Updated-Successfully" : "Profile updated successfully",
+    "Entity-Name" : "Entity Name",
+    "Entity-Name-Required" : "Entity name is required",
+    "Country" : "Country",
+    "Country-Required" : "Country is required"
     
 }

@@ -8,6 +8,7 @@ export interface MediatorModel
     fullName : string;
     jobTitle : string;
     firm : string;
+    countryId : number;
     address : string;
     telephone : string;
     email : string;

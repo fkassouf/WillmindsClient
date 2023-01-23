@@ -31,6 +31,8 @@ export class ProfileComponent implements OnInit
     updateMediatorProfileForm : FormGroup;
     countries : Country[] = [];
     filteredCountries : Country[] = [];
+    countries2 : Country[] = [];
+    filteredCountries2 : Country[] = [];
     disputes : Dispute[] = [];
     filteredDisputes : Dispute[] = [];
     mediationExpertises : MediationExpertise[] = [];
@@ -64,11 +66,13 @@ export class ProfileComponent implements OnInit
 
     ngOnInit(): void {
         this.updateEntityProfileForm = this._formBuilder.group({
+            entityName : [null, []],
             fullName : [null, Validators.required],
             nationality : [null, [Validators.required]],
             profession : [null, [Validators.required]],
             dob : [null, [Validators.required]],
             phone : [null, [Validators.required]],
+            country : [null, [Validators.required]],
             address : [null, [Validators.required]]
             }
         );
@@ -79,6 +83,7 @@ export class ProfileComponent implements OnInit
             fullName : [null, Validators.required],
             //email : [null, [Validators.required, Validators.email]],
             firm : [null, []],
+            country : [null, [Validators.required]],
             address : [null, [Validators.required]],
             phone : [null, [Validators.required]],
             accrediation : [null, []],
@@ -143,9 +148,9 @@ export class ProfileComponent implements OnInit
             {
                 
                 this.currentAccount = resp.result;
-                
+                this.updateEntityProfileForm.controls.entityName.setValue(this.currentAccount.entityName);
                 this.updateEntityProfileForm.controls.fullName.setValue(this.currentAccount.fullName);
-                this.getCountries(this.currentAccount.nationalityId);
+                this.getCountries(this.currentAccount.nationalityId, this.currentAccount.countryId);
                 this.updateEntityProfileForm.controls.profession.setValue(this.currentAccount.profession);
                 this.updateEntityProfileForm.controls.dob.setValue(this.currentAccount.dob);
                 this.updateEntityProfileForm.controls.phone.setValue(this.currentAccount.telephone);
@@ -176,7 +181,7 @@ export class ProfileComponent implements OnInit
                 this.updateMediatorProfileForm.controls.firm.setValue(this.currentMediatorAccount.firm);
                 this.updateMediatorProfileForm.controls.address.setValue(this.currentMediatorAccount.address);
                 this.updateMediatorProfileForm.controls.phone.setValue(this.currentMediatorAccount.telephone);
-                this.getCountries(this.currentMediatorAccount.nationalityId);
+                this.getCountries(this.currentMediatorAccount.nationalityId, this.currentMediatorAccount.countryId);
                 this.updateMediatorProfileForm.controls.accrediation.setValue(this.currentMediatorAccount.accrediation);
                 this.updateMediatorProfileForm.controls.jurisdiction.setValue(this.currentMediatorAccount.jurisdiction);
                 this.updateMediatorProfileForm.controls.linkedInUrl.setValue(this.currentMediatorAccount.linkedInUrl);
@@ -209,17 +214,24 @@ export class ProfileComponent implements OnInit
         );
       }
 
-    getCountries(id)
+    getCountries(id, countryId)
     {
         this.authService.getCountries().subscribe(resp=>{
             if(resp?.success)
             {
                 this.countries = resp?.result;
                 this.filteredCountries = resp?.result;
+
+                this.countries2 = resp?.result;
+                this.filteredCountries2 = resp?.result;
                 
-                let country = this.countries.filter(x=>x.id == id)[0];
-                this.updateEntityProfileForm.controls.nationality.setValue(country);
-                this.updateMediatorProfileForm.controls.nationality.setValue(country);
+                let nationality = this.countries.filter(x=>x.id == id)[0];
+                this.updateEntityProfileForm.controls.nationality.setValue(nationality);
+                this.updateMediatorProfileForm.controls.nationality.setValue(nationality);
+
+                let country = this.countries2.filter(x=>x.id == countryId)[0];
+                this.updateEntityProfileForm.controls.country.setValue(country);
+                this.updateMediatorProfileForm.controls.country.setValue(country);
             }
         });
     }
@@ -318,11 +330,13 @@ export class ProfileComponent implements OnInit
             id : this.currentAccount.id,
             userId : this.authService.user$.id,
             nationalityId : this.entityF.nationality.value.id,
+            entityName : this.entityF.entityName.value,
             fullName : this.entityF.fullName.value,
             profession : this.entityF.profession.value,
             dob : this.entityF.dob.value,
             telephone : this.entityF.phone.value.e164Number,
             email : this.currentAccount.email,
+            countryId : this.entityF.country.value.id,
             address : this.entityF.address.value,
             isActive : true,
         };
@@ -388,6 +402,7 @@ export class ProfileComponent implements OnInit
             id : this.currentMediatorAccount?.id,
             userId : this.currentMediatorAccount?.userId,
             accrediation : this.fMediator.accrediation.value,
+            countryId : this.fMediator.country.value.id,
             address : this.fMediator.address.value,
             conductMediation : this.fMediator.conductMediation.value,
             disputes : disputes,

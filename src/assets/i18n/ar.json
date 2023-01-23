@@ -81,6 +81,10 @@
     "Mediation-Expertises" : "خبرات الوساطة",
     "Field-Required" : "حقل مطلوب",
     "Filter" : "منقي",
-    "Profile-Updated-Successfully" : "تم تحديث الملف الشخصي بنجاح"
+    "Profile-Updated-Successfully" : "تم تحديث الملف الشخصي بنجاح",
+    "Entity-Name" : "اسم الكيان",
+    "Entity-Name-Required" : "اسم الكيان مطلوب",
+    "Country" : "البلد",
+    "Country-Required" : "البلد مطلوب"
     
 }
