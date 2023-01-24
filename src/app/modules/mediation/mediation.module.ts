@@ -28,6 +28,8 @@ import { MediationCaseComponent } from './mediation-case/mediation-case.componen
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MaterialFileInputModule, NGX_MAT_FILE_INPUT_CONFIG } from 'ngx-material-file-input';
+import { config } from 'app/core/models/file-input-config';
 
 const routes: Route[] = [
     {
@@ -70,8 +72,10 @@ const routes: Route[] = [
         MatTabsModule,
         MatRadioModule,
         FuseDrawerModule,
+        MaterialFileInputModule,
         SharedModule
-    ]
+    ],
+    providers: [{ provide: NGX_MAT_FILE_INPUT_CONFIG, useValue: config }]
 })
 export class MediationModule {
 }

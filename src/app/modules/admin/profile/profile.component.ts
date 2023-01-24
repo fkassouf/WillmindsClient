@@ -106,7 +106,7 @@ export class ProfileComponent implements OnInit
         );
         
          // Create the form
-        if(this.authService.user$.roles[0] === ROLES.USER)
+        if(this.authService.user$.roles[0] === ROLES.PARTY)
         {
             this.getEntityAccount(this.authService.user$.id)
         }

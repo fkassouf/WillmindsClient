@@ -30,7 +30,7 @@
                 <!--Step 1 submit a request-->
                 <mat-tab label="Step 1"> 
                     <form class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden"
-                    [formGroup]="mediationRequestForm">
+                    [formGroup]="mediationRequestForm" (ngSubmit)="submitForm()">
                         <p class="text-lg font-medium">SECTION 1 - DETAILS OF THE PARTIES</p>
                         <p class="text-secondary mb-6">
                             Details of the REQUESTING PARTY
@@ -55,29 +55,73 @@
                                     class="icon-size-5"
                                     matPrefix
                                     [svgIcon]="'heroicons_solid:mail'"></mat-icon>
+                                    <mat-error *ngIf="submitted && f.requesterSecondaryEmail.hasError('email')">
+                                        <ng-container *transloco="let translate">
+                                            {{translate('Invalid-Email')}}
+                                        </ng-container>
+                                    </mat-error>
                             </mat-form-field>
-                            <mat-form-field class="w-full">
-                                <mat-label>Secondary Telehone</mat-label>
-                                <input matInput formControlName="requesterSecondaryTelephone">
-                                <mat-icon
-                                    class="icon-size-5"
-                                    matPrefix
-                                    [svgIcon]="'heroicons_solid:phone'"></mat-icon>
-                            </mat-form-field>
+                           <!-- phone field -->
+                <div class="w-full">
+                    <mat-label>
+                       Secondary Phone </mat-label>
+                    <br>
+                    <ngx-intl-tel-input
+                    [cssClass]="'custom'"
+                    [preferredCountries]="preferredCountries"
+                    [enableAutoCountrySelect]="true"
+                    [enablePlaceholder]="true"
+                    [searchCountryFlag]="true"
+                    [searchCountryField]="[
+                    SearchCountryField.Iso2,
+                    SearchCountryField.Name
+                    ]"
+                    [selectFirstCountry]="false"
+                    [selectedCountryISO]="CountryISO.Lebanon"
+                    [maxLength]="15"
+                    [phoneValidation]="true"
+                    [separateDialCode]="separateDialCode"
+                    [numberFormat]="PhoneNumberFormat.National"
+                    name="requesterSecondaryTelephone"
+                    formControlName="requesterSecondaryTelephone"
+                >
+                </ngx-intl-tel-input>
+                <mat-error *ngIf="submitted && f.requesterSecondaryTelephone.hasError('required')">
+                    <ng-container *transloco="let translate">
+                        {{translate('Field-Required')}}
+                    </ng-container>
+                </mat-error>
+                <mat-error *ngIf="submitted && f.requesterSecondaryTelephone.hasError('validatePhoneNumber')">
+                    <ng-container *transloco="let translate">
+                        {{translate('Invalid-Phone')}}
+                    </ng-container>
+                </mat-error>
+            </div>
                         </div>
                         <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
-                            <mat-label>Do you have legal representation? If “Yes” please fill the details below</mat-label>
+                            <mat-checkbox color="primary" #anyLegalR (change)="anyLegalRChanged($event)">Do you have legal representation? If “Yes” please fill the details below</mat-checkbox>
+                            
                         </div>
+                        <ng-container *ngIf="anyLegalR.checked">
                         <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
                             
                             <mat-form-field class="w-full">
                                 <mat-label>Firm Name</mat-label>
                                 <input matInput formControlName="legalRFirmName">
-                                
+                                <mat-error *ngIf="submitted && f.legalRFirmName.hasError('required')">
+                                    <ng-container *transloco="let translate">
+                                        {{translate('Field-Required')}}
+                                    </ng-container>
+                                </mat-error>
                             </mat-form-field>
                             <mat-form-field class="w-full">
                                 <mat-label>Lawyer Name</mat-label>
                                 <input matInput formControlName="legalRLawyerName">
+                                <mat-error *ngIf="submitted && f.legalRLawyerName.hasError('required')">
+                                    <ng-container *transloco="let translate">
+                                        {{translate('Field-Required')}}
+                                    </ng-container>
+                                </mat-error>
                                 
                             </mat-form-field>
                             <mat-form-field class="w-full">
@@ -87,17 +131,54 @@
                                     class="icon-size-5"
                                     matPrefix
                                     [svgIcon]="'heroicons_solid:mail'"></mat-icon>
+                                    <mat-error *ngIf="submitted && f.legalREmail.hasError('required')">
+                                        <ng-container *transloco="let translate">
+                                            {{translate('Field-Required')}}
+                                        </ng-container>
+                                    </mat-error>
+                                    <mat-error *ngIf="submitted && f.legalREmail.hasError('email')">
+                                        <ng-container *transloco="let translate">
+                                            {{translate('Invalid-Email')}}
+                                        </ng-container>
+                                    </mat-error>
                             </mat-form-field>
                         </div>
                         <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
-                            <mat-form-field class="w-full">
-                                <mat-label>Telephone</mat-label>
-                                <input matInput formControlName="legalRTelephone">
-                                <mat-icon
-                                    class="icon-size-5"
-                                    matPrefix
-                                    [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
-                            </mat-form-field>
+                            <div class="w-full">
+                                <mat-label>
+                                   Phone *</mat-label>
+                                <br>
+                                <ngx-intl-tel-input
+                                [cssClass]="'custom'"
+                                [preferredCountries]="preferredCountries"
+                                [enableAutoCountrySelect]="true"
+                                [enablePlaceholder]="true"
+                                [searchCountryFlag]="true"
+                                [searchCountryField]="[
+                                SearchCountryField.Iso2,
+                                SearchCountryField.Name
+                                ]"
+                                [selectFirstCountry]="false"
+                                [selectedCountryISO]="CountryISO.Lebanon"
+                                [maxLength]="15"
+                                [phoneValidation]="true"
+                                [separateDialCode]="separateDialCode"
+                                [numberFormat]="PhoneNumberFormat.National"
+                                name="legalRTelephone"
+                                formControlName="legalRTelephone"
+                            >
+                            </ngx-intl-tel-input>
+                            <mat-error *ngIf="submitted && f.legalRTelephone.hasError('required')">
+                                <ng-container *transloco="let translate">
+                                    {{translate('Field-Required')}}
+                                </ng-container>
+                            </mat-error>
+                            <mat-error *ngIf="submitted && f.legalRTelephone.hasError('validatePhoneNumber')">
+                                <ng-container *transloco="let translate">
+                                    {{translate('Invalid-Phone')}}
+                                </ng-container>
+                            </mat-error>
+                        </div>
                             <mat-form-field class="col-span-2 w-full">
                                 <mat-label>Address</mat-label>
                                 <input matInput formControlName="legalRAddress">
@@ -105,92 +186,170 @@
                                     class="icon-size-5"
                                     matPrefix
                                     [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                                    <mat-error *ngIf="submitted && f.legalRAddress.hasError('required')">
+                                        <ng-container *transloco="let translate">
+                                            {{translate('Field-Required')}}
+                                        </ng-container>
+                                    </mat-error>
                             </mat-form-field>
                                 
                         </div>
-        
+                        </ng-container>
                         <mat-divider class="mt-6 mb-10"></mat-divider>
         
                         <p class="text-lg font-medium"></p>
                         <p class="text-secondary mb-6">
                             Details of the SECOND PARTY
-                            <button mat-stroked-button [disabled]="otherParties.length > otherPartiesLimit"
+                            <button mat-stroked-button [disabled]="f.partyList.value.length > otherPartiesLimit"
                             color="primary" (click)="addOtherParty()">
-                                Add more
+                                Add more parties ({{partyList.controls.length}})
                                
                             </button>
+                            
                         </p>
-                        <div *ngFor="let p of otherParties; let i = index">
+                        <ng-container formArrayName="partyList">
+                        <ng-container *ngFor="let partyForm of partyList.controls; let i = index">
+                        <div [formGroup]="partyForm">
                         <div class="grid sm:grid-cols-4 gap-3 pb-4 w-full">
                             <mat-form-field class="w-full">
                                 <mat-label>Entity Name</mat-label>
-                                <input matInput [value]="p.entityName">
+                                <input matInput formControlName="entityName">
                                 
                             </mat-form-field>
                          
                             <mat-form-field class="w-full">
                                 <mat-label>Individual Full Name</mat-label>
-                                <input matInput [value]="p.fullName">
+                                <input matInput formControlName="fullName">
                                 
                             </mat-form-field>
                      
                             <mat-form-field class="w-full">
                                 <mat-label>Email</mat-label>
-                                <input matInput [value]="p.email">
+                                <input matInput formControlName="email">
                                 <mat-icon
                                     class="icon-size-5"
                                     matPrefix
                                     [svgIcon]="'heroicons_solid:mail'"></mat-icon>
                             </mat-form-field>
-                            <mat-form-field class="w-full">
-                                <mat-label>Phone</mat-label>
-                                <input matInput [value]="p.telephone">
-                                <mat-icon
-                                    class="icon-size-5"
-                                    matPrefix
-                                    [svgIcon]="'heroicons_solid:phone'"></mat-icon>
-                            </mat-form-field>
+                            <div class="w-full">
+                               
+                                <mat-label>
+                                   Phone *</mat-label>
+                                <br>
+                                <ngx-intl-tel-input
+                                [cssClass]="'custom'"
+                                [preferredCountries]="preferredCountries"
+                                [enableAutoCountrySelect]="true"
+                                [enablePlaceholder]="true"
+                                [searchCountryFlag]="true"
+                                [searchCountryField]="[
+                                SearchCountryField.Iso2,
+                                SearchCountryField.Name
+                                ]"
+                                [selectFirstCountry]="false"
+                                [selectedCountryISO]="CountryISO.Lebanon"
+                                [maxLength]="15"
+                                [phoneValidation]="true"
+                                [separateDialCode]="separateDialCode"
+                                [numberFormat]="PhoneNumberFormat.National"
+                                name="phone"
+                                formControlName="phone"
+                            >
+                            </ngx-intl-tel-input>
+                            
+                            <mat-error *ngIf="submitted && partyForm.controls.phone.hasError('required')">
+                                <ng-container *transloco="let translate">
+                                    {{translate('Field-Required')}}
+                                </ng-container>
+                            </mat-error>
+                            <mat-error *ngIf="submitted && partyForm.controls.phone.hasError('validatePhoneNumber')">
+                                <ng-container *transloco="let translate">
+                                    {{translate('Invalid-Phone')}}
+                                </ng-container>
+                            </mat-error>
+                        </div>
                             
                             
                          </div>
                          <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
-                            <mat-label>Do you know if the Second Party have legal representation? If “Yes”, please fill in the details below</mat-label>
+                            <mat-label>Do you know if the Second Party have legal representation? If “Yes”, please fill in the details below
+                             
+                            </mat-label>
                         </div>
                         <div class="grid sm:grid-cols-4 gap-3 pb-4 w-full">
                             <mat-form-field class="w-full">
                                 <mat-label>Firm Name</mat-label>
-                                <input matInput [value]="p.lawyerFirmName">
+                                <input matInput formControlName="firmName">
                             </mat-form-field>
                             <mat-form-field class="w-full">
                                 <mat-label>Laywer Name</mat-label>
-                                <input matInput [value]="p.lawyerName">
-                                
-                            </mat-form-field>
-                            <mat-form-field class="w-full">
-                                <mat-label>Telephone</mat-label>
-                                <input matInput [value]="p.lawyerTelephone">
+                                <input matInput formControlName="lawyerName">
                                 
                             </mat-form-field>
                             <mat-form-field class="w-full">
                                 <mat-label>Email</mat-label>
-                                <input matInput [value]="p.lawyerEmail">
-                                
+                                <input matInput formControlName="lawyerEmail">
+                                <mat-icon
+                                    class="icon-size-5"
+                                    matPrefix
+                                    [svgIcon]="'heroicons_solid:mail'"></mat-icon>
                             </mat-form-field>
+                            <div class="w-full">
+                                <mat-label>
+                                   Phone *</mat-label>
+                                <br>
+                                <ngx-intl-tel-input
+                                [cssClass]="'custom'"
+                                [preferredCountries]="preferredCountries"
+                                [enableAutoCountrySelect]="true"
+                                [enablePlaceholder]="true"
+                                [searchCountryFlag]="true"
+                                [searchCountryField]="[
+                                SearchCountryField.Iso2,
+                                SearchCountryField.Name
+                                ]"
+                                [selectFirstCountry]="false"
+                                [selectedCountryISO]="CountryISO.Lebanon"
+                                [maxLength]="15"
+                                [phoneValidation]="true"
+                                [separateDialCode]="separateDialCode"
+                                [numberFormat]="PhoneNumberFormat.National"
+                                name="lawyerPhone"
+                                formControlName="lawyerPhone"
+                            >
+                            </ngx-intl-tel-input>
+                            <mat-error *ngIf="submitted && partyForm.controls.lawyerPhone.hasError('required')">
+                                <ng-container *transloco="let translate">
+                                    {{translate('Field-Required')}}
+                                </ng-container>
+                            </mat-error>
+                            <mat-error *ngIf="submitted && partyForm.controls.lawyerPhone.hasError('validatePhoneNumber')">
+                                <ng-container *transloco="let translate">
+                                    {{translate('Invalid-Phone')}}
+                                </ng-container>
+                            </mat-error>
+                        </div>
+                           
                         </div>
                         <div class="grid sm:grid-cols-4 gap-3 pb-4 w-full">
                             <mat-form-field class="col-span-2 w-full">
                                 <mat-label>Address</mat-label>
-                                <input matInput [value]="p.lawyerAddress">
-                                
+                                <input matInput formControlName="lawyerAddress">
+                                <mat-icon
+                                    class="icon-size-5"
+                                    matPrefix
+                                    [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
                             </mat-form-field>
                         </div>
                          <div class="w-full">
-                            <button mat-raised-button color="warn" (click)="deleteOtherParty(i)" *ngIf="i > 0">
+                            <button mat-raised-button color="warn" (click)="removeOtherParty(i)" *ngIf="i > 0">
                                 Remove
                             </button>
                         </div>
-                         <mat-divider class="mt-6 mb-10" *ngIf="i < otherParties.length - 1"></mat-divider>
+                         <mat-divider class="mt-6 mb-10" *ngIf="i < f.partyList.value.length - 1"></mat-divider>
                         </div>
+                        </ng-container>
+                    </ng-container>
                         <mat-divider class="mt-6 mb-10"></mat-divider>
         
                         <p class="text-lg font-medium">SECTION 2 - BRIEF DETAILS OF THE CLAIM</p>
@@ -223,12 +382,34 @@
                             </div>
                         </div>
                         <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
-                            <ngx-dropzone (change)="onMediationEvidencesSelect($event)">
-                                <ngx-dropzone-label>Drop files here</ngx-dropzone-label>
-                                <ngx-dropzone-preview *ngFor="let f of mediationEvidenceFiles" [removable]="true" (removed)="onMediationEvidencesRemove(f)">
-                                    <ngx-dropzone-label>{{ f.name }})</ngx-dropzone-label>
-                                </ngx-dropzone-preview>
-                            </ngx-dropzone>
+                            <mat-form-field class="w-full">
+                                <mat-label>Contract/Contract Clause</mat-label>
+                                <ngx-mat-file-input #contractClause formControlName="contractClause" [accept]="'.pdf,.docx'"></ngx-mat-file-input>
+                                <button mat-icon-button *ngIf="!contractClause.empty" (click)="contractClause.clear($event)">
+                                    <mat-icon>clear</mat-icon>
+                                </button>
+                                <mat-icon matSuffix>folder</mat-icon>
+                              </mat-form-field>
+                        </div>
+                        <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                            <mat-form-field class="w-full">
+                                <mat-label>Mediation Submission Agreement</mat-label>
+                                <ngx-mat-file-input #mediationSubmissionAgreement formControlName="mediationSubmissionAgreement" [accept]="'.pdf,.docx'"></ngx-mat-file-input>
+                                <button mat-icon-button *ngIf="!mediationSubmissionAgreement.empty" (click)="mediationSubmissionAgreement.clear($event)">
+                                    <mat-icon>clear</mat-icon>
+                                </button>
+                                <mat-icon matSuffix>folder</mat-icon>
+                              </mat-form-field>
+                        </div>
+                        <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                            <mat-form-field class="w-full">
+                                <mat-label>Email written Communications between parties (all in one document)</mat-label>
+                                <ngx-mat-file-input #emailWrittenComm formControlName="emailWrittenComm" [accept]="'.pdf,.docx'"></ngx-mat-file-input>
+                                <button mat-icon-button *ngIf="!emailWrittenComm.empty" (click)="emailWrittenComm.clear($event)">
+                                    <mat-icon>clear</mat-icon>
+                                </button>
+                                <mat-icon matSuffix>folder</mat-icon>
+                              </mat-form-field>
                         </div>
                         <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
                             <div class="w-full">
@@ -244,110 +425,80 @@
                             </mat-form-field>
                         </div>
                         <mat-divider class="mt-6 mb-10"></mat-divider>
-                        <p class="text-lg font-medium">SECTION 4 – MEDIATION PROCESS</p>
-                        <p class="text-secondary mb-6">
-                            
-                        </p>
-                        <div class="grid sm:grid-cols-4 gap-3 pb-4 w-full">
-                            <div class="w-full">
-                                <mat-label>Preferred track of your mediation</mat-label>
-                                <mat-radio-group aria-label="Preferred track of your mediation" color="primary">
-                                    <mat-radio-button value="1" checked="true">Normal Track</mat-radio-button>
-                                    <mat-radio-button value="2">Fast Track</mat-radio-button>
-                                  </mat-radio-group>
-                            </div>
-                            <mat-form-field class="w-full">
-                                <mat-label>Preferred method of mediation</mat-label>
-                                <mat-select></mat-select>
-                            </mat-form-field>
-                            
-                            <div class="w-full">
-                                <mat-label>Preferred option for mediator(s)</mat-label>
-                                <mat-radio-group color="primary" aria-label="Preferred option for mediator(s)">
-                                    <mat-radio-button value="1" checked="true">By Parties</mat-radio-button>
-                                    <mat-radio-button value="2">By Center</mat-radio-button>
-                                  </mat-radio-group>
-                            </div>
-                            <mat-form-field class="w-full">
-                                <mat-label>Please language for mediation</mat-label>
-                                <mat-select></mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
-                            <div class="gap-3 w-full">
-                                <mat-label>Please provide details of any dates to avoid</mat-label>
-                                <button mat-stroked-button color="primary" (click)="addDateToAvoid()">
-                                    Add
-                                </button>
-                                <table>
-                                    <tbody>
-                                        <tr *ngFor="let d of datesToAvoid; let i = index">
-                                            <td>
-                                               
-                                              <input class="form-control" type="date" [value]="d">
-                                               
-                                            </td>
-                                            <td>
-                                                <button mat-icon-button color="warn" (click)="datesToAvoid.splice(i,1)">
-                                                    <mat-icon>remove_circle</mat-icon>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                        </div>
-                        <mat-divider class="mt-6 mb-10"></mat-divider>
-                        <p class="text-lg font-medium">SECTION 5 – BACKGROUND OF THE DISPUTE</p>
+                        
+                        <p class="text-lg font-medium">SECTION 4 – BACKGROUND OF THE DISPUTE</p>
                         <p class="text-secondary mb-6">
                             
                         </p>
                         <div class="grid sm:grid-cols-4 gap-3 pb-4 w-full">
                             <mat-form-field class="w-full">
-                                <mat-label>Category of the Dispute</mat-label>
-                                <mat-select></mat-select>
+                                <mat-label>Dispute Category</mat-label>
+                                <mat-select #disputeCategory formControlName="disputeCategory" [multiple]="true">
+                                    <mat-select-trigger>
+                                        {{disputeCategory.value?.[0]?.name || ''}}
+                                        <span *ngIf="(disputeCategory.value?.length || 0) > 1" class="example-additional-selection">
+                                          (+{{(disputeCategory.value?.length || 0) - 1}} {{disputeCategory.value?.length === 2 ? 'other' : 'others'}})
+                                        </span>
+                                      </mat-select-trigger>
+                                        <mat-option class="custom-search-input">
+                                        <lib-mat-select-search
+                                            [list]="disputes"
+                                            [searchProperties]="['name']"
+                                            (filtered)="filteredDisputes = $event">
+                                        </lib-mat-select-search>
+                                        </mat-option>
+                                    <mat-option *ngFor="let d of filteredDisputes" [value]="d" >
+                                        <span>{{d.name}}</span>
+                                    </mat-option>
+                                    
+                                  </mat-select>
+                                  <mat-icon matSuffix *ngIf="disputeCategory.value" (click)="disputeCategory.value = null">close</mat-icon>
+                                  <mat-error *ngIf="f.disputeCategory.hasError('required')">
+                                    <ng-container *transloco="let translate">
+                                        {{translate('Field-Required')}}
+                                    </ng-container>
+                                </mat-error>  
                             </mat-form-field>
-                            <mat-form-field class="col-span-3 w-full">
+                            <mat-form-field class="col-span-2 w-full">
                                 <mat-label>For dispute(s) involving monetary claims, please provide details of the amount in dispute</mat-label>
-                                <input matInput>
+                                <input matInput type="number" formControlName="monetaryValue">
                             </mat-form-field>
                         </div>
-                        <p class="text-secondary mb-6"><strong>Please provide brief details of the dispute. 
-                            Include a summary of what occurred, the date(s) on which the dispute occurred, the names and titles of all individuals involved.</strong> You may attach a separate document setting out the nature of the dispute, but this must not exceed 10 pages.</p>
+                      
                             <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
                                 <mat-form-field class="w-full">
-                                    
-                                    <textarea matInput rows="3"></textarea>
+                                    <mat-label>Please provide brief details of the dispute. 
+                                        Include a summary of what occurred, the date(s) on which the dispute occurred, the names and titles of all individuals involved.</mat-label>
+                                    <textarea matInput rows="3" formControlName="disputeDetails"></textarea>
                                 </mat-form-field>
                             </div>
-                            <p class="text-secondary mb-6"><strong>
-                                If you are attaching any additional documents alongside this completed form, please list them here
-                            </strong></p>
-                            <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
-                                <ngx-dropzone (change)="onMediationEvidencesSelect($event)">
-                                    <ngx-dropzone-label>Drop files here</ngx-dropzone-label>
-                                    <ngx-dropzone-preview *ngFor="let f of mediationEvidenceFiles" [removable]="true" (removed)="onMediationEvidencesRemove(f)">
-                                        <ngx-dropzone-label>{{ f.name }})</ngx-dropzone-label>
-                                    </ngx-dropzone-preview>
-                                </ngx-dropzone>
+                           <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                                <mat-form-field class="w-full">
+                                    <mat-label>You may attach a separate document setting out the nature of the dispute, but this must not exceed 10 pages</mat-label>
+                                    <ngx-mat-file-input  #natureOfDispute formControlName="natureOfDispute" [accept]="'.pdf,.docx'"></ngx-mat-file-input>
+                                    <button mat-icon-button *ngIf="!natureOfDispute.empty" (click)="natureOfDispute.clear($event)">
+                                        <mat-icon>clear</mat-icon>
+                                    </button>
+                                    <mat-icon matSuffix>folder</mat-icon>
+                                  </mat-form-field>
                             </div>
-                            <p class="text-secondary mb-6"><strong>Please provide details of the relief requested (e.g., an amount of money damages or a description of other relief you seek).</strong></p>
+                           
+                            
                                 <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
                                     <mat-form-field class="w-full">
-                                        
-                                        <textarea matInput rows="3"></textarea>
+                                        <mat-label>Please provide details of the relief requested (e.g., an amount of money damages or a description of other relief you seek).</mat-label>
+                                        <textarea matInput rows="3" formControlName="requestedRelief"></textarea>
                                     </mat-form-field>
                                 </div>
                                 <mat-divider class="mt-6 mb-10"></mat-divider>
-                                <p class="text-lg font-medium">SECTION 7 – ADDITIONAL INFORMATION</p>
+                                <p class="text-lg font-medium">SECTION 5 – ADDITIONAL INFORMATION</p>
                                 <p class="text-secondary mb-6">
-                                    Please provide any other information which you consider would be of assistance
+                                   
                                 </p>
                                 <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
                                     <mat-form-field class="w-full">
-                                        
-                                        <textarea matInput rows="3"></textarea>
+                                        <mat-label> Please provide any other information which you consider would be of assistance</mat-label>
+                                        <textarea matInput rows="3" formControlName="otherInfo"></textarea>
                                     </mat-form-field>
                                 </div>
                         <div class="flex items-center justify-end border-t -mx-8 mt-8 px-8 py-5 bg-gray-50 dark:bg-gray-700">

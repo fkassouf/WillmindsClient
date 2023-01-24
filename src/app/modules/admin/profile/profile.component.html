@@ -83,7 +83,7 @@
                 <hr class="w-full border-t my-6">
                 <form            
                 [formGroup]="updateEntityProfileForm" (ngSubmit)="submitEntityProfile()"
-                #updateEntityProfileNgForm="ngForm" *ngIf="authService.user$.roles[0] === roles.USER">
+                #updateEntityProfileNgForm="ngForm" *ngIf="authService.user$.roles[0] === roles.PARTY">
                 
                 <!-- Name field -->
                 <div class="grid sm:grid-cols-2 gap-3 w-full">
