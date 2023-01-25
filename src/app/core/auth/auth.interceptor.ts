@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
-import { AuthService } from 'app/core/auth/auth.service';
 import { AuthUtils } from 'app/core/auth/auth.utils';
+import { AuthenticationService } from './authentication.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor
@@ -10,7 +10,7 @@ export class AuthInterceptor implements HttpInterceptor
     /**
      * Constructor
      */
-    constructor(private _authService: AuthService)
+    constructor(private _authService: AuthenticationService)
     {
     }
 
@@ -33,10 +33,10 @@ export class AuthInterceptor implements HttpInterceptor
         // for the protected API routes which our response interceptor will
         // catch and delete the access token from the local storage while logging
         // the user out from the app.
-        if ( this._authService.accessToken && !AuthUtils.isTokenExpired(this._authService.accessToken) )
+        if ( this._authService.user$.accessToken && !AuthUtils.isTokenExpired(this._authService.user$.accessToken) )
         {
             newReq = req.clone({
-                headers: req.headers.set('Authorization', 'Bearer ' + this._authService.accessToken)
+                headers: req.headers.set('Authorization', 'Bearer ' + this._authService.user$.accessToken)
             });
         }
 

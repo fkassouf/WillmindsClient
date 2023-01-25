@@ -55,7 +55,7 @@
                                     class="icon-size-5"
                                     matPrefix
                                     [svgIcon]="'heroicons_solid:mail'"></mat-icon>
-                                    <mat-error *ngIf="submitted && f.requesterSecondaryEmail.hasError('email')">
+                                    <mat-error *ngIf="f.requesterSecondaryEmail.hasError('email')">
                                         <ng-container *transloco="let translate">
                                             {{translate('Invalid-Email')}}
                                         </ng-container>
@@ -108,7 +108,7 @@
                             <mat-form-field class="w-full">
                                 <mat-label>Firm Name</mat-label>
                                 <input matInput formControlName="legalRFirmName">
-                                <mat-error *ngIf="submitted && f.legalRFirmName.hasError('required')">
+                                <mat-error *ngIf="f.legalRFirmName.hasError('required')">
                                     <ng-container *transloco="let translate">
                                         {{translate('Field-Required')}}
                                     </ng-container>
@@ -117,7 +117,7 @@
                             <mat-form-field class="w-full">
                                 <mat-label>Lawyer Name</mat-label>
                                 <input matInput formControlName="legalRLawyerName">
-                                <mat-error *ngIf="submitted && f.legalRLawyerName.hasError('required')">
+                                <mat-error *ngIf="f.legalRLawyerName.hasError('required')">
                                     <ng-container *transloco="let translate">
                                         {{translate('Field-Required')}}
                                     </ng-container>
@@ -131,12 +131,12 @@
                                     class="icon-size-5"
                                     matPrefix
                                     [svgIcon]="'heroicons_solid:mail'"></mat-icon>
-                                    <mat-error *ngIf="submitted && f.legalREmail.hasError('required')">
+                                    <mat-error *ngIf="f.legalREmail.hasError('required')">
                                         <ng-container *transloco="let translate">
                                             {{translate('Field-Required')}}
                                         </ng-container>
                                     </mat-error>
-                                    <mat-error *ngIf="submitted && f.legalREmail.hasError('email')">
+                                    <mat-error *ngIf="f.legalREmail.hasError('email')">
                                         <ng-container *transloco="let translate">
                                             {{translate('Invalid-Email')}}
                                         </ng-container>
@@ -186,7 +186,7 @@
                                     class="icon-size-5"
                                     matPrefix
                                     [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
-                                    <mat-error *ngIf="submitted && f.legalRAddress.hasError('required')">
+                                    <mat-error *ngIf="f.legalRAddress.hasError('required')">
                                         <ng-container *transloco="let translate">
                                             {{translate('Field-Required')}}
                                         </ng-container>
@@ -214,22 +214,41 @@
                             <mat-form-field class="w-full">
                                 <mat-label>Entity Name</mat-label>
                                 <input matInput formControlName="entityName">
-                                
+                                 <mat-error *ngIf="submitted && partyForm.controls.entityName.hasError('required')">
+                                        <ng-container *transloco="let translate">
+                                            {{translate('Field-Required')}}
+                                        </ng-container>
+                                    </mat-error>
                             </mat-form-field>
                          
                             <mat-form-field class="w-full">
-                                <mat-label>Individual Full Name</mat-label>
+                                <mat-label>Full Name</mat-label>
                                 <input matInput formControlName="fullName">
-                                
+                                <mat-error *ngIf="partyForm.controls.fullName.hasError('required')">
+                                        <ng-container *transloco="let translate">
+                                            {{translate('Field-Required')}}
+                                        </ng-container>
+                                    </mat-error>
                             </mat-form-field>
                      
                             <mat-form-field class="w-full">
                                 <mat-label>Email</mat-label>
-                                <input matInput formControlName="email">
+                                
                                 <mat-icon
                                     class="icon-size-5"
                                     matPrefix
                                     [svgIcon]="'heroicons_solid:mail'"></mat-icon>
+                                    <input matInput formControlName="email">
+                                    <mat-error *ngIf="submitted && partyForm.controls.email.hasError('required')">
+                                        <ng-container *transloco="let translate">
+                                            {{translate('Field-Required')}}
+                                        </ng-container>
+                                    </mat-error>
+                                    <mat-error *ngIf="submitted && partyForm.controls.email.hasError('email')">
+                                        <ng-container *transloco="let translate">
+                                            {{translate('Invalid-Email')}}
+                                        </ng-container>
+                                    </mat-error>
                             </mat-form-field>
                             <div class="w-full">
                                
@@ -271,6 +290,22 @@
                             
                             
                          </div>
+                         <div class="grid sm:grid-cols-2 gap-3 pb-4 w-full">
+                            <mat-form-field class="w-full">
+                                <mat-label>Address</mat-label>
+                                <mat-icon
+                                    class="icon-size-5"
+                                    matPrefix
+                                    [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                                    <input matInput formControlName="address">
+                                    <mat-error *ngIf="submitted && partyForm.controls.address.hasError('required')">
+                                        <ng-container *transloco="let translate">
+                                            {{translate('Field-Required')}}
+                                        </ng-container>
+                                    </mat-error>
+                                    
+                            </mat-form-field>
+                         </div>
                          <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
                             <mat-label>Do you know if the Second Party have legal representation? If “Yes”, please fill in the details below
                              
@@ -293,10 +328,15 @@
                                     class="icon-size-5"
                                     matPrefix
                                     [svgIcon]="'heroicons_solid:mail'"></mat-icon>
+                                    <mat-error *ngIf="partyForm.controls.lawyerEmail.hasError('email')">
+                                        <ng-container *transloco="let translate">
+                                            {{translate('Invalid-Email')}}
+                                        </ng-container>
+                                    </mat-error>
                             </mat-form-field>
                             <div class="w-full">
                                 <mat-label>
-                                   Phone *</mat-label>
+                                   Phone </mat-label>
                                 <br>
                                 <ngx-intl-tel-input
                                 [cssClass]="'custom'"
@@ -362,10 +402,20 @@
                             <mat-form-field class="w-full">
                                 <mat-label>Stage at which the proceedings have reached</mat-label>
                                 <textarea rows="3" matInput formControlName="processStageReached"></textarea>
+                                <mat-error *ngIf="submitted && f.processStageReached.hasError('required')">
+                                    <ng-container *transloco="let translate">
+                                        {{translate('Field-Required')}}
+                                    </ng-container>
+                                </mat-error>
                             </mat-form-field>
                             <mat-form-field class="w-full">
                                 <mat-label>Details of any hearing dates that have been set</mat-label>
                                 <textarea rows="3" matInput formControlName="hearingDates"></textarea>
+                                <mat-error *ngIf="submitted && f.hearingDates.hasError('required')">
+                                    <ng-container *transloco="let translate">
+                                        {{translate('Field-Required')}}
+                                    </ng-container>
+                                </mat-error>
                             </mat-form-field>
                         </div>
                         <mat-divider class="mt-6 mb-10"></mat-divider>
@@ -375,12 +425,14 @@
                         </p>
                         <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
                             <div class="w-full">
-                                <mat-checkbox color="primary" formControlName="allPartyAggreedToMediate">Have all Parties agreed to mediate this matter?
+                                <mat-checkbox color="primary" #allPartyAggreedToMediate (change)="allPartyAggreedToMediateChanged($event)"
+                                formControlName="allPartyAggreedToMediate">Have all Parties agreed to mediate this matter?
                                     If ‘Yes’, please provide evidence along with this completed form (contract clause or any submission
                                     agreement or written communications)
                                 </mat-checkbox>
                             </div>
                         </div>
+                        <div *ngIf="allPartyAggreedToMediate.checked">
                         <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
                             <mat-form-field class="w-full">
                                 <mat-label>Contract/Contract Clause</mat-label>
@@ -389,6 +441,11 @@
                                     <mat-icon>clear</mat-icon>
                                 </button>
                                 <mat-icon matSuffix>folder</mat-icon>
+                                <mat-error *ngIf="f.contractClause.hasError('required')">
+                                    <ng-container *transloco="let translate">
+                                        {{translate('Field-Required')}}
+                                    </ng-container>
+                                </mat-error>
                               </mat-form-field>
                         </div>
                         <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
@@ -399,6 +456,11 @@
                                     <mat-icon>clear</mat-icon>
                                 </button>
                                 <mat-icon matSuffix>folder</mat-icon>
+                                <mat-error *ngIf="f.mediationSubmissionAgreement.hasError('required')">
+                                    <ng-container *transloco="let translate">
+                                        {{translate('Field-Required')}}
+                                    </ng-container>
+                                </mat-error>
                               </mat-form-field>
                         </div>
                         <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
@@ -409,8 +471,16 @@
                                     <mat-icon>clear</mat-icon>
                                 </button>
                                 <mat-icon matSuffix>folder</mat-icon>
+                                <mat-error *ngIf="f.emailWrittenComm.hasError('required')">
+                                    <ng-container *transloco="let translate">
+                                        {{translate('Field-Required')}}
+                                    </ng-container>
+                                </mat-error>
                               </mat-form-field>
                         </div>
+                      </div>
+
+
                         <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
                             <div class="w-full">
                                 <mat-checkbox color="primary" formControlName="sendNoticeToOtherParties">Do you want the Center to send a Notice of
@@ -422,6 +492,11 @@
                             <mat-form-field class="w-full">
                                 <mat-label>Please provide any relevant information below</mat-label>
                                 <textarea matInput rows="3" formControlName="relevantInformation"></textarea>
+                                <mat-error *ngIf="submitted && f.relevantInformation.hasError('required')">
+                                    <ng-container *transloco="let translate">
+                                        {{translate('Field-Required')}}
+                                    </ng-container>
+                                </mat-error>
                             </mat-form-field>
                         </div>
                         <mat-divider class="mt-6 mb-10"></mat-divider>
@@ -462,6 +537,11 @@
                             <mat-form-field class="col-span-2 w-full">
                                 <mat-label>For dispute(s) involving monetary claims, please provide details of the amount in dispute</mat-label>
                                 <input matInput type="number" formControlName="monetaryValue">
+                                <mat-error *ngIf="submitted && f.monetaryValue.hasError('required')">
+                                    <ng-container *transloco="let translate">
+                                        {{translate('Field-Required')}}
+                                    </ng-container>
+                                </mat-error>
                             </mat-form-field>
                         </div>
                       
@@ -470,6 +550,11 @@
                                     <mat-label>Please provide brief details of the dispute. 
                                         Include a summary of what occurred, the date(s) on which the dispute occurred, the names and titles of all individuals involved.</mat-label>
                                     <textarea matInput rows="3" formControlName="disputeDetails"></textarea>
+                                    <mat-error *ngIf="submitted && f.disputeDetails.hasError('required')">
+                                        <ng-container *transloco="let translate">
+                                            {{translate('Field-Required')}}
+                                        </ng-container>
+                                    </mat-error>
                                 </mat-form-field>
                             </div>
                            <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
@@ -488,6 +573,11 @@
                                     <mat-form-field class="w-full">
                                         <mat-label>Please provide details of the relief requested (e.g., an amount of money damages or a description of other relief you seek).</mat-label>
                                         <textarea matInput rows="3" formControlName="requestedRelief"></textarea>
+                                        <mat-error *ngIf="submitted && f.requestedRelief.hasError('required')">
+                                            <ng-container *transloco="let translate">
+                                                {{translate('Field-Required')}}
+                                            </ng-container>
+                                        </mat-error>
                                     </mat-form-field>
                                 </div>
                                 <mat-divider class="mt-6 mb-10"></mat-divider>
@@ -499,17 +589,30 @@
                                     <mat-form-field class="w-full">
                                         <mat-label> Please provide any other information which you consider would be of assistance</mat-label>
                                         <textarea matInput rows="3" formControlName="otherInfo"></textarea>
+                                        <mat-error *ngIf="submitted && f.otherInfo.hasError('required')">
+                                            <ng-container *transloco="let translate">
+                                                {{translate('Field-Required')}}
+                                            </ng-container>
+                                        </mat-error>
                                     </mat-form-field>
                                 </div>
                         <div class="flex items-center justify-end border-t -mx-8 mt-8 px-8 py-5 bg-gray-50 dark:bg-gray-700">
-                            <button mat-button>
+                            <button mat-button type="button">
                                 Cancel
                             </button>
                             <button
+                                type="button"
+                                class="px-6 ml-3"
+                                mat-flat-button
+                                [color]="'warn'" (click)="saveForm()">
+                                Save Work
+                            </button>
+                            <button
+                                type="submit"
                                 class="px-6 ml-3"
                                 mat-flat-button
                                 [color]="'primary'">
-                                Save
+                                Submit
                             </button>
                         </div>
                         

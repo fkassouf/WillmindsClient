@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from 'app/core/auth/authentication.service';
 import { Dispute } from 'app/modules/admin/models/dispute';
 import { CountryISO, PhoneNumberFormat, SearchCountryField } from 'ngx-intl-tel-input';
+import { ToastrService } from 'ngx-toastr';
+import { createMediationRequest } from '../models/create-mediation-request';
 import { OtherParty } from '../models/other-party';
 import { MediationService } from '../services/mediation.service';
 
@@ -31,17 +33,18 @@ export class MediationCaseComponent implements OnInit {
 	preferredCountries: CountryISO[] = [CountryISO.Lebanon];
   disputes : Dispute[] = [];
   filteredDisputes : Dispute[] = [];
+
   /**
      * Constructor
      */
   constructor(public _authService : AuthenticationService, 
-    private _formBuilder : FormBuilder, private mediationService : MediationService){}
+    private _formBuilder : FormBuilder, private mediationService : MediationService,  private toastr: ToastrService){}
 
   ngOnInit() : void {
     this.breadCrumbItems = [
          { label: 'Home', active: true, url : '/' }
       ];
-
+      
       this.title = 'New Mediation Request';
       this.otherParties.push(new OtherParty());
       this.mediationRequestForm = this._formBuilder.group({
@@ -97,6 +100,12 @@ export class MediationCaseComponent implements OnInit {
     this.clearLegalRFields(event.checked);
   }
 
+  allPartyAggreedToMediateChanged(event : any)
+  {
+      this.clearAllPartyAggreedToMediateFields(event.checked);
+  }
+
+
   clearLegalRFields(checked : boolean)
   {
       if(checked)
@@ -124,6 +133,32 @@ export class MediationCaseComponent implements OnInit {
       this.f.legalRTelephone.updateValueAndValidity();
   }
 
+  clearAllPartyAggreedToMediateFields(checked : boolean)
+  {
+    if(checked)
+    {
+       this.f.contractClause.addValidators(Validators.required);
+       this.f.mediationSubmissionAgreement.addValidators(Validators.required);
+       this.f.emailWrittenComm.addValidators(Validators.required);
+    }
+    else
+    {
+        this.f.contractClause.clearValidators();
+        this.f.mediationSubmissionAgreement.clearValidators();
+        this.f.emailWrittenComm.clearValidators();
+
+        this.f.contractClause.setValue(null);
+        this.f.mediationSubmissionAgreement.setValue(null);
+        this.f.emailWrittenComm.setValue(null);
+    }
+
+    /**Update value and validity */
+    this.f.contractClause.updateValueAndValidity();
+    this.f.mediationSubmissionAgreement.updateValueAndValidity();
+    this.f.emailWrittenComm.updateValueAndValidity();
+  }
+  
+
   /**Add more parties */
   addOtherParty()
   {
@@ -132,6 +167,7 @@ export class MediationCaseComponent implements OnInit {
       fullName: new FormControl<string>(null, [Validators.required]),
       email : new FormControl<string>(null, [Validators.required, Validators.email]),
       phone: new FormControl<string>(null, [Validators.required]),
+      address: new FormControl<string>(null, [Validators.required]),
       firmName : new FormControl<string>(null, []),
       lawyerName : new FormControl<string>(null, []),
       lawyerPhone : new FormControl<string>(null, []),
@@ -153,11 +189,50 @@ export class MediationCaseComponent implements OnInit {
      this.datesToAvoid.push('');
   }
 
+  saveForm()
+  {
+     let body : createMediationRequest = new createMediationRequest();
+     body.requesterSecondaryEmail = this.f.requesterSecondaryEmail.value;
+     body.requesterSecondaryEmail = this.f.requesterSecondaryEmail.value;
+     body.legalRFirmName = this.f.legalRFirmName.value;
+     body.legalRLawyerName = this.f.legalRLawyerName.value;
+     body.legalREmail = this.f.legalREmail.value;
+     body.legalRTelephone = this.f.legalRTelephone.value;
+     body.legalRAddress = this.f.legalRAddress.value;
+     body.stageClaims = this.f.processStageReached.value;
+
+     
+     this.partyList.controls.forEach((f:FormGroup)=>{
+          let party : OtherParty = new OtherParty();
+          party.entityName = f.controls.entityName.value;
+          party.email = f.controls.email.value;
+          party.telephone = f.controls.phone.value;
+          party.address = f.controls.address.value;
+          party.fullName = f.controls.email.value;
+          party.lawyerName = f.controls.lawyerName.value;
+          party.lawyerAddress = f.controls.lawyerAddress.value;
+          party.lawyerTelephone = f.controls.lawyerPhone.value;
+          party.lawyerEmail = f.controls.lawyerEmail.value;
+          body.partyList.push(party);
+     });
+
+        this.mediationService.createMediationRequest(body, null, null, null, null).subscribe(resp=>{
+        if(resp.success)
+        {
+          this.toastr.success('Mediation request created successfully');
+        }
+     })
+
+  }
+
   submitForm()
   {
+   
     this.submitted = true;
-     if(!this.mediationRequestForm.invalid)
+    this.mediationRequestForm.markAllAsTouched();
+     if(this.mediationRequestForm.invalid)
      {
+      this.toastr.error('Some fields are invalid');
        return;
      }
   }
