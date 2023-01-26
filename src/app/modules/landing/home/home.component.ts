@@ -25,6 +25,6 @@ export class LandingHomeComponent implements OnInit
 
     requestMediation()
     {
-        this.router.navigate(['/mediation/mediation-case']);
+        this.router.navigate(['/mediation/mediation-case', '-1']);
     }
 }

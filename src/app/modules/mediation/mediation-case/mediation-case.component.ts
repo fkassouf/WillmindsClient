@@ -1,9 +1,11 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService } from 'app/core/auth/authentication.service';
 import { Dispute } from 'app/modules/admin/models/dispute';
 import { CountryISO, PhoneNumberFormat, SearchCountryField } from 'ngx-intl-tel-input';
 import { ToastrService } from 'ngx-toastr';
+import { finalize } from 'rxjs';
 import { createMediationRequest } from '../models/create-mediation-request';
 import { OtherParty } from '../models/other-party';
 import { MediationService } from '../services/mediation.service';
@@ -14,6 +16,9 @@ import { MediationService } from '../services/mediation.service';
   styleUrls: ['./mediation-case.component.scss']
 })
 export class MediationCaseComponent implements OnInit {
+  private sub: any;
+  id : number;
+  mode : string = 'add';
   breadCrumbItems!: Array<{}>;
   title : string;
   mediationRequestForm : FormGroup;
@@ -33,20 +38,23 @@ export class MediationCaseComponent implements OnInit {
 	preferredCountries: CountryISO[] = [CountryISO.Lebanon];
   disputes : Dispute[] = [];
   filteredDisputes : Dispute[] = [];
+  saving : boolean = false;
+
+  currentMediationRequest : any;
 
   /**
      * Constructor
      */
-  constructor(public _authService : AuthenticationService, 
-    private _formBuilder : FormBuilder, private mediationService : MediationService,  private toastr: ToastrService){}
+  constructor(public _authService : AuthenticationService, private activatedRoute: ActivatedRoute,
+    private _formBuilder : FormBuilder, private mediationService : MediationService,  
+    private toastr: ToastrService, private router : Router){}
 
   ngOnInit() : void {
     this.breadCrumbItems = [
-         { label: 'Home', active: true, url : '/' }
-      ];
-      
-      this.title = 'New Mediation Request';
-      this.otherParties.push(new OtherParty());
+      { label: 'Home', active: true, url : '/' }
+    ];
+    this.sub = this.activatedRoute.params.subscribe(params => {
+
       this.mediationRequestForm = this._formBuilder.group({
         requesterSecondaryEmail : new FormControl<string>(null, [Validators.email]),
         requesterSecondaryTelephone : new FormControl<any>(null, []),
@@ -71,8 +79,49 @@ export class MediationCaseComponent implements OnInit {
         requestedRelief : new FormControl<string>(null, []),
         otherInfo : new FormControl<string>(null, [])
       });
-      this.addOtherParty();
-      this.getDisputeList();
+      this.id = +params['id'];
+      if(this.id === -1)
+      {
+         this.title = 'New Mediation Request';
+         this.otherParties.push(new OtherParty());
+         this.addOtherParty();
+         this.getDisputeList();
+      }
+      else
+      {
+        this.mode = 'edit';
+        this.title = 'Edit Mediation Request';
+        this.getMediationRequest();
+      }
+      
+   });
+    
+      
+      
+      
+  }
+
+  getMediationRequest()
+  {
+      this.mediationService.getMediationRequestById(this.id).subscribe(resp=>{
+          if(resp.success)
+          {
+              if(resp.result)
+              {
+                  this.currentMediationRequest = resp.result;
+                  this.title = this.title + ' ' + this.currentMediationRequest?.caseNumber;
+                  console.log(this.currentMediationRequest);
+                  /*this.mediationRequestForm.patchValue({
+                    secondaryEmail : this.currentMediationRequest.secondaryEmail,
+                    secondaryPhone : this.currentMediationRequest.secondaryTelephone,
+                  });*/
+              }
+              else
+              {
+                 this.router.navigate(['/']);
+              }
+          }
+      })
   }
 
   get f()
@@ -191,35 +240,73 @@ export class MediationCaseComponent implements OnInit {
 
   saveForm()
   {
+     this.mediationRequestForm.disable();
+     this.saving = true;
      let body : createMediationRequest = new createMediationRequest();
      body.requesterSecondaryEmail = this.f.requesterSecondaryEmail.value;
-     body.requesterSecondaryEmail = this.f.requesterSecondaryEmail.value;
+     body.requesterSecondaryTelephone = this.f.requesterSecondaryTelephone.value?.e164Number;
      body.legalRFirmName = this.f.legalRFirmName.value;
      body.legalRLawyerName = this.f.legalRLawyerName.value;
      body.legalREmail = this.f.legalREmail.value;
-     body.legalRTelephone = this.f.legalRTelephone.value;
+     body.legalRTelephone = this.f.legalRTelephone.value?.e164Number;
      body.legalRAddress = this.f.legalRAddress.value;
      body.stageClaims = this.f.processStageReached.value;
+     body.hearingDetails = this.f.hearingDates.value;
+     body.partiesAgreed = this.f.allPartyAggreedToMediate.value;
+     /*If all parties aggreed then attach files*/
+     let contractClauseFile = this.f.contractClause.value;
+     let mediationSubmissionAgreementFile = this.f.mediationSubmissionAgreement.value;
+     let emailWrittenCommFile = this.f.emailWrittenComm.value;
+
+     body.notifyParties = this.f.sendNoticeToOtherParties.value;
+     body.relevantInfo = this.f.relevantInformation.value;
+
+     let disputesCatNumbers : number[] = [];
+     let disputeCategories : Dispute[] = this.f.disputeCategory.value;
+     disputeCategories?.forEach(f=>{
+        disputesCatNumbers.push(f.id);
+     });
+     body.disputeList = disputesCatNumbers;
+     body.monetaryValue = this.f.monetaryValue.value;
+     body.disputeDetails = this.f.disputeDetails.value;
+     
+     /*Nature of disputes file*/
+     let natureOfDisputeFile = this.f.natureOfDispute.value;
+
+     body.requestedRelief = this.f.requestedRelief.value;
+     body.otherInfo = this.f.otherInfo.value;
 
      
      this.partyList.controls.forEach((f:FormGroup)=>{
           let party : OtherParty = new OtherParty();
           party.entityName = f.controls.entityName.value;
           party.email = f.controls.email.value;
-          party.telephone = f.controls.phone.value;
+          party.telephone = f.controls.phone.value?.e164Number;
           party.address = f.controls.address.value;
-          party.fullName = f.controls.email.value;
+          party.fullName = f.controls.fullName.value;
           party.lawyerName = f.controls.lawyerName.value;
           party.lawyerAddress = f.controls.lawyerAddress.value;
-          party.lawyerTelephone = f.controls.lawyerPhone.value;
+          party.lawyerTelephone = f.controls.lawyerPhone.value?.e164Number;
           party.lawyerEmail = f.controls.lawyerEmail.value;
           body.partyList.push(party);
      });
-
-        this.mediationService.createMediationRequest(body, null, null, null, null).subscribe(resp=>{
+      
+        
+        this.mediationService.createMediationRequest(body, natureOfDisputeFile?.files[0], 
+          emailWrittenCommFile?.files[0], 
+          contractClauseFile?.files[0], mediationSubmissionAgreementFile?.files[0])
+          .pipe(finalize(()=>{
+            this.mediationRequestForm.enable();
+            this.saving = false;
+          }))
+          .subscribe(resp=>{
         if(resp.success)
         {
           this.toastr.success('Mediation request created successfully');
+        }
+        else
+        {
+          this.toastr.error(resp.message);
         }
      })
 

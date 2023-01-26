@@ -84,6 +84,7 @@
     "Entity-Name" : "Nom de l'entité",
     "Entity-Name-Required" : "Nom de l'entité est requis",
     "Country" : "Pays",
-    "Country-Required" : "Le pays est requis"
+    "Country-Required" : "Le pays est requis",
+    "Save-Work" : "Enregistrer le travail"
  
 }

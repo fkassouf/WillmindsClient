@@ -604,8 +604,17 @@
                                 type="button"
                                 class="px-6 ml-3"
                                 mat-flat-button
-                                [color]="'warn'" (click)="saveForm()">
-                                Save Work
+                                [color]="'warn'" (click)="saveForm()" [disabled]="saving">
+                              
+                                <span *ngIf="!saving">
+                                    <ng-container *transloco="let translate">
+                                        {{translate('Save-Work')}}
+                                    </ng-container>
+                                </span>
+                                <mat-progress-spinner
+                                    *ngIf="saving"
+                                    [diameter]="24"
+                                    [mode]="'indeterminate'"></mat-progress-spinner>
                             </button>
                             <button
                                 type="submit"

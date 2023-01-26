@@ -33,7 +33,7 @@ import { config } from 'app/core/models/file-input-config';
 
 const routes: Route[] = [
     {
-        path: 'mediation-case',
+        path: 'mediation-case/:id',
         component: MediationCaseComponent,
     },
 ];

@@ -21,6 +21,11 @@ export class MediationService
         return this._httpClient.get<any>(environment.api + '/Case/GetDisputeList');
     }
 
+    getMediationRequestById(id : number)
+    {
+        return this._httpClient.get<any>(environment.api + '/Case/GetById?id=' + id);
+    }
+
     createMediationRequest(mediationRequest : createMediationRequest, 
         natureofdispute : File | null, 
         writtencommunication : File | null,

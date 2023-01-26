@@ -85,6 +85,7 @@
     "Entity-Name" : "Entity Name",
     "Entity-Name-Required" : "Entity name is required",
     "Country" : "Country",
-    "Country-Required" : "Country is required"
+    "Country-Required" : "Country is required",
+    "Save-Work" : "Save Work"
     
 }

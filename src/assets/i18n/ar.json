@@ -85,6 +85,7 @@
     "Entity-Name" : "اسم الكيان",
     "Entity-Name-Required" : "اسم الكيان مطلوب",
     "Country" : "البلد",
-    "Country-Required" : "البلد مطلوب"
+    "Country-Required" : "البلد مطلوب",
+    "Save-Work" : "حفظ العمل"
     
 }
