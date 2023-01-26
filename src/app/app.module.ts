@@ -12,6 +12,8 @@ import { appRoutes } from 'app/app.routing';
 import { ToastrModule } from 'ngx-toastr';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { CustomMatPaginatorIntl } from './core/transloco/custom-mat-paginator-intl';
+import { FuseMockApiModule } from '@fuse/lib/mock-api';
+import { mockApiServices } from './mock-api';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy       : PreloadAllModules,
@@ -30,7 +32,7 @@ const routerConfig: ExtraOptions = {
         // Fuse, FuseConfig & FuseMockAPI
         FuseModule,
         FuseConfigModule.forRoot(appConfig),
-        //FuseMockApiModule.forRoot(mockApiServices),
+        FuseMockApiModule.forRoot(mockApiServices),
 
         // Core module of your application
         CoreModule,

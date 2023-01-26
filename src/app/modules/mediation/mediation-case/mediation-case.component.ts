@@ -111,10 +111,13 @@ export class MediationCaseComponent implements OnInit {
                   this.currentMediationRequest = resp.result;
                   this.title = this.title + ' ' + this.currentMediationRequest?.caseNumber;
                   console.log(this.currentMediationRequest);
-                  /*this.mediationRequestForm.patchValue({
-                    secondaryEmail : this.currentMediationRequest.secondaryEmail,
-                    secondaryPhone : this.currentMediationRequest.secondaryTelephone,
-                  });*/
+                  
+                  this.mediationRequestForm.patchValue({
+                    requesterSecondaryEmail : this.currentMediationRequest?.requesterSecondaryEmail,
+                    requesterSecondaryTelephone : this.currentMediationRequest?.requesterSecondaryTelephone,
+                    legalRFirmName : this.currentMediationRequest?.legalRFirmName,
+                    legalRLawyerName : this.currentMediationRequest?.legalRLawyerName,
+                  });
               }
               else
               {
