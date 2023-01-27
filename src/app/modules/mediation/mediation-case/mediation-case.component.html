@@ -200,7 +200,7 @@
                         <p class="text-lg font-medium"></p>
                         <p class="text-secondary mb-6">
                             Details of the SECOND PARTY
-                            <button mat-stroked-button [disabled]="f.partyList.value.length > otherPartiesLimit"
+                            <button type="button" mat-stroked-button [disabled]="f.partyList.value.length > otherPartiesLimit"
                             color="primary" (click)="addOtherParty()">
                                 Add more parties ({{partyList.controls.length}})
                                
@@ -433,9 +433,11 @@
                             </div>
                         </div>
                         <div *ngIf="allPartyAggreedToMediate.checked">
-                        <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                        <div class="grid sm:grid-cols-2 gap-3 pb-4 w-full">
                             <mat-form-field class="w-full">
-                                <mat-label>Contract/Contract Clause</mat-label>
+                                <mat-label>Contract/Contract Clause
+                                   
+                                </mat-label>
                                 <ngx-mat-file-input #contractClause formControlName="contractClause" [accept]="'.pdf,.docx'"></ngx-mat-file-input>
                                 <button mat-icon-button *ngIf="!contractClause.empty" (click)="contractClause.clear($event)">
                                     <mat-icon>clear</mat-icon>
@@ -447,9 +449,12 @@
                                     </ng-container>
                                 </mat-error>
                               </mat-form-field>
+                              <a target="_blank" *ngIf="currentMediationRequest?.contractClause" [href]="apiPath + '/Utility/DownloadFile?fileName=' + currentMediationRequest?.contractClause">
+                                {{currentMediationRequest?.contractClause}}
+                               </a>
                         </div>
-                        <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
-                            <mat-form-field class="w-full">
+                        <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
+                            <mat-form-field class="col-span-2 w-full">
                                 <mat-label>Mediation Submission Agreement</mat-label>
                                 <ngx-mat-file-input #mediationSubmissionAgreement formControlName="mediationSubmissionAgreement" [accept]="'.pdf,.docx'"></ngx-mat-file-input>
                                 <button mat-icon-button *ngIf="!mediationSubmissionAgreement.empty" (click)="mediationSubmissionAgreement.clear($event)">
@@ -462,9 +467,12 @@
                                     </ng-container>
                                 </mat-error>
                               </mat-form-field>
+                              <a target="_blank" *ngIf="currentMediationRequest?.agreementOnMediation" [href]="apiPath + '/Utility/DownloadFile?fileName=' + currentMediationRequest?.agreementOnMediation">
+                                {{currentMediationRequest?.agreementOnMediation}}
+                               </a>
                         </div>
-                        <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
-                            <mat-form-field class="w-full">
+                        <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
+                            <mat-form-field class="col-span-2 w-full">
                                 <mat-label>Email written Communications between parties (all in one document)</mat-label>
                                 <ngx-mat-file-input #emailWrittenComm formControlName="emailWrittenComm" [accept]="'.pdf,.docx'"></ngx-mat-file-input>
                                 <button mat-icon-button *ngIf="!emailWrittenComm.empty" (click)="emailWrittenComm.clear($event)">
@@ -477,6 +485,9 @@
                                     </ng-container>
                                 </mat-error>
                               </mat-form-field>
+                              <a target="_blank" *ngIf="currentMediationRequest?.writtenCommunication" [href]="apiPath + '/Utility/DownloadFile?fileName=' + currentMediationRequest?.writtenCommunication">
+                                {{currentMediationRequest?.writtenCommunication}}
+                               </a>
                         </div>
                       </div>
 
@@ -557,8 +568,8 @@
                                     </mat-error>
                                 </mat-form-field>
                             </div>
-                           <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
-                                <mat-form-field class="w-full">
+                           <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
+                                <mat-form-field class="col-span-2 w-full">
                                     <mat-label>You may attach a separate document setting out the nature of the dispute, but this must not exceed 10 pages</mat-label>
                                     <ngx-mat-file-input  #natureOfDispute formControlName="natureOfDispute" [accept]="'.pdf,.docx'"></ngx-mat-file-input>
                                     <button mat-icon-button *ngIf="!natureOfDispute.empty" (click)="natureOfDispute.clear($event)">
@@ -566,6 +577,9 @@
                                     </button>
                                     <mat-icon matSuffix>folder</mat-icon>
                                   </mat-form-field>
+                                  <a target="_blank" *ngIf="currentMediationRequest?.natureOfDispute" [href]="apiPath + '/Utility/DownloadFile?fileName=' + currentMediationRequest?.natureOfDispute">
+                                    {{currentMediationRequest?.natureOfDispute}}
+                                   </a>
                             </div>
                            
                             

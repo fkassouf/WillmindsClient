@@ -3,11 +3,13 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService } from 'app/core/auth/authentication.service';
 import { Dispute } from 'app/modules/admin/models/dispute';
+import { environment } from 'environments/environment';
 import { CountryISO, PhoneNumberFormat, SearchCountryField } from 'ngx-intl-tel-input';
 import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs';
 import { createMediationRequest } from '../models/create-mediation-request';
 import { OtherParty } from '../models/other-party';
+import { UpdateMediationRequest } from '../models/update-mediation-request';
 import { MediationService } from '../services/mediation.service';
 
 @Component({
@@ -41,6 +43,8 @@ export class MediationCaseComponent implements OnInit {
   saving : boolean = false;
 
   currentMediationRequest : any;
+
+  apiPath = environment.api;
 
   /**
      * Constructor
@@ -85,7 +89,7 @@ export class MediationCaseComponent implements OnInit {
          this.title = 'New Mediation Request';
          this.otherParties.push(new OtherParty());
          this.addOtherParty();
-         this.getDisputeList();
+         this.getDisputeList(null);
       }
       else
       {
@@ -117,7 +121,22 @@ export class MediationCaseComponent implements OnInit {
                     requesterSecondaryTelephone : this.currentMediationRequest?.requesterSecondaryTelephone,
                     legalRFirmName : this.currentMediationRequest?.legalRFirmName,
                     legalRLawyerName : this.currentMediationRequest?.legalRLawyerName,
+                    legalREmail : this.currentMediationRequest?.legalREmail,
+                    legalRTelephone : this.currentMediationRequest?.legalRTelephone,
+                    legalRAddress : this.currentMediationRequest?.legalRAddress,
+                    processStageReached : this.currentMediationRequest?.stageClaims,
+                    hearingDates : this.currentMediationRequest?.hearingDetails,
+                    allPartyAggreedToMediate : this.currentMediationRequest?.partiesAgreed,
+                    sendNoticeToOtherParties : this.currentMediationRequest?.notifyParties,
+                    relevantInformation : this.currentMediationRequest?.relevantInfo,
+                    monetaryValue : this.currentMediationRequest?.monetaryValue,
+                    disputeDetails : this.currentMediationRequest?.disputeDetails,
+                    requestedRelief : this.currentMediationRequest?.requestedRelief,
+                    otherInfo : this.currentMediationRequest?.otherInfo,
+                    
                   });
+                  this.getDisputeList(this.currentMediationRequest?.disputeBackground);
+                  this.addOtherPartiesForEdit(this.currentMediationRequest?.parties);
               }
               else
               {
@@ -136,13 +155,28 @@ export class MediationCaseComponent implements OnInit {
     return this.f.partyList as FormArray;
   }
 
-  getDisputeList()
+  getDisputeList(data : any[])
   {
       this.mediationService.getDisputeList().subscribe(resp=>{
         if(resp.success)
         {
             this.disputes = resp.result;
             this.filteredDisputes = resp.result;
+          
+            if(data)
+               {
+                  let arr : Dispute[] = [];
+                  this.disputes.forEach(d=>{
+                    data.forEach(el=>{
+                        if(d.id === el.id)
+                        {
+                            arr.push(d);
+                        }
+                      });
+                  });
+                  this.f.disputeCategory.patchValue(arr);
+                  
+               }
         }
       })
   }
@@ -209,6 +243,27 @@ export class MediationCaseComponent implements OnInit {
     this.f.mediationSubmissionAgreement.updateValueAndValidity();
     this.f.emailWrittenComm.updateValueAndValidity();
   }
+
+  /**Add parties for Edit */
+  addOtherPartiesForEdit(parties : OtherParty[])
+  {
+    parties.forEach(party=>{
+      const partyForm = this._formBuilder.group({
+        entityName : new FormControl<string>(party.entityName, []),
+        fullName: new FormControl<string>(party.fullName, [Validators.required]),
+        email : new FormControl<string>(party.email, [Validators.required, Validators.email]),
+        phone: new FormControl<string>(party.telephone, [Validators.required]),
+        address: new FormControl<string>(party.address, [Validators.required]),
+        firmName : new FormControl<string>(party.lawyerFirmName, []),
+        lawyerName : new FormControl<string>(party.lawyerName, []),
+        lawyerPhone : new FormControl<string>(party.lawyerTelephone, []),
+        lawyerEmail : new FormControl<string>(party.lawyerEmail, [Validators.email]),
+        lawyerAddress : new FormControl<string>(party.lawyerAddress, []),
+      });
+      this.partyList.push(partyForm);
+    });
+    
+  }
   
 
   /**Add more parties */
@@ -245,6 +300,8 @@ export class MediationCaseComponent implements OnInit {
   {
      this.mediationRequestForm.disable();
      this.saving = true;
+     if(this.mode == 'add')
+     {
      let body : createMediationRequest = new createMediationRequest();
      body.requesterSecondaryEmail = this.f.requesterSecondaryEmail.value;
      body.requesterSecondaryTelephone = this.f.requesterSecondaryTelephone.value?.e164Number;
@@ -311,7 +368,79 @@ export class MediationCaseComponent implements OnInit {
         {
           this.toastr.error(resp.message);
         }
-     })
+     });
+    }
+    else if(this.mode == 'edit')
+    {
+      let body : UpdateMediationRequest = new UpdateMediationRequest();
+      body.id = this.currentMediationRequest.id;
+      body.ownerId = this.currentMediationRequest.ownerId;
+      body.requesterSecondaryEmail = this.f.requesterSecondaryEmail.value;
+      body.requesterSecondaryTelephone = this.f.requesterSecondaryTelephone.value?.e164Number;
+      body.legalRFirmName = this.f.legalRFirmName.value;
+      body.legalRLawyerName = this.f.legalRLawyerName.value;
+      body.legalREmail = this.f.legalREmail.value;
+      body.legalRTelephone = this.f.legalRTelephone.value?.e164Number;
+      body.legalRAddress = this.f.legalRAddress.value;
+      body.stageClaims = this.f.processStageReached.value;
+      body.hearingDetails = this.f.hearingDates.value;
+      body.partiesAgreed = this.f.allPartyAggreedToMediate.value;
+      /*If all parties aggreed then attach files*/
+      let contractClauseFile = this.f.contractClause.value;
+      let mediationSubmissionAgreementFile = this.f.mediationSubmissionAgreement.value;
+      let emailWrittenCommFile = this.f.emailWrittenComm.value;
+ 
+      body.notifyParties = this.f.sendNoticeToOtherParties.value;
+      body.relevantInfo = this.f.relevantInformation.value;
+ 
+      let disputesCatNumbers : number[] = [];
+      let disputeCategories : Dispute[] = this.f.disputeCategory.value;
+      disputeCategories?.forEach(f=>{
+         disputesCatNumbers.push(f.id);
+      });
+      body.disputeList = disputesCatNumbers;
+      body.monetaryValue = this.f.monetaryValue.value;
+      body.disputeDetails = this.f.disputeDetails.value;
+      
+      /*Nature of disputes file*/
+      let natureOfDisputeFile = this.f.natureOfDispute.value;
+ 
+      body.requestedRelief = this.f.requestedRelief.value;
+      body.otherInfo = this.f.otherInfo.value;
+ 
+      
+      this.partyList.controls.forEach((f:FormGroup)=>{
+           let party : OtherParty = new OtherParty();
+           party.entityName = f.controls.entityName.value;
+           party.email = f.controls.email.value;
+           party.telephone = f.controls.phone.value?.e164Number;
+           party.address = f.controls.address.value;
+           party.fullName = f.controls.fullName.value;
+           party.lawyerName = f.controls.lawyerName.value;
+           party.lawyerAddress = f.controls.lawyerAddress.value;
+           party.lawyerTelephone = f.controls.lawyerPhone.value?.e164Number;
+           party.lawyerEmail = f.controls.lawyerEmail.value;
+           body.partyList.push(party);
+      });
+
+      this.mediationService.updateMediationRequest(body, natureOfDisputeFile?.files[0], 
+        emailWrittenCommFile?.files[0], 
+        contractClauseFile?.files[0], mediationSubmissionAgreementFile?.files[0])
+        .pipe(finalize(()=>{
+          this.mediationRequestForm.enable();
+          this.saving = false;
+        }))
+        .subscribe(resp=>{
+      if(resp.success)
+      {
+        this.toastr.success('Mediation request updated successfully');
+      }
+      else
+      {
+        this.toastr.error(resp.message);
+      }
+   });
+    }
 
   }
 
