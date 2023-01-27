@@ -10,6 +10,8 @@ import { FuseNavigationService } from '@fuse/components/navigation/navigation.se
 import { FuseScrollbarDirective } from '@fuse/directives/scrollbar/scrollbar.directive';
 import { FuseUtilsService } from '@fuse/services/utils/utils.service';
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
+import { ROLES } from 'app/core/enums/core-enum';
+import { AuthenticationService } from 'app/core/auth/authentication.service';
 
 @Component({
     selector       : 'fuse-vertical-navigation',
@@ -72,7 +74,8 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
         private _router: Router,
         private _scrollStrategyOptions: ScrollStrategyOptions,
         private _fuseNavigationService: FuseNavigationService,
-        private _fuseUtilsService: FuseUtilsService
+        private _fuseUtilsService: FuseUtilsService,
+        private _authService : AuthenticationService
     )
     {
         this._handleAsideOverlayClick = (): void => {
@@ -777,5 +780,15 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
 
         // Execute the observable
         this.openedChanged.next(open);
+    }
+
+    checkPrivacy(id : any)
+    {
+        if(id === 'users-management' && this._authService.user$?.roles[0] !== ROLES.SUPERADMIN && this._authService.user$?.roles[0] !== ROLES.ADMIN)
+        {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -59,30 +59,6 @@ export class ModernLayoutComponent implements OnInit, OnDestroy
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((navigation: Navigation) => {
             this.navigation = navigation;
-
-            /*manage navigation privacy*/
-            if(this._authService.user$?.roles[0] !== ROLES.SUPERADMIN)
-            {
-                let indexOfUsersManagementHorizontal = this.navigation.horizontal.indexOf({
-                    id   : 'users-management',
-                    title: 'Users Management',
-                    type : 'basic',
-                    icon : 'heroicons_outline:users',
-                    link : '/admin/users-management'
-                });
-                this.navigation.horizontal.splice(indexOfUsersManagementHorizontal, 1);
-
-                let indexOfUsersManagementDefault = this.navigation.default.indexOf({
-                    id   : 'users-management',
-                    title: 'Users Management',
-                    type : 'basic',
-                    icon : 'heroicons_outline:users',
-                    link : '/admin/users-management'
-                });
-
-                this.navigation.default.splice(indexOfUsersManagementDefault, 1);
-            }
-
             });
 
         // Subscribe to media changes
