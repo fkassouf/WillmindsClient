@@ -6,15 +6,16 @@
         <ng-container *ngIf="(item.hidden && !item.hidden(item)) || !item.hidden">
 
             <!-- Basic -->
-            <ng-container *ngIf="item.type === 'basic'">
+            <ng-container *ngIf="item.type === 'basic' && checkPrivacy(item.id)">
                 <fuse-horizontal-navigation-basic-item
                     class="fuse-horizontal-navigation-menu-item"
                     [item]="item"
                     [name]="name"></fuse-horizontal-navigation-basic-item>
+                    
             </ng-container>
 
             <!-- Branch: aside, collapsable, group -->
-            <ng-container *ngIf="item.type === 'aside' || item.type === 'collapsable' || item.type === 'group'">
+            <ng-container *ngIf="(item.type === 'aside' || item.type === 'collapsable' || item.type === 'group') && checkPrivacy(item.id)">
                 <fuse-horizontal-navigation-branch-item
                     class="fuse-horizontal-navigation-menu-item"
                     [item]="item"

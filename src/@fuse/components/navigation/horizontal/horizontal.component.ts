@@ -4,6 +4,8 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FuseUtilsService } from '@fuse/services/utils/utils.service';
+import { AuthenticationService } from 'app/core/auth/authentication.service';
+import { ROLES } from 'app/core/enums/core-enum';
 
 @Component({
     selector       : 'fuse-horizontal-navigation',
@@ -28,7 +30,8 @@ export class FuseHorizontalNavigationComponent implements OnChanges, OnInit, OnD
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseNavigationService: FuseNavigationService,
-        private _fuseUtilsService: FuseUtilsService
+        private _fuseUtilsService: FuseUtilsService,
+        private _authService : AuthenticationService
     )
     {
     }
@@ -105,5 +108,15 @@ export class FuseHorizontalNavigationComponent implements OnChanges, OnInit, OnD
     trackByFn(index: number, item: any): any
     {
         return item.id || index;
+    }
+
+    checkPrivacy(id : any)
+    {
+        if(id === 'users-management' && this._authService.user$?.roles[0] !== ROLES.SUPERADMIN && this._authService.user$?.roles[0] !== ROLES.ADMIN)
+        {
+            return false;
+        }
+
+        return true;
     }
 }
