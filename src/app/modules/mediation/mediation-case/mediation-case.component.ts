@@ -1,5 +1,6 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatCheckbox } from '@angular/material/checkbox';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService } from 'app/core/auth/authentication.service';
 import { Dispute } from 'app/modules/admin/models/dispute';
@@ -11,6 +12,9 @@ import { createMediationRequest } from '../models/create-mediation-request';
 import { OtherParty } from '../models/other-party';
 import { UpdateMediationRequest } from '../models/update-mediation-request';
 import { MediationService } from '../services/mediation.service';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ConfirmSubmissionComponent } from '../confirm-submission/confirm-submission.component';
 
 @Component({
   selector: 'app-mediation-case',
@@ -46,16 +50,20 @@ export class MediationCaseComponent implements OnInit {
 
   apiPath = environment.api;
 
+  @ViewChild('confirmSubmission') confirmSubmission : MatCheckbox;
+
   /**
      * Constructor
      */
   constructor(public _authService : AuthenticationService, private activatedRoute: ActivatedRoute,
     private _formBuilder : FormBuilder, private mediationService : MediationService,  
-    private toastr: ToastrService, private router : Router){}
+    private toastr: ToastrService, private router : Router, private dialog: MatDialog){}
 
   ngOnInit() : void {
     this.breadCrumbItems = [
-      { label: 'Home', active: true, url : '/' }
+      { label: 'Home', active: false, url : '/' },
+      { label: 'Mediations', active: false, url : '/mediation/mediations' },
+      
     ];
     this.sub = this.activatedRoute.params.subscribe(params => {
 
@@ -87,6 +95,9 @@ export class MediationCaseComponent implements OnInit {
       if(this.id === -1)
       {
          this.title = 'New Mediation Request';
+         this.breadCrumbItems.push(
+          { label: 'Add', active: true, url : '/' },
+         );
          this.otherParties.push(new OtherParty());
          this.addOtherParty();
          this.getDisputeList(null);
@@ -113,8 +124,10 @@ export class MediationCaseComponent implements OnInit {
               if(resp.result)
               {
                   this.currentMediationRequest = resp.result;
-                  this.title = this.title + ' ' + this.currentMediationRequest?.caseNumber;
-                  console.log(this.currentMediationRequest);
+                 
+                  this.breadCrumbItems.push(
+                    { label: this.currentMediationRequest?.caseNumber, active: true, url : '/' },
+                   );
                   
                   this.mediationRequestForm.patchValue({
                     requesterSecondaryEmail : this.currentMediationRequest?.requesterSecondaryEmail,
@@ -253,11 +266,11 @@ export class MediationCaseComponent implements OnInit {
         fullName: new FormControl<string>(party.fullName, [Validators.required]),
         email : new FormControl<string>(party.email, [Validators.required, Validators.email]),
         phone: new FormControl<string>(party.telephone, [Validators.required]),
-        address: new FormControl<string>(party.address, [Validators.required]),
+        address: new FormControl<string>(party.address, []),
         firmName : new FormControl<string>(party.lawyerFirmName, []),
         lawyerName : new FormControl<string>(party.lawyerName, []),
         lawyerPhone : new FormControl<string>(party.lawyerTelephone, []),
-        lawyerEmail : new FormControl<string>(party.lawyerEmail, [Validators.email]),
+        lawyerEmail : new FormControl<string>(party.lawyerEmail, []),
         lawyerAddress : new FormControl<string>(party.lawyerAddress, []),
       });
       this.partyList.push(partyForm);
@@ -335,9 +348,23 @@ export class MediationCaseComponent implements OnInit {
 
      body.requestedRelief = this.f.requestedRelief.value;
      body.otherInfo = this.f.otherInfo.value;
+    
+     let otherPartiesValid : boolean = true;
 
-     
      this.partyList.controls.forEach((f:FormGroup)=>{
+
+          /**Prevent the user to save the form without adding at least one other party email */
+          if(!f.controls.email.value)
+          {
+            this.toastr.error('Other parties missing emails');
+            this.mediationRequestForm.enable();
+            f.controls.email.markAsTouched();
+            f.controls.email.updateValueAndValidity();
+            this.saving = false;
+            otherPartiesValid = false;
+            return;
+          }
+          
           let party : OtherParty = new OtherParty();
           party.entityName = f.controls.entityName.value;
           party.email = f.controls.email.value;
@@ -351,24 +378,28 @@ export class MediationCaseComponent implements OnInit {
           body.partyList.push(party);
      });
       
-        
-        this.mediationService.createMediationRequest(body, natureOfDisputeFile?.files[0], 
-          emailWrittenCommFile?.files[0], 
-          contractClauseFile?.files[0], mediationSubmissionAgreementFile?.files[0])
-          .pipe(finalize(()=>{
-            this.mediationRequestForm.enable();
-            this.saving = false;
-          }))
-          .subscribe(resp=>{
-        if(resp.success)
+     
+        if(otherPartiesValid)
         {
-          this.toastr.success('Mediation request created successfully');
-        }
-        else
-        {
-          this.toastr.error(resp.message);
-        }
-     });
+            this.mediationService.createMediationRequest(body, natureOfDisputeFile?.files[0], 
+              emailWrittenCommFile?.files[0], 
+              contractClauseFile?.files[0], mediationSubmissionAgreementFile?.files[0])
+              .pipe(finalize(()=>{
+                this.mediationRequestForm.enable();
+                this.saving = false;
+              }))
+              .subscribe(resp=>{
+            if(resp.success)
+            {
+              this.toastr.success('Mediation request created successfully');
+              this.router.navigate(['/mediation/mediations']);
+            }
+            else
+            {
+              this.toastr.error(resp.message);
+            }
+        });
+      }
     }
     else if(this.mode == 'edit')
     {
@@ -408,8 +439,19 @@ export class MediationCaseComponent implements OnInit {
       body.requestedRelief = this.f.requestedRelief.value;
       body.otherInfo = this.f.otherInfo.value;
  
-      
+      let otherPartiesValid : boolean = true;
       this.partyList.controls.forEach((f:FormGroup)=>{
+        /**Prevent the user to save the form without adding at least one other party email */
+        if(!f.controls.email.value)
+        {
+          this.toastr.error('Other parties missing emails');
+          this.mediationRequestForm.enable();
+          f.controls.email.markAsTouched();
+          f.controls.email.updateValueAndValidity();
+          this.saving = false;
+          otherPartiesValid = false;
+          return;
+        }
            let party : OtherParty = new OtherParty();
            party.entityName = f.controls.entityName.value;
            party.email = f.controls.email.value;
@@ -423,30 +465,34 @@ export class MediationCaseComponent implements OnInit {
            body.partyList.push(party);
       });
 
-      this.mediationService.updateMediationRequest(body, natureOfDisputeFile?.files[0], 
-        emailWrittenCommFile?.files[0], 
-        contractClauseFile?.files[0], mediationSubmissionAgreementFile?.files[0])
-        .pipe(finalize(()=>{
-          this.mediationRequestForm.enable();
-          this.saving = false;
-        }))
-        .subscribe(resp=>{
-      if(resp.success)
+      if(otherPartiesValid)
       {
-        this.toastr.success('Mediation request updated successfully');
+        this.mediationService.updateMediationRequest(body, natureOfDisputeFile?.files[0], 
+          emailWrittenCommFile?.files[0], 
+          contractClauseFile?.files[0], mediationSubmissionAgreementFile?.files[0])
+          .pipe(finalize(()=>{
+            this.mediationRequestForm.enable();
+            this.saving = false;
+          }))
+          .subscribe(resp=>{
+          if(resp.success)
+          {
+            this.toastr.success('Mediation request updated successfully');
+            this.router.navigate(['/mediation/mediations']);
+          }
+          else
+          {
+            this.toastr.error(resp.message);
+          }
+        });
       }
-      else
-      {
-        this.toastr.error(resp.message);
-      }
-   });
     }
 
   }
 
   submitForm()
   {
-   
+    
     this.submitted = true;
     this.mediationRequestForm.markAllAsTouched();
      if(this.mediationRequestForm.invalid)
@@ -454,6 +500,102 @@ export class MediationCaseComponent implements OnInit {
       this.toastr.error('Some fields are invalid');
        return;
      }
+
+
+     /*body*/
+     let body : UpdateMediationRequest = new UpdateMediationRequest();
+     body.id = this.currentMediationRequest.id;
+     body.ownerId = this.currentMediationRequest.ownerId;
+     body.requesterSecondaryEmail = this.f.requesterSecondaryEmail.value;
+     body.requesterSecondaryTelephone = this.f.requesterSecondaryTelephone.value?.e164Number;
+     body.legalRFirmName = this.f.legalRFirmName.value;
+     body.legalRLawyerName = this.f.legalRLawyerName.value;
+     body.legalREmail = this.f.legalREmail.value;
+     body.legalRTelephone = this.f.legalRTelephone.value?.e164Number;
+     body.legalRAddress = this.f.legalRAddress.value;
+     body.stageClaims = this.f.processStageReached.value;
+     body.hearingDetails = this.f.hearingDates.value;
+     body.partiesAgreed = this.f.allPartyAggreedToMediate.value;
+     /*If all parties aggreed then attach files*/
+     let contractClauseFile = this.f.contractClause.value;
+     let mediationSubmissionAgreementFile = this.f.mediationSubmissionAgreement.value;
+     let emailWrittenCommFile = this.f.emailWrittenComm.value;
+
+     body.notifyParties = this.f.sendNoticeToOtherParties.value;
+     body.relevantInfo = this.f.relevantInformation.value;
+
+     let disputesCatNumbers : number[] = [];
+     let disputeCategories : Dispute[] = this.f.disputeCategory.value;
+     disputeCategories?.forEach(f=>{
+        disputesCatNumbers.push(f.id);
+     });
+     body.disputeList = disputesCatNumbers;
+     body.monetaryValue = this.f.monetaryValue.value;
+     body.disputeDetails = this.f.disputeDetails.value;
+     
+     /*Nature of disputes file*/
+     let natureOfDisputeFile = this.f.natureOfDispute.value;
+
+     body.requestedRelief = this.f.requestedRelief.value;
+     body.otherInfo = this.f.otherInfo.value;
+     body.isSubmitted = true;
+
+     let otherPartiesValid : boolean = true;
+     this.partyList.controls.forEach((f:FormGroup)=>{
+       /**Prevent the user to save the form without adding at least one other party email */
+       if(!f.controls.email.value)
+       {
+         this.toastr.error('Other parties missing emails');
+         this.mediationRequestForm.enable();
+         f.controls.email.markAsTouched();
+         f.controls.email.updateValueAndValidity();
+         this.saving = false;
+         otherPartiesValid = false;
+         return;
+       }
+          let party : OtherParty = new OtherParty();
+          party.entityName = f.controls.entityName.value;
+          party.email = f.controls.email.value;
+          party.telephone = f.controls.phone.value?.e164Number;
+          party.address = f.controls.address.value;
+          party.fullName = f.controls.fullName.value;
+          party.lawyerName = f.controls.lawyerName.value;
+          party.lawyerAddress = f.controls.lawyerAddress.value;
+          party.lawyerTelephone = f.controls.lawyerPhone.value?.e164Number;
+          party.lawyerEmail = f.controls.lawyerEmail.value;
+          body.partyList.push(party);
+     });
+
+     if(otherPartiesValid)
+     {
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.disableClose = true;
+      dialogConfig.autoFocus = true;
+      dialogConfig.data = {
+        body : body,
+        natureOfDisputeFile : natureOfDisputeFile?.files[0],
+        emailWrittenCommFile : emailWrittenCommFile?.files[0],
+        contractClauseFile : contractClauseFile?.files[0],
+        mediationSubmissionAgreementFile : mediationSubmissionAgreementFile?.files[0],
+        success : false
+      };
+
+      const dialogR = this.dialog.open(ConfirmSubmissionComponent, dialogConfig);
+       
+       dialogR.afterClosed().subscribe(data => {
+          if(data == 'success')
+          {
+              this.toastr.success('Mediation Request submitted successfully');
+              this.router.navigate(['/mediation/mediations']);
+          }
+          else
+          {
+            this.toastr.error(data);
+          }
+       }
+      );
+     }
+     
   }
 
 }

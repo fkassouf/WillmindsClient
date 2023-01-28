@@ -30,17 +30,28 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MaterialFileInputModule, NGX_MAT_FILE_INPUT_CONFIG } from 'ngx-material-file-input';
 import { config } from 'app/core/models/file-input-config';
+import { MediationsComponent } from './mediations/mediations.component';
+import { MediationsFilterComponent } from './mediations-filter/mediations-filter.component';
+import { ConfirmSubmissionComponent } from './confirm-submission/confirm-submission.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 const routes: Route[] = [
     {
         path: 'mediation-case/:id',
         component: MediationCaseComponent,
     },
+    {
+        path: 'mediations',
+        component: MediationsComponent,
+    },
 ];
 
 @NgModule({
     declarations: [
-     MediationCaseComponent
+     MediationCaseComponent,
+     MediationsComponent,
+     MediationsFilterComponent,
+     ConfirmSubmissionComponent
   ],
     imports: [
         RouterModule.forChild(routes),
@@ -70,9 +81,13 @@ const routes: Route[] = [
         MatStepperModule,
         MatRadioModule,
         MatTabsModule,
+        MatDatepickerModule,
         MatRadioModule,
         FuseDrawerModule,
         MaterialFileInputModule,
+        MatTooltipModule,
+        FuseDrawerModule,
+        MatDialogModule,
         SharedModule
     ],
     providers: [{ provide: NGX_MAT_FILE_INPUT_CONFIG, useValue: config }]

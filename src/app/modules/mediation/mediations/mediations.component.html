@@ -1,0 +1,140 @@
+
+<div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-2 sm:py-2 sm:px-10 border-b bg-card dark:bg-transparent">
+        <!-- Title -->
+        <div class="text-2xl font-extrabold tracking-tight">
+            <ng-container *transloco="let translate">
+                <span>{{translate("Mediations")}}</span>
+            </ng-container>
+        </div>
+        <!-- Actions -->
+        <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4 gap-8">
+            <!-- Add mediation request button -->
+            <button
+            class="ml-4"
+            mat-flat-button
+            [color]="'primary'"
+            (click)="addNewRequest()"
+            matTooltip="Add new request"
+            >
+            <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+            <span class="ml-2 mr-1"><ng-container *transloco="let translate">
+                <span>{{translate("Add")}}</span>
+            </ng-container></span>
+        </button>
+        
+        <button mat-icon-button color="primary" (click)="toggleFilter()">
+            <mat-icon>search</mat-icon>
+            <span *ngIf="existsFilter"
+            class="w-2 h-2 rounded-full bg-green-500"></span>
+            
+        </button>
+            <!-- Breadcrumbs -->
+            <app-pagetitle title="Mediations" [breadcrumbItems]="breadCrumbItems"></app-pagetitle>
+            
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div class="flex flex-auto overflow-hidden">
+        <!-- Mediations list -->
+        <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden sm:overflow-y-auto">
+            <ng-container>
+                <ng-container>
+                    <div class="grid">
+                        <mat-table [dataSource]="dataSource" class="items-center gap-4 border-b" matSort matSortActive="createdOn"
+                            matSortDirection="desc" matSortDisableClear>
+                            <ng-container matColumnDef="caseNumber">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <ng-container *transloco="let translate">
+                                        <span>{{translate("Case-Number")}}</span>
+                                    </ng-container>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let mediation">{{mediation.caseNumber}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="createdOn">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <ng-container *transloco="let translate">
+                                        <span>{{translate("Created-On")}}</span>
+                                    </ng-container>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let mediation">{{mediation.createdOn | date : 'dd-MM-yyyy'}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="requesterName">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <ng-container *transloco="let translate">
+                                        <span>{{translate("Requester-Name")}}</span>
+                                    </ng-container>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let mediation">{{mediation.requesterName}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="requesterEmail">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <ng-container *transloco="let translate">
+                                        <span>{{translate("Email")}}</span>
+                                    </ng-container>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let mediation">{{mediation.requesterEmail}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="requesterTelephone">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <ng-container *transloco="let translate">
+                                        <span>{{translate("Telephone")}}</span>
+                                    </ng-container>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let mediation">{{mediation.requesterTelephone}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="caseStatus">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <ng-container *transloco="let translate">
+                                        <span>{{translate("Status")}}</span>
+                                    </ng-container>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let mediation">{{mediation.caseStatus}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="lastUpdatedOn">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <ng-container *transloco="let translate">
+                                        <span>{{translate("Updated-On")}}</span>
+                                    </ng-container>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let mediation">{{mediation.lastUpdatedOn | date : 'dd-MM-yyyy'}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="actions">
+                                <mat-header-cell *matHeaderCellDef>
+                                    <ng-container *transloco="let translate">
+                                        <span>{{translate("Actions")}}</span>
+                                    </ng-container>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let mediation">
+                                    <button mat-icon-button (click)="editCase(mediation.id)"
+                                    matTooltip="Edit request">
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
+                                </mat-cell>
+                            </ng-container>
+                            <mat-header-row
+                                class="z-10 sticky top-0 font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                                *matHeaderRowDef="displayedColumns"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+
+                        </mat-table>
+                        <div *ngIf="dataSource.totalRecords$ === 0 && !dataSource.loading$" class="p-3 text-center">
+                            <ng-container *transloco="let translate">
+                                <span>{{translate("No-Data-Found")}}</span>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <mat-paginator
+                        class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-50 dark:bg-transparent"
+                        [showFirstLastButtons]="true" [length]="dataSource.totalRecords$" [pageSize]="10"
+                        [pageSizeOptions]="[10, 25, 50, 100]"></mat-paginator>
+                </ng-container>
+            </ng-container>
+
+
+        </div>
+    </div>
+</div>
+<mediations-filter #mediationsFilter (filterMediations)="filterMediations($event)"></mediations-filter>

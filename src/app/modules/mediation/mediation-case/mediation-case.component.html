@@ -214,7 +214,7 @@
                             <mat-form-field class="w-full">
                                 <mat-label>Entity Name</mat-label>
                                 <input matInput formControlName="entityName">
-                                 <mat-error *ngIf="submitted && partyForm.controls.entityName.hasError('required')">
+                                 <mat-error *ngIf="partyForm.controls.entityName.hasError('required')">
                                         <ng-container *transloco="let translate">
                                             {{translate('Field-Required')}}
                                         </ng-container>
@@ -239,12 +239,12 @@
                                     matPrefix
                                     [svgIcon]="'heroicons_solid:mail'"></mat-icon>
                                     <input matInput formControlName="email">
-                                    <mat-error *ngIf="submitted && partyForm.controls.email.hasError('required')">
+                                    <mat-error *ngIf="partyForm.controls.email.hasError('required')">
                                         <ng-container *transloco="let translate">
                                             {{translate('Field-Required')}}
                                         </ng-container>
                                     </mat-error>
-                                    <mat-error *ngIf="submitted && partyForm.controls.email.hasError('email')">
+                                    <mat-error *ngIf="partyForm.controls.email.hasError('email')">
                                         <ng-container *transloco="let translate">
                                             {{translate('Invalid-Email')}}
                                         </ng-container>
@@ -298,7 +298,7 @@
                                     matPrefix
                                     [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
                                     <input matInput formControlName="address">
-                                    <mat-error *ngIf="submitted && partyForm.controls.address.hasError('required')">
+                                    <mat-error *ngIf="partyForm.controls.address.hasError('required')">
                                         <ng-container *transloco="let translate">
                                             {{translate('Field-Required')}}
                                         </ng-container>
@@ -433,8 +433,8 @@
                             </div>
                         </div>
                         <div *ngIf="allPartyAggreedToMediate.checked">
-                        <div class="grid sm:grid-cols-2 gap-3 pb-4 w-full">
-                            <mat-form-field class="w-full">
+                        <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
+                            <mat-form-field class="col-span-2 w-full">
                                 <mat-label>Contract/Contract Clause
                                    
                                 </mat-label>
@@ -449,7 +449,7 @@
                                     </ng-container>
                                 </mat-error>
                               </mat-form-field>
-                              <a target="_blank" *ngIf="currentMediationRequest?.contractClause" [href]="apiPath + '/Utility/DownloadFile?fileName=' + currentMediationRequest?.contractClause">
+                              <a target="_blank" class="custom-link" *ngIf="currentMediationRequest?.contractClause" [href]="apiPath + '/Utility/DownloadFile?fileName=' + currentMediationRequest?.contractClause">
                                 {{currentMediationRequest?.contractClause}}
                                </a>
                         </div>
@@ -467,7 +467,7 @@
                                     </ng-container>
                                 </mat-error>
                               </mat-form-field>
-                              <a target="_blank" *ngIf="currentMediationRequest?.agreementOnMediation" [href]="apiPath + '/Utility/DownloadFile?fileName=' + currentMediationRequest?.agreementOnMediation">
+                              <a target="_blank" class="custom-link" *ngIf="currentMediationRequest?.agreementOnMediation" [href]="apiPath + '/Utility/DownloadFile?fileName=' + currentMediationRequest?.agreementOnMediation">
                                 {{currentMediationRequest?.agreementOnMediation}}
                                </a>
                         </div>
@@ -485,7 +485,7 @@
                                     </ng-container>
                                 </mat-error>
                               </mat-form-field>
-                              <a target="_blank" *ngIf="currentMediationRequest?.writtenCommunication" [href]="apiPath + '/Utility/DownloadFile?fileName=' + currentMediationRequest?.writtenCommunication">
+                              <a target="_blank" class="custom-link" *ngIf="currentMediationRequest?.writtenCommunication" [href]="apiPath + '/Utility/DownloadFile?fileName=' + currentMediationRequest?.writtenCommunication">
                                 {{currentMediationRequest?.writtenCommunication}}
                                </a>
                         </div>
@@ -577,7 +577,7 @@
                                     </button>
                                     <mat-icon matSuffix>folder</mat-icon>
                                   </mat-form-field>
-                                  <a target="_blank" *ngIf="currentMediationRequest?.natureOfDispute" [href]="apiPath + '/Utility/DownloadFile?fileName=' + currentMediationRequest?.natureOfDispute">
+                                  <a target="_blank" class="custom-link" *ngIf="currentMediationRequest?.natureOfDispute" [href]="apiPath + '/Utility/DownloadFile?fileName=' + currentMediationRequest?.natureOfDispute">
                                     {{currentMediationRequest?.natureOfDispute}}
                                    </a>
                             </div>
@@ -610,6 +610,7 @@
                                         </mat-error>
                                     </mat-form-field>
                                 </div>
+                             
                         <div class="flex items-center justify-end border-t -mx-8 mt-8 px-8 py-5 bg-gray-50 dark:bg-gray-700">
                             <button mat-button type="button">
                                 Cancel

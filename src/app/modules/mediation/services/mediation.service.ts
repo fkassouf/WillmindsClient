@@ -1,6 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { DataTableRequest } from "app/modules/common/models";
 import { environment } from "environments/environment";
+import { Observable } from "rxjs";
 import { createMediationRequest } from "../models/create-mediation-request";
 import { UpdateMediationRequest } from "../models/update-mediation-request";
 
@@ -15,6 +17,11 @@ export class MediationService
     constructor(private _httpClient: HttpClient)
     {
         
+    }
+
+    getMediationStatusList()
+    {
+        return this._httpClient.get<any>(environment.api + '/Case/GetMediationStatusList');
     }
 
     getDisputeList()
@@ -79,5 +86,13 @@ export class MediationService
             formData.append("agreementonmediation", agreementonmediation || '');
         }
         return this._httpClient.post<any>(environment.api + '/Case/Update', formData);
+    }
+
+    getMediations(dataTableRequest : DataTableRequest) : Observable<any>
+    {
+        const headers = {'content-type' : 'application/json'};
+        let body = JSON.stringify(dataTableRequest);
+        let url = environment.api + '/Case/GetMediations';
+        return this._httpClient.post<any>(url, body, {headers : headers});
     }
 }

@@ -86,6 +86,11 @@
     "Entity-Name-Required" : "Entity name is required",
     "Country" : "Country",
     "Country-Required" : "Country is required",
-    "Save-Work" : "Save Work"
+    "Save-Work" : "Save Work",
+    "Mediations" : "Mediations",
+    "Case-Number" : "Case Number",
+    "Created-On" : "Created On",
+    "Requester-Name" : "Requester Name",
+    "Updated-On" : "Updated On"
     
 }

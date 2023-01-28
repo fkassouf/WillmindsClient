@@ -86,6 +86,11 @@
     "Entity-Name-Required" : "اسم الكيان مطلوب",
     "Country" : "البلد",
     "Country-Required" : "البلد مطلوب",
-    "Save-Work" : "حفظ العمل"
+    "Save-Work" : "حفظ العمل",
+    "Mediations" : "Mediations",
+    "Case-Number" : "Case Number",
+    "Created-On" : "Created On",
+    "Requester-Name" : "Requester Name",
+    "Updated-On" : "Updated On"
     
 }

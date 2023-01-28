@@ -1,0 +1,26 @@
+<h1 mat-dialog-title><mat-checkbox color="primary" #confirmSubmission>
+    Confirm
+</mat-checkbox></h1>
+<mat-dialog-content>
+    <p class="text-sm font-small">
+        I/We hereby confirm that the information provided herein is accurate,
+        correct and complete and that the documents uploaded along with this request are genuine.
+        I undertake to inform Willminds Mediation and Arbitration Center (hereby referred to as “WMAC” or ‘the
+        Center”) in writing of any changes
+        to the information already provided and to update the information on this form whenever requested to do
+        so by the Center.
+        </p>
+        <p class="text-sm font-small">
+        I/We understand that any misrepresentation, falsification, or omission of any facts called for in the
+        request may render it void
+        and will be cause for cancelation, whenever discovered.
+
+
+    </p>
+        
+    
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-raised-button (click)="close()" >Cancel</button>
+    <button mat-raised-button color="primary" (click)="submitForm()" [disabled]="!confirmSubmission.checked">Confirm</button>
+</mat-dialog-actions>

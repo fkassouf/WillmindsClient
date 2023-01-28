@@ -88,11 +88,11 @@
   z-index: 1 !important;
 }
 
-a {
+.custom-link {
   color : blue !important;
   text-decoration: underline !important;
 }
 
-a:hover{
+.custom-link:hover{
   color : rgb(13, 158, 255) !important;
 }
