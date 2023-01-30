@@ -82,6 +82,7 @@ export class AuthSignInComponent implements OnInit
                         
                         let user : User = {
                             id : result.id,
+                            entityId : result.entityId,
                             displayName : result.fullName,
                             email : result.email,
                             phoneNumber : result.phoneNumber,

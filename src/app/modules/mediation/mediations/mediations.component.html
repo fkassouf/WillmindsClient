@@ -108,9 +108,16 @@
                                     </ng-container>
                                 </mat-header-cell>
                                 <mat-cell *matCellDef="let mediation">
-                                    <button mat-icon-button (click)="editCase(mediation.id)"
+                                    <button mat-icon-button (click)="editCase(mediation.id)" 
+                                    *ngIf="mediation.caseStatus === mediationCaseStatusEnum.INCOMPLETE && 
+                                    currentUser?.entityId != null && currentUser?.entityId == mediation.ownerId"
                                     matTooltip="Edit request">
                                         <mat-icon>edit</mat-icon>
+                                    </button>
+                                    <button mat-icon-button matTooltip="View details" 
+                                    *ngIf="mediation.caseStatus !== mediationCaseStatusEnum.INCOMPLETE"
+                                    (click)="openDetails(mediation)">
+                                        <mat-icon>more_horiz</mat-icon>
                                     </button>
                                 </mat-cell>
                             </ng-container>

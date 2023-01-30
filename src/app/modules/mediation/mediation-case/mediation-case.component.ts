@@ -175,7 +175,7 @@ export class MediationCaseComponent implements OnInit {
         {
             this.disputes = resp.result;
             this.filteredDisputes = resp.result;
-          
+            console.log(data);
             if(data)
                {
                   let arr : Dispute[] = [];
@@ -187,6 +187,9 @@ export class MediationCaseComponent implements OnInit {
                         }
                       });
                   });
+                  if(arr.length == 0){
+                    arr = null;
+                  }
                   this.f.disputeCategory.patchValue(arr);
                   
                }
@@ -490,6 +493,11 @@ export class MediationCaseComponent implements OnInit {
 
   }
 
+  cancel()
+  {
+    this.router.navigate(['/mediation/mediations']);
+  }
+
   submitForm()
   {
     
@@ -590,7 +598,8 @@ export class MediationCaseComponent implements OnInit {
           }
           else
           {
-            this.toastr.error(data);
+            if(data != null)
+              this.toastr.error(data);
           }
        }
       );

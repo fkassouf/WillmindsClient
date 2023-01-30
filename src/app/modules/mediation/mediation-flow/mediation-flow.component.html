@@ -1,0 +1,269 @@
+<div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0">
+    <!-- Header -->
+    <div
+        class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-2 sm:py-2 sm:px-10 border-b bg-card dark:bg-transparent">
+        <!-- Title -->
+        <div class="text-2xl font-extrabold tracking-tight"> <ng-container *transloco="let translate">
+                <span>{{translate(title)}}</span>
+            </ng-container></div>
+        <!-- Actions -->
+        <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+            <!-- Breadcrumbs -->
+            <app-pagetitle title="Home" [breadcrumbItems]="breadCrumbItems"></app-pagetitle>
+
+        </div>
+    </div>
+    <!-- Main -->
+    <div class="flex-auto p-3 sm:p-4 sm:overflow-y-auto">
+        <div class="w-full">
+            <mat-tab-group mat-stretch-tabs class="bg-card mat-elevation-z4">
+                <!--Step 1 submit a request-->
+                <mat-tab label="Request Info"> 
+                    <p class="text-lg font-medium">SECTION 1 - DETAILS OF THE PARTIES</p>
+                        <p class="text-secondary mb-6">
+                            Details of the REQUESTING PARTY
+                        </p>
+                        <div class="grid sm:grid-cols-4 gap-3 pb-4 w-full">
+                            
+                            <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                                <p class="text-md font-medium">Requester Primary Email</p>
+                                <p class="text-md mb-6">
+                                   {{_authService.user$.email}}
+                                </p>
+                            </div>
+                            <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                                <p class="text-md font-medium">Requester Primary Phone</p>
+                                <p class="text-md mb-6">
+                                   {{_authService.user$.phoneNumber}}
+                                </p>
+                            </div>
+                            <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                                <p class="text-md font-medium">Requester Secondary Email</p>
+                                <p class="text-md mb-6">
+                                   {{currentMediationRequest?.requesterSecondaryEmail}}
+                                </p>
+                            </div>
+                            <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                                <p class="text-md font-medium">Requester Secondary Phone</p>
+                                <p class="text-md mb-6">
+                                   {{currentMediationRequest?.requesterSecondaryTelephone}}
+                                </p>
+                            </div>
+                        </div>
+                        <p class="text-secondary mb-6">
+                            Legal representation
+                        </p>
+                        <div class="grid sm:grid-cols-4 gap-3 pb-4 w-full">
+                            <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                                <p class="text-md font-medium">Firm Name</p>
+                                <p class="text-md mb-6">
+                                   {{currentMediationRequest?.legalRFirmName}}
+                                </p>
+                            </div>
+                            <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                                <p class="text-md font-medium">Lawyer Name</p>
+                                <p class="text-md mb-6">
+                                   {{currentMediationRequest?.legalRLawyerName}}
+                                </p>
+                            </div>
+                            <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                                <p class="text-md font-medium">Email</p>
+                                <p class="text-md mb-6">
+                                   {{currentMediationRequest?.legalREmail}}
+                                </p>
+                            </div>
+                            <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                                <p class="text-md font-medium">Phone</p>
+                                <p class="text-md mb-6">
+                                   {{currentMediationRequest?.legalRTelephone}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
+                            <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                                <p class="text-md font-medium">Address</p>
+                                <p class="text-md mb-6">
+                                   {{currentMediationRequest?.legalRAddress}}
+                                </p>
+                            </div>
+                        </div>
+                       
+                        <p class="text-secondary mb-6">
+                            Details of the SECOND PARTY
+                        </p>
+                       
+                            <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3"></th>
+                                            <th scope="col" class="px-6 py-3">Entity Name</th>
+                                            <th scope="col" class="px-6 py-3">Full Name</th>
+                                            <th scope="col" class="px-6 py-3">Email</th>
+                                            <th scope="col" class="px-6 py-3">Phone</th>
+                                            <th scope="col" class="px-6 py-3">Address</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngFor="let p of currentMediationRequest?.parties; let i = index" class="border-b">
+                                       
+                                        <tr class="bg-white dark:bg-gray-800 dark:border-gray-700">
+                                            <td class="px-6 py-4"> {{i + 1}}-</td>
+                                            <td class="px-6 py-4">
+                                             {{p.entityName}}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{p.fullName}}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{p.email}}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{p.telephone}}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{p.address}}
+                                            </td>
+                                            
+                                        </tr>
+                                        <tr class="dark:text-gray-400">
+                                            <td colspan="6"><h1 class="text-center"><strong>Legal representation</strong></h1></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="6">
+                                                
+                                                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                                        <tr>
+                                                            <th scope="col" class="px-6 py-3">Firm Name</th>
+                                                            <th scope="col" class="px-6 py-3">Lawyer Name</th>
+                                                            <th scope="col" class="px-6 py-3">Email</th>
+                                                            <th scope="col" class="px-6 py-3">Phone</th>
+                                                            <th scope="col" class="px-6 py-3">Address</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr class="bg-white dark:bg-gray-800 dark:border-gray-700">
+                                                            <td class="px-6 py-4">
+                                                                {{p.firmName}}
+                                                            </td>
+                                                            <td class="px-6 py-4">
+                                                                {{p.lawyerName}}
+                                                            </td>
+                                                            <td class="px-6 py-4">
+                                                                {{p.lawyerEmail}}
+                                                            </td>
+                                                            <td class="px-6 py-4">
+                                                                {{p.lawyerTelephone}}
+                                                            </td>
+                                                            <td class="px-6 py-4">
+                                                                {{p.lawyerAddress}}
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="text-lg font-medium">SECTION 2 - BRIEF DETAILS OF THE CLAIM</p>
+                            <p class="text-secondary mb-6">
+                               
+                            </p>
+                            <div class="grid sm:grid-cols-2 gap-3 pb-4 w-full">
+                                <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                                    <p class="text-md font-medium">Stage at which the proceedings have reached</p>
+                                    <p class="text-md mb-6">
+                                       {{currentMediationRequest?.stageClaims}}
+                                    </p>
+                                </div>
+                                <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                                    <p class="text-md font-medium">Details of any hearing dates that have been set</p>
+                                    <p class="text-md mb-6">
+                                       {{currentMediationRequest?.hearingDetails}}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <mat-divider class="mt-6 mb-10"></mat-divider>
+                            <p class="text-lg font-medium">SECTION 3 – AGREEMENT ON MEDIATION</p>
+                            <p class="text-secondary mb-6">
+                                
+                            </p>
+                            <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full" *ngIf="currentMediationRequest?.partiesAgreed">
+                                <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full" *ngIf="currentMediationRequest?.contractClause">
+                                    <p class="text-md font-medium">Contract/Clause</p>
+                                    <a target="_blank" class="custom-link" [href]="apiPath + '/Utility/DownloadFile?fileName=' + currentMediationRequest?.contractClause">
+                                        {{currentMediationRequest?.contractClause}}
+                                       </a>                                
+                                </div>
+                                <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full" *ngIf="currentMediationRequest?.agreementOnMediation">
+                                    <p class="text-md font-medium">Mediation Submission Agreement</p>
+                                    <a target="_blank" class="custom-link" [href]="apiPath + '/Utility/DownloadFile?fileName=' + currentMediationRequest?.agreementOnMediation">
+                                        {{currentMediationRequest?.agreementOnMediation}}
+                                       </a>                                
+                                </div>
+                                <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full" *ngIf="currentMediationRequest?.writtenCommunication">
+                                    <p class="text-md font-medium">Email written Communications between parties</p>
+                                    <a target="_blank" class="custom-link" [href]="apiPath + '/Utility/DownloadFile?fileName=' + currentMediationRequest?.writtenCommunication">
+                                        {{currentMediationRequest?.writtenCommunication}}
+                                       </a>                                
+                                </div>
+                            </div>
+                            <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
+                                <p class="text-md font-medium">Additional Information</p>
+                                <p class="text-md mb-6">
+                                    {{currentMediationRequest?.relevantInfo}}
+                                    </p>
+                            </div>
+                            <mat-divider class="mt-6 mb-10"></mat-divider>
+                        
+                        <p class="text-lg font-medium">SECTION 4 – BACKGROUND OF THE DISPUTE</p>
+                        <p class="text-secondary mb-6">
+                            
+                        </p>
+                        <div class="grid sm:grid-cols-2 gap-3 pb-4 w-full">
+                            <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                                <p class="text-md font-medium">Dispute Categories</p>
+                                <p class="text-md mb-6">{{disputeNames.join(',')}}</p>
+                            </div>
+                            <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                                <p class="text-md font-medium">Details of the amount in dispute</p>
+                                <p class="text-md mb-6">{{currentMediationRequest?.monetaryValue}}</p>
+                            </div>
+                        </div>
+                        <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
+                            <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                                <p class="text-md font-medium">Brief details of the dispute</p>
+                                <p class="text-md mb-6">{{currentMediationRequest?.disputeDetails}}</p>
+                            </div>
+                            <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                                <p class="text-md font-medium">Nature of the dispute</p>
+                                <a target="_blank" class="custom-link" *ngIf="currentMediationRequest?.natureOfDispute" [href]="apiPath + '/Utility/DownloadFile?fileName=' + currentMediationRequest?.natureOfDispute">
+                                    {{currentMediationRequest?.natureOfDispute}}
+                                   </a>
+                            </div>
+                            <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                                <p class="text-md font-medium">Details of the relief requested</p>
+                                <p class="text-md mb-6">{{currentMediationRequest?.requestedRelief}}
+                                </p>
+                            </div>
+                        </div>
+                        <mat-divider class="mt-6 mb-10"></mat-divider>
+                        <p class="text-lg font-medium">SECTION 5 – ADDITIONAL INFORMATION</p>
+                        <p class="text-secondary mb-6">
+                        <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                            <p class="text-md font-medium">Other information</p>
+                                <p class="text-md mb-6">{{currentMediationRequest?.otherInfo}}
+                                </p>
+                        </div>
+                      
+                </mat-tab>
+                <mat-tab label="Registration Fees"> 
+                    info here
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+
+    </div>
+</div>

@@ -1,6 +1,7 @@
 export interface User
 {
     id: string;
+    entityId? : number;
     email: string;
     phoneNumber : string;
     name?: string;

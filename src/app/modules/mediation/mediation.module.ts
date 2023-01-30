@@ -34,11 +34,16 @@ import { MediationsComponent } from './mediations/mediations.component';
 import { MediationsFilterComponent } from './mediations-filter/mediations-filter.component';
 import { ConfirmSubmissionComponent } from './confirm-submission/confirm-submission.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MediationFlowComponent } from './mediation-flow/mediation-flow.component';
 
 const routes: Route[] = [
     {
         path: 'mediation-case/:id',
         component: MediationCaseComponent,
+    },
+    {
+        path: 'mediation-flow/:id',
+        component: MediationFlowComponent,
     },
     {
         path: 'mediations',
@@ -51,7 +56,8 @@ const routes: Route[] = [
      MediationCaseComponent,
      MediationsComponent,
      MediationsFilterComponent,
-     ConfirmSubmissionComponent
+     ConfirmSubmissionComponent,
+     MediationFlowComponent
   ],
     imports: [
         RouterModule.forChild(routes),
