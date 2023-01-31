@@ -114,11 +114,25 @@
                                     matTooltip="Edit request">
                                         <mat-icon>edit</mat-icon>
                                     </button>
+                                    <button mat-icon-button color="primary" (click)="adminApprove(mediation.id, true)"
+                                    *ngIf="mediation.caseStatus === mediationCaseStatusEnum.SUBMITTED  && 
+                                    (currentUser?.roles[0] === roles.SUPERADMIN || currentUser?.roles[0] === roles.ADMIN)"
+                                    matTooltip="Approve request">
+                                        <mat-icon>check</mat-icon>
+                                    </button>
+                                    <button mat-icon-button color="warn" (click)="adminApprove(mediation.id, false)"
+                                    *ngIf="mediation.caseStatus === mediationCaseStatusEnum.SUBMITTED && 
+                                    (currentUser?.roles[0] === roles.SUPERADMIN || currentUser?.roles[0] === roles.ADMIN)"
+                                    matTooltip="Reject request">
+                                        <mat-icon>cancel</mat-icon>
+                                    </button>
                                     <button mat-icon-button matTooltip="View details" 
-                                    *ngIf="mediation.caseStatus !== mediationCaseStatusEnum.INCOMPLETE"
+                                    *ngIf="mediation.caseStatus === mediationCaseStatusEnum.SUBMITTED"
+                                   
                                     (click)="openDetails(mediation)">
                                         <mat-icon>more_horiz</mat-icon>
                                     </button>
+                                    
                                 </mat-cell>
                             </ng-container>
                             <mat-header-row

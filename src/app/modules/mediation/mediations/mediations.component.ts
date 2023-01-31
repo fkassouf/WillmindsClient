@@ -10,6 +10,9 @@ import { MediationsDataSource } from '../datasources/mediations-datasource';
 import { MediationsFilterComponent } from '../mediations-filter/mediations-filter.component';
 import { MediationsFilter } from '../models/mediations-filter';
 import { MediationService } from '../services/mediation.service';
+import { ROLES } from 'app/core/enums/core-enum';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-mediations',
@@ -28,10 +31,10 @@ export class MediationsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   currentUser : User;
-
+  roles = ROLES;
   /*constructor*/
   constructor(private mediationService : MediationService, 
-    private router : Router, private authService : AuthenticationService){}
+    private router : Router, private authService : AuthenticationService, private toastrService : ToastrService){}
 
   ngOnInit(): void {
        
@@ -96,5 +99,40 @@ export class MediationsComponent implements OnInit, AfterViewInit {
   openDetails(mediation : any)
   {
       this.router.navigate(['/mediation/mediation-flow', mediation.id])
+  }
+
+  adminApprove(caseId : number, approve : boolean)
+  {
+    let approveTxt = '<span class="text-red-500">reject</span>';
+    let approvedText = 'rejected'
+    if(approve)
+    {
+      approveTxt = '<span class="text-green-500">approve</span>';
+      approvedText = 'approved'
+    }
+    Swal.fire({
+      html: 'Are you sure you want to ' + approveTxt + ' this mediation request?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Confirm',
+      confirmButtonColor: '#f59e0b'
+      
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        this.mediationService.adminApprove(caseId, approve).subscribe(resp=>{
+          if(resp.success)
+          {
+            this.toastrService.success('Request ' + approvedText + ' successfully');
+            this.loadMediationsPage();
+          }
+          else
+          {
+            this.toastrService.error(resp.message);
+          }
+        })
+        
+      } 
+    })
   }
 }

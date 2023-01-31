@@ -95,4 +95,11 @@ export class MediationService
         let url = environment.api + '/Case/GetMediations';
         return this._httpClient.post<any>(url, body, {headers : headers});
     }
+
+    adminApprove(caseId : number, approve : boolean)
+    {
+        const headers = {'content-type' : 'application/json'};
+        let url = environment.api + '/Admin/AdminApprove?caseId=' + caseId + '&status=' + approve;
+        return this._httpClient.post<any>(url, null, {headers : headers});
+    }
 }
