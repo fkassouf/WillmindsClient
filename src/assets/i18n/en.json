@@ -91,6 +91,7 @@
     "Case-Number" : "Case Number",
     "Created-On" : "Created On",
     "Requester-Name" : "Requester Name",
-    "Updated-On" : "Updated On"
+    "Updated-On" : "Updated On",
+    "Mediation-Request-Aggreement" : "Mediation Request Aggreement"
     
 }

@@ -19,7 +19,18 @@ export const appRoutes: Route[] = [
     // location. This is a small convenience to keep all main routes together here on this file.
     {path: 'signed-in-redirect', pathMatch : 'full', redirectTo: 'home'},
 
-   
+    // Auth routes for verification module
+    {
+        path: '',
+        component: LayoutComponent,
+        data: {
+            layout: 'empty'
+        },
+        children: [
+            {path: 'verification', loadChildren: () => import('app/modules/verification/verification.module').then(m => m.VerificationModule)},
+           
+        ]
+    },
 
     // Auth routes for guests
     {
