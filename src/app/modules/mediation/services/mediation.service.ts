@@ -102,4 +102,22 @@ export class MediationService
         let url = environment.api + '/Admin/AdminApprove?caseId=' + caseId + '&status=' + approve;
         return this._httpClient.post<any>(url, null, {headers : headers});
     }
+
+    submitStatementOfReply(body : any, file : File | null)
+    {
+        const formData = new FormData();
+        formData.append('stOfReply', JSON.stringify(body));
+        formData.append("stOfReplyFile", file || '');
+        return this._httpClient.post<any>(environment.api + '/Party/SubmitStatementOfReply', formData);
+
+    }
+
+    sendRegistrationInvoice(requestId : number)
+    {
+        const headers = {'content-type' : 'application/json'};
+        let url = environment.api + '/Case/SendRegistrationFeesInvoice?requestId=' + requestId;
+        return this._httpClient.post<any>(url, null, {headers : headers});
+    }
+
+
 }

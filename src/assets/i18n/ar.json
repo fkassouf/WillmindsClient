@@ -92,6 +92,8 @@
     "Created-On" : "Created On",
     "Requester-Name" : "Requester Name",
     "Updated-On" : "Updated On",
-    "Mediation-Request-Aggreement" : "Mediation Request Aggreement"
+    "Mediation-Request-Aggreement" : "Mediation Request Aggreement",
+    "Statement-Of-Reply" : "Statement Of Reply",
+    "Send-Registration-Fees-Invoice" : "Send Registration Fees Invoice"
     
 }

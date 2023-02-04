@@ -3,8 +3,36 @@
     <div
         class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-2 sm:py-2 sm:px-10 border-b bg-card dark:bg-transparent">
         <!-- Title -->
-        <div class="text-2xl font-extrabold tracking-tight"> <ng-container *transloco="let translate">
-                <span>{{translate(title)}}</span>
+        <div class="text-1xl font-extrabold tracking-tight"> <ng-container *transloco="let translate">
+                <span>{{translate(title)}}</span>&nbsp;{{currentMediationRequest?.caseNumber}}
+
+                <button mat-icon-button color="primary" (click)="adminApprove(currentMediationRequest?.id, true)"
+                                    *ngIf="currentMediationRequest?.statusName === mediationCaseStatusEnum.SUBMITTED  && 
+                                    (currentUser?.roles[0] === roles.SUPERADMIN || currentUser?.roles[0] === roles.ADMIN)"
+                                    matTooltip="Approve request">
+                                        <mat-icon>check</mat-icon>
+                                    </button>
+                                    <button mat-icon-button color="warn" (click)="adminApprove(currentMediationRequest?.id, false)"
+                                    *ngIf="currentMediationRequest?.statusName === mediationCaseStatusEnum.SUBMITTED && 
+                                    (currentUser?.roles[0] === roles.SUPERADMIN || currentUser?.roles[0] === roles.ADMIN)"
+                                    matTooltip="Reject request">
+                                        <mat-icon>cancel</mat-icon>
+                                    </button>
+                                    <button mat-stroked-button color="primary" (click)="sendRegistrationInvoice(currentMediationRequest?.id)"
+                                    *ngIf="currentMediationRequest?.statusName === mediationCaseStatusEnum.REGISTRATION_PENDING  && 
+                                    (currentUser?.roles[0] === roles.SUPERADMIN || currentUser?.roles[0] === roles.ADMIN)"
+                                    [disabled]="sendingRegistrationInvoice"
+                                    >
+                                    <span *ngIf="!sendingRegistrationInvoice">
+                                        <ng-container *transloco="let translate">
+                                            {{translate('Send-Registration-Fees-Invoice')}}
+                                        </ng-container>
+                                    </span>
+                                    <mat-progress-spinner
+                                        *ngIf="sendingRegistrationInvoice"
+                                        [diameter]="24"
+                                        [mode]="'indeterminate'"></mat-progress-spinner>
+                                    </button>
             </ng-container></div>
         <!-- Actions -->
         <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
@@ -24,19 +52,35 @@
                             Details of the REQUESTING PARTY
                         </p>
                         <div class="grid sm:grid-cols-4 gap-3 pb-4 w-full">
-                            
+                            <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                                <p class="text-md font-medium">Requester Entity Name</p>
+                                <p class="text-md mb-6">
+                                   {{currentMediationRequest?.entityName}}
+                                </p>
+                            </div>
+                            <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                                <p class="text-md font-medium">Requester Full Name</p>
+                                <p class="text-md mb-6">
+                                   {{currentMediationRequest?.requesterFullName}}
+                                </p>
+                            </div>
                             <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
                                 <p class="text-md font-medium">Requester Primary Email</p>
                                 <p class="text-md mb-6">
-                                   {{_authService.user$.email}}
+                                   {{currentMediationRequest?.requesterEmail}}
                                 </p>
                             </div>
                             <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
                                 <p class="text-md font-medium">Requester Primary Phone</p>
                                 <p class="text-md mb-6">
-                                   {{_authService.user$.phoneNumber}}
+                                   {{currentMediationRequest?.requesterTelephone}}
                                 </p>
                             </div>
+                        </div>
+                        <div class="grid sm:grid-cols-4 gap-3 pb-4 w-full">
+                            
+                            
+                           
                             <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
                                 <p class="text-md font-medium">Requester Secondary Email</p>
                                 <p class="text-md mb-6">
@@ -102,12 +146,16 @@
                                             <th scope="col" class="px-6 py-3">Email</th>
                                             <th scope="col" class="px-6 py-3">Phone</th>
                                             <th scope="col" class="px-6 py-3">Address</th>
+                                            <th scope="col" class="px-6 py-3">St. Of Reply</th>
+                                            <th scope="col" class="px-6 py-3">St. Of Reply Doc.</th>
                                         </tr>
                                     </thead>
                                     <tbody *ngFor="let p of currentMediationRequest?.parties; let i = index" class="border-b">
                                        
                                         <tr class="bg-white dark:bg-gray-800 dark:border-gray-700">
-                                            <td class="px-6 py-4"> {{i + 1}}-</td>
+                                            <th scope="col" 
+                                            class="px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400" 
+                                            [attr.rowspan]="3"> Party&nbsp;{{i + 1}}</th>
                                             <td class="px-6 py-4">
                                              {{p.entityName}}
                                             </td>
@@ -123,13 +171,25 @@
                                             <td class="px-6 py-4">
                                                 {{p.address}}
                                             </td>
+                                            <td class="px-6 py-4">
+                                              {{(currentUser?.roles[0] === roles.SUPERADMIN || currentUser?.roles[0] === roles.ADMIN) ? p.stOfReply : 'N/A'}}
+                                             
+                                            </td>
+                                            <td class="px-6 py-4">
                                             
+                                                <a target="_blank" class="custom-link" *ngIf="p.stOfReplyFile && (currentUser?.roles[0] === roles.SUPERADMIN || currentUser?.roles[0] === roles.ADMIN)" 
+                                                [href]="apiPath + '/Utility/DownloadStOfReplyFile?fileName=' + p.stOfReplyFile">
+                                                    {{p.stOfReplyFile}}
+                                                   </a>
+                                            </td>
                                         </tr>
                                         <tr class="dark:text-gray-400">
-                                            <td colspan="6"><h1 class="text-center"><strong>Legal representation</strong></h1></td>
+                                           
+                                            <td colspan="7"><h1 class="text-center"><strong>Legal representation</strong></h1></td>
                                         </tr>
                                         <tr>
-                                            <td colspan="6">
+                                           
+                                            <td colspan="7">
                                                 
                                                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                                                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -211,10 +271,13 @@
                                 </div>
                             </div>
                             <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
-                                <p class="text-md font-medium">Additional Information</p>
-                                <p class="text-md mb-6">
-                                    {{currentMediationRequest?.relevantInfo}}
-                                    </p>
+                                <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+                                    <p class="text-md font-medium">Additional Information</p>
+                                    <p class="text-md mb-6">
+                                        {{currentMediationRequest?.relevantInfo}}
+                                        </p>
+                                </div>
+                               
                             </div>
                             <mat-divider class="mt-6 mb-10"></mat-divider>
                         
@@ -259,9 +322,19 @@
                         </div>
                       
                 </mat-tab>
-                <mat-tab label="Registration Fees"> 
+                 <!--Statement Of reply-->
+                 <mat-tab label="Statement Of Reply" *ngIf="currentUser?.roles[0] === roles.PARTY
+                 && isSecondParty(currentUser?.entityId) && isStOfReplySubmitted(currentUser?.entityId)"> 
+                    <app-statement-of-reply [request]="currentMediationRequest"
+                    (reloadRequestEvent)="reloadRequest($event)"></app-statement-of-reply>
+                 </mat-tab>
+                <!--Registration fees-->
+                <mat-tab label="Registration Fees" *ngIf="currentUser?.roles[0] === roles.PARTY
+                
+                && currentMediationRequest?.ownerId === currentUser?.entityId"> 
                     info here
                 </mat-tab>
+               
             </mat-tab-group>
         </div>
 

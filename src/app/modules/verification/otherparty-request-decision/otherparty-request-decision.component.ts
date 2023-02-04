@@ -5,6 +5,7 @@ import { VerificationService } from '../services/mediation.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { FuseAlertType } from '@fuse/components/alert';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
 
 @Component({
   selector: 'app-otherparty-request-decision',
@@ -62,8 +63,27 @@ export class OtherpartyRequestDecisionComponent implements OnInit, OnDestroy {
      .subscribe(resp=>{
         if(resp.success)
         {
+            if(decision)
+            {
+              Swal.fire({
+                icon: 'success',
+                title : 'You accepted this mediation request',
+                text: 'Sign-in using your credentials to proceed',
+                confirmButtonColor: "#f59e0b"
+              });
+                this.router.navigate(['/mediation/mediation-flow', resp.result]);
+            }
+            else
+            {
+              Swal.fire({
+                icon: 'error',
+                title : 'You rejected this mediation request',
+                text: 'You will be out of this case',
+                confirmButtonColor: "#f59e0b"
+              });
+                this.router.navigate(['/']);
+            }
            
-           this.router.navigate(['/mediation/mediation-flow', resp.result]);
         }
         else
         {

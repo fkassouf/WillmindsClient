@@ -22,5 +22,10 @@
 </mat-dialog-content>
 <mat-dialog-actions>
     <button mat-raised-button (click)="close()" >Cancel</button>
-    <button mat-raised-button color="primary" (click)="submitForm()" [disabled]="!confirmSubmission.checked">Confirm</button>
+    <button mat-raised-button color="primary" (click)="submitForm()" [disabled]="!confirmSubmission.checked || submitting">
+        <mat-progress-spinner
+        *ngIf="submitting"
+        [diameter]="24"
+        [mode]="'indeterminate'"></mat-progress-spinner>
+        Confirm</button>
 </mat-dialog-actions>

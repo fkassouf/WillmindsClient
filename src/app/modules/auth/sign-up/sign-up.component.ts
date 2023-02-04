@@ -5,6 +5,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthenticationService } from 'app/core/auth/authentication.service';
 import { CountryISO, PhoneNumberFormat, SearchCountryField } from 'ngx-intl-tel-input';
+import { finalize } from 'rxjs';
 
 import { Account, Country } from '../models';
 
@@ -120,11 +121,13 @@ export class AuthSignUpComponent implements OnInit
 
        
         // Sign up
-        this._authService.signUpAsAccount(body).subscribe(resp=>{
+        this._authService.signUpAsAccount(body)
+        .pipe(finalize(()=>{
+            this.signUpForm.enable();
+        }))
+        .subscribe(resp=>{
             if(resp.success)
             {
-                this.signUpForm.enable();
-
                 // Reset the form
                 this.signUpNgForm.resetForm();
 
@@ -139,10 +142,8 @@ export class AuthSignUpComponent implements OnInit
             }
             else
             {
-                this.signUpForm.enable();
-
-                // Reset the form
-                this.signUpNgForm.resetForm();
+                 // Reset the form
+                //this.signUpNgForm.resetForm();
 
                 // Set the alert
                 this.alert = {

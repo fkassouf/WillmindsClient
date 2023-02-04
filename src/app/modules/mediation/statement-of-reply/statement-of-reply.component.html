@@ -1,0 +1,53 @@
+<form class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden"
+[formGroup]="stOfReplyForm" (ngSubmit)="submitForm()">
+    <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+        <mat-form-field class="w-full">
+            <mat-label>
+                <ng-container *transloco="let translate">
+                    {{translate('Statement-Of-Reply')}}
+                </ng-container>
+            </mat-label>
+            <textarea matInput rows="5" formControlName="statOfReply"></textarea>
+            <mat-error *ngIf="f.statOfReply.hasError('required')">
+                <ng-container *transloco="let translate">
+                    {{translate('Field-Required')}}
+                </ng-container>
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+        <mat-form-field class="w-full">
+            <mat-label>Attach File
+               
+            </mat-label>
+            <ngx-mat-file-input #statOfReplyFile formControlName="statOfReplyFile" [accept]="'.pdf,.docx'"></ngx-mat-file-input>
+            <button mat-icon-button *ngIf="!statOfReplyFile.empty" (click)="statOfReplyFile.clear($event)">
+                <mat-icon>clear</mat-icon>
+            </button>
+            <mat-icon matSuffix>folder</mat-icon>
+            <mat-error *ngIf="f.statOfReplyFile.hasError('required')">
+                <ng-container *transloco="let translate">
+                    {{translate('Field-Required')}}
+                </ng-container>
+            </mat-error>
+          </mat-form-field>
+    </div>
+    <div class="flex items-center justify-end border-t -mx-8 mt-8 px-8 py-5 bg-gray-50 dark:bg-gray-700">
+        <button
+        type="submit"
+        class="px-6 ml-3"
+        mat-flat-button
+        [color]="'primary'"
+        [disabled]="submitting">
+        <span *ngIf="!submitting">
+            <ng-container *transloco="let translate">
+                {{translate('Submit')}}
+            </ng-container>
+        </span>
+        <mat-progress-spinner
+            *ngIf="submitting"
+            [diameter]="24"
+            [mode]="'indeterminate'"></mat-progress-spinner>
+    </button>
+    </div>
+</form>

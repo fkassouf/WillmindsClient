@@ -26,9 +26,12 @@
                 <button mat-stroked-button color="primary" 
                 class="px-6 ml-3" (click)="accept(true)" [disabled]="accepting || rejecting">
                     <mat-icon>check</mat-icon>
-                    <ng-container *transloco="let translate">
-                        {{translate('Accept')}}
-                    </ng-container>
+                    <span *ngIf="!accepting">
+                        <ng-container *transloco="let translate">
+                            {{translate('Accept')}}
+                        </ng-container>
+                    </span>
+                    
                     <mat-progress-spinner
                         *ngIf="accepting"
                         [diameter]="24"
@@ -38,9 +41,12 @@
                 <button mat-stroked-button  class="px-6 ml-3" (click)="accept(false)"
                 [disabled]="accepting || rejecting">
                     <mat-icon>close</mat-icon>
-                    <ng-container *transloco="let translate">
-                        {{translate('Reject')}}
-                    </ng-container>
+                    <span *ngIf="!rejecting">
+                        <ng-container *transloco="let translate">
+                            {{translate('Reject')}}
+                        </ng-container>
+                    </span>
+                    
                     <mat-progress-spinner
                         *ngIf="rejecting"
                         [diameter]="24"

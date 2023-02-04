@@ -101,38 +101,5 @@ export class MediationsComponent implements OnInit, AfterViewInit {
       this.router.navigate(['/mediation/mediation-flow', mediation.id])
   }
 
-  adminApprove(caseId : number, approve : boolean)
-  {
-    let approveTxt = '<span class="text-red-500">reject</span>';
-    let approvedText = 'rejected'
-    if(approve)
-    {
-      approveTxt = '<span class="text-green-500">approve</span>';
-      approvedText = 'approved'
-    }
-    Swal.fire({
-      html: 'Are you sure you want to ' + approveTxt + ' this mediation request?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Confirm',
-      confirmButtonColor: '#f59e0b'
-      
-    }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
-      if (result.isConfirmed) {
-        this.mediationService.adminApprove(caseId, approve).subscribe(resp=>{
-          if(resp.success)
-          {
-            this.toastrService.success('Request ' + approvedText + ' successfully');
-            this.loadMediationsPage();
-          }
-          else
-          {
-            this.toastrService.error(resp.message);
-          }
-        })
-        
-      } 
-    })
-  }
+  
 }
