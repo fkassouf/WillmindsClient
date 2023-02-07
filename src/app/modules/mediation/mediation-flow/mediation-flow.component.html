@@ -332,7 +332,7 @@
                 <mat-tab label="Registration Fees" *ngIf="currentUser?.roles[0] === roles.PARTY
                 
                 && currentMediationRequest?.ownerId === currentUser?.entityId"> 
-                    info here
+                    <mediation-registration-payment></mediation-registration-payment>
                 </mat-tab>
                
             </mat-tab-group>

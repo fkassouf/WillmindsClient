@@ -5,3 +5,9 @@ export enum ROLES
     MEDIATOR = "Mediator",
     PARTY = "Party"
 }
+
+export enum PAYMENTMETHODS
+{
+    CASH = "Cash",
+    BANK = "Bank"
+}

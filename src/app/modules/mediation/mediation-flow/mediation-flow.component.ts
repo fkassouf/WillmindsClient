@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService } from 'app/core/auth/authentication.service';
 import { Dispute } from 'app/modules/admin/models/dispute';
@@ -16,6 +16,7 @@ import { elementAt, finalize } from 'rxjs';
   styleUrls: ['./mediation-flow.component.scss']
 })
 export class MediationFlowComponent implements OnInit {
+ 
   private sub: any;
   breadCrumbItems!: Array<{}>;
   id : number;
@@ -83,9 +84,9 @@ export class MediationFlowComponent implements OnInit {
               {
                   this.currentMediationRequest = resp.result;
                 
-                  this.breadCrumbItems.push(
+                  /*this.breadCrumbItems.push(
                     { label: this.currentMediationRequest?.caseNumber, active: true, url : '/' },
-                   );
+                   );*/
                   
                    this.getDisputeList(this.currentMediationRequest.disputeBackground);
                   //this.getDisputeList(this.currentMediationRequest?.disputeBackground);
