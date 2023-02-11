@@ -100,6 +100,7 @@
     "Account-Number" : "Account Number",
     "Transfer-Date" : "Transfer Date",
     "Payment-Amount" : "Payment Amount",
-    "Currency" : "Currency"
+    "Currency" : "Currency",
+    "Approve-Registration-Fees-Payment" : "Approve Registration Fees Payment"
  
 }

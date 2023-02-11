@@ -29,6 +29,7 @@ export class MediationFlowComponent implements OnInit {
   roles = ROLES;
   currentUser : User;
   sendingRegistrationInvoice : boolean = false;
+  approvingRegFeesPay : boolean = false;
   
   constructor(private activatedRoute : ActivatedRoute, 
     private mediationService : MediationService, 
@@ -179,6 +180,26 @@ export class MediationFlowComponent implements OnInit {
             this.toastrService.error(resp.message);
           }
       });
+  }
+
+  approveRegistrationFeesPay()
+  {
+      this.approvingRegFeesPay = true;
+      this.mediationService.approveRegistrationPayment(this.currentMediationRequest?.id, true)
+      .pipe(finalize(()=>{
+        this.approvingRegFeesPay = false;
+      }))
+      .subscribe(resp=>{
+        if(resp.success)
+        {
+           this.toastrService.success('Registration fees payment approved successfully');
+           this.getMediationRequest();
+        }
+        else
+        {
+          this.toastrService.error(resp.message);
+        }
+      })
   }
 
 

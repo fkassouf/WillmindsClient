@@ -4,7 +4,7 @@
         class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-2 sm:py-2 sm:px-10 border-b bg-card dark:bg-transparent">
         <!-- Title -->
         <div class="text-1xl font-extrabold tracking-tight"> <ng-container *transloco="let translate">
-                <span>{{translate(title)}}</span>&nbsp;&nbsp;{{currentMediationRequest?.caseNumber}}&nbsp;&nbsp;{{currentMediationRequest?.statusName}}
+                <span>{{translate(title)}}</span>&nbsp;&nbsp;&nbsp;&nbsp;{{currentMediationRequest?.caseNumber}}&nbsp;&nbsp;&nbsp;&nbsp;{{currentMediationRequest?.statusName}}
 
                 <button mat-icon-button color="primary" (click)="adminApprove(currentMediationRequest?.id, true)"
                                     *ngIf="currentMediationRequest?.statusName === mediationCaseStatusEnum.SUBMITTED  && 
@@ -21,7 +21,7 @@
                                     <button mat-stroked-button color="primary" (click)="sendRegistrationInvoice(currentMediationRequest?.id)"
                                     *ngIf="currentMediationRequest?.statusName === mediationCaseStatusEnum.REGISTRATION_PENDING  && 
                                     (currentUser?.roles[0] === roles.SUPERADMIN || currentUser?.roles[0] === roles.ADMIN) && !currentMediationRequest?.registrationInvoiceSent"
-                                    [disabled]="sendingRegistrationInvoice"
+                                    [disabled]="sendingRegistrationInvoice || !currentMediationRequest"
                                     >
                                     <span *ngIf="!sendingRegistrationInvoice">
                                         <ng-container *transloco="let translate">
@@ -33,6 +33,18 @@
                                         [diameter]="24"
                                         [mode]="'indeterminate'"></mat-progress-spinner>
                                     </button>
+
+                                    <!--Approve registration payment-->
+                                    <button mat-stroked-button color="primary" (click)="approveRegistrationFeesPay()" *ngIf="currentMediationRequest?.statusName === mediationCaseStatusEnum.REGISTRATION_PENDING  && 
+                                    (currentUser?.roles[0] === roles.SUPERADMIN || currentUser?.roles[0] === roles.ADMIN)" [disabled]="approvingRegFeesPay || !currentMediationRequest">
+                                        <ng-container *transloco="let translate">
+                                            {{translate('Approve-Registration-Fees-Payment')}}
+                                        </ng-container>
+                                        <mat-progress-spinner
+                                        *ngIf="approvingRegFeesPay"
+                                        [diameter]="24"
+                                        [mode]="'indeterminate'"></mat-progress-spinner>
+                                        </button>
             </ng-container></div>
         <!-- Actions -->
         <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
@@ -331,9 +343,10 @@
                 <!--Registration fees-->
                 <mat-tab label="Registration Fees" *ngIf="(currentUser?.roles[0] === roles.PARTY || 
                 currentUser?.roles[0] === roles.SUPERADMIN || currentUser?.roles[0] === roles.ADMIN)
-                && currentMediationRequest?.ownerId === currentUser?.entityId && 
+                || (currentMediationRequest?.ownerId === currentUser?.entityId) && 
                 currentMediationRequest?.registrationInvoiceSent"> 
-                    <mediation-registration-payment [request]="currentMediationRequest" (reloadRequestEvent)="reloadRequest($event)"></mediation-registration-payment>
+                    <mediation-registration-payment [request]="currentMediationRequest" 
+                    (reloadRequestEvent)="reloadRequest($event)"></mediation-registration-payment>
                     
                 </mat-tab>
                

@@ -128,4 +128,12 @@ export class MediationService
         return this._httpClient.post<any>(url, body, {headers : headers});
     }
 
+    approveRegistrationPayment(requestId : number, accept : boolean)
+    {
+        const headers = {'content-type' : 'application/json'};
+        let url = environment.api + '/Case/ApproveRegistrationPayment?requestId=' + requestId + '&accept=' + accept;
+        return this._httpClient.post<any>(url, null, {headers : headers});
+    }
+
+
 }

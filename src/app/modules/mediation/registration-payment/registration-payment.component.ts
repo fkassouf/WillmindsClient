@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { PAYMENTMETHODS } from 'app/core/enums/core-enum';
+import { MediationCaseStatusEnum } from 'app/modules/common/models/_enums';
 import { SharedService } from 'app/shared/services/shared.service';
 import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs';
@@ -18,6 +19,7 @@ export class RegistrationPaymentComponent {
 
   paymentForm : FormGroup;
   paymentMethodsEnum = PAYMENTMETHODS;
+  mediationCaseStatusEnum = MediationCaseStatusEnum;
   submitted : boolean = false;
   submitting : boolean = false;
   currencies : any[] = [];
@@ -40,6 +42,10 @@ export class RegistrationPaymentComponent {
       paymentCurrency : new FormControl<any>(null, []),
     });
 
+    
+   
+  
+
     this.getCurrencyList();
     this.getPaymentMethods();
   }
@@ -47,9 +53,10 @@ export class RegistrationPaymentComponent {
   ngOnChanges(changes: SimpleChanges) {
     let previousRequest = changes.request.previousValue;
     let currentRequest = changes.request.currentValue;
+  
     let currentPaymentMode =  this.paymentMethods.find(x=>x.id == currentRequest.regPaymentMode);
     let currentCurrency =  this.currencies.find(x=>x.code == currentRequest?.currencyCode);
-    this.paymentForm.patchValue({
+    this.paymentForm?.patchValue({
       paymentMethod : currentPaymentMode,
       bankName : currentRequest?.regBankName,
       nameOfAccountHolder : currentRequest?.regTransferee,
@@ -58,9 +65,13 @@ export class RegistrationPaymentComponent {
       paymentAmount : currentRequest?.regPaymentAmount,
       paymentCurrency : currentCurrency
     });
-    this.paymentForm.markAsPristine();
-    this.paymentForm.markAsUntouched();
+    this.paymentForm?.markAsPristine();
+    this.paymentForm?.markAsUntouched();
     this.submitted = false;
+    /*if(currentRequest?.statusName === this.mediationCaseStatusEnum.REGISTRATION_PAID)
+    {
+      this.paymentForm?.disable();
+    }*/
   }
 
   getCurrencyList()
@@ -70,7 +81,7 @@ export class RegistrationPaymentComponent {
          {
             this.currencies = resp.result;
             let currentCurrency =  this.currencies.find(x=>x.code == this.request?.currencyCode);
-        
+            
             this.f.paymentCurrency.setValue(currentCurrency);
             
          }
@@ -195,4 +206,5 @@ export class RegistrationPaymentComponent {
   reloadRequest(value: boolean) {
     this.reloadRequestEvent.emit(value);
   }
+
 }

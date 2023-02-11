@@ -1,6 +1,6 @@
 <form class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden"
-[formGroup]="paymentForm" (ngSubmit)="submit()">
-    <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+[formGroup]="paymentForm" (ngSubmit)="submit()" *ngIf="request?.statusName === this.mediationCaseStatusEnum.REGISTRATION_PENDING">
+    <div class="grid sm:grid-cols-2 gap-3 pb-4 w-full">
         <div class="w-full">
             <mat-label id="payment-method-label">
                 <ng-container *transloco="let translate">
@@ -125,7 +125,7 @@
         </div>
     </div>
     
-    <div class="flex items-center justify-end border-t -mx-8 mt-8 px-8 py-5 bg-gray-50 dark:bg-gray-700">
+    <div class="flex items-center justify-end border-t -mx-8 mt-8 px-8 py-5 bg-gray-50 dark:bg-gray-700" *ngIf="request?.statusName === mediationCaseStatusEnum.REGISTRATION_PENDING">
         <button
         type="submit"
         class="px-6 ml-3"
@@ -144,3 +144,35 @@
     </button>
     </div>
 </form>
+<div *ngIf="request?.statusName === this.mediationCaseStatusEnum.REGISTRATION_PAID"
+class="flex flex-col mt-1 px-8 pt-10 bg-card shadow rounded overflow-hidden">
+<div class="grid sm:grid-cols-4 gap-3 pb-4 w-full">
+    <div class="w-full">
+        <p class="text-md font-medium">
+            <ng-container *transloco="let translate">
+                {{translate('Payment-Mode')}}
+            </ng-container>
+        </p>
+        <p class="text-md mb-6">{{request?.regPaymentModeName}}</p>
+    </div>
+   
+</div>
+<div class="grid sm:grid-cols-4 gap-3 pb-4 w-full" *ngIf="request?.regPaymentModeName === paymentMethodsEnum.BANK">
+    <div class="w-full">
+        <p class="text-md font-medium">
+            <ng-container *transloco="let translate">
+                {{translate('Bank-Name')}}
+            </ng-container>
+        </p>
+        <p class="text-md mb-6">{{request?.regBankName}}</p>
+    </div>
+    <div class="w-full">
+        <p class="text-md font-medium">
+            <ng-container *transloco="let translate">
+                {{translate('Name-Of-Account-Holder')}}
+            </ng-container>
+        </p>
+        <p class="text-md mb-6">{{request?.regTransferee}}</p>
+    </div>
+</div>
+</div>
