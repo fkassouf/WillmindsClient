@@ -4,16 +4,22 @@
         <div class="w-full">
             <mat-label id="payment-method-label">
                 <ng-container *transloco="let translate">
-                    {{translate('Choose method')}}
+                    {{translate('Choose-Payment-Mode')}}
                 </ng-container>
             </mat-label>
             <mat-radio-group formControlName="paymentMethod"
-            aria-labelledby="payment-method-label"
+            aria-labelledby="payment-method-label" (change)="selectPaymentMethod($event)"
             >
-                <mat-radio-button color="primary" *ngFor="let p of paymentMethods" [value]="p">
+                <mat-radio-button color="primary" 
+                *ngFor="let p of paymentMethods; let i = index" [value]="p">
                     {{p.type}}
                 </mat-radio-button>
             </mat-radio-group>
+            <mat-error *ngIf="submitted && f.paymentMethod.hasError('required')">
+                <ng-container *transloco="let translate">
+                    {{translate('Field-Required')}}
+                </ng-container>
+            </mat-error>
         </div>
         
     </div>
@@ -27,7 +33,11 @@
                     </ng-container>
                 </mat-label>
                 <input matInput formControlName="bankName">
-                
+                <mat-error *ngIf="submitted && f.bankName.hasError('required')">
+                    <ng-container *transloco="let translate">
+                        {{translate('Field-Required')}}
+                    </ng-container>
+                </mat-error>
             </mat-form-field>
             <mat-form-field class="w-full">
                 <mat-label>
@@ -37,7 +47,11 @@
                     </ng-container>
                 </mat-label>
                 <input matInput formControlName="nameOfAccountHolder">
-                
+                <mat-error *ngIf="submitted && f.nameOfAccountHolder.hasError('required')">
+                    <ng-container *transloco="let translate">
+                        {{translate('Field-Required')}}
+                    </ng-container>
+                </mat-error>
             </mat-form-field>
             <mat-form-field class="w-full">
                 <mat-label>
@@ -46,27 +60,67 @@
                     </ng-container>
                 </mat-label>
                 <input matInput formControlName="accountNumber">
-                
+                <mat-error *ngIf="submitted && f.accountNumber.hasError('required')">
+                    <ng-container *transloco="let translate">
+                        {{translate('Field-Required')}}
+                    </ng-container>
+                </mat-error>
             </mat-form-field>
         </div>
         <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
             <mat-form-field class="w-full">
                 <mat-label>
                     <ng-container *transloco="let translate">
-                        {{translate('Payment-Date')}}
+                        {{translate('Transfer-Date')}}
                     </ng-container>
                 </mat-label>
                 <input
-                    id="paymentDate"
+                    id="transferDate"
                     [matDatepicker]="pickerPD"
                     matInput
-                    [formControlName]="'paymentDate'">
+                    [formControlName]="'transferDate'">
                     <mat-datepicker-toggle
                         matSuffix
                         [for]="pickerPD"></mat-datepicker-toggle>
                     <mat-datepicker #pickerPD></mat-datepicker>
-           
+                    <mat-error *ngIf="submitted && f.transferDate.hasError('required')">
+                        <ng-container *transloco="let translate">
+                            {{translate('Field-Required')}}
+                        </ng-container>
+                    </mat-error>
                
+            </mat-form-field>
+            <mat-form-field class="w-full">
+                <mat-label>
+                    <ng-container *transloco="let translate">
+                        {{translate('Payment-Amount')}}
+                    </ng-container>
+                </mat-label>
+                <input
+                    matInput
+                    formControlName="paymentAmount">
+                    <mat-error *ngIf="submitted && f.paymentAmount.hasError('required')">
+                        <ng-container *transloco="let translate">
+                            {{translate('Field-Required')}}
+                        </ng-container>
+                    </mat-error>
+            </mat-form-field>
+            <mat-form-field class="w-full">
+                <mat-label>
+                    <ng-container *transloco="let translate">
+                        {{translate('Currency')}}
+                    </ng-container>
+                </mat-label>
+                <mat-select formControlName="paymentCurrency">
+                    <mat-option *ngFor="let c of currencies" [value]="c" >
+                        <span>{{c.code}}</span>
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="submitted && f.paymentCurrency.hasError('required')">
+                    <ng-container *transloco="let translate">
+                        {{translate('Field-Required')}}
+                    </ng-container>
+                </mat-error>
             </mat-form-field>
         </div>
     </div>

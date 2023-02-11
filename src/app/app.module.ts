@@ -15,6 +15,7 @@ import { CustomMatPaginatorIntl } from './core/transloco/custom-mat-paginator-in
 import { FuseMockApiModule } from '@fuse/lib/mock-api';
 import { mockApiServices } from './mock-api';
 
+
 const routerConfig: ExtraOptions = {
     preloadingStrategy       : PreloadAllModules,
     scrollPositionRestoration: 'enabled'
@@ -33,7 +34,6 @@ const routerConfig: ExtraOptions = {
         FuseModule,
         FuseConfigModule.forRoot(appConfig),
         FuseMockApiModule.forRoot(mockApiServices),
-
         // Core module of your application
         CoreModule,
 
@@ -41,10 +41,10 @@ const routerConfig: ExtraOptions = {
         LayoutModule,
         ToastrModule.forRoot()
     ],
-    providers: [{
-        provide: MatPaginatorIntl, 
-        useClass: CustomMatPaginatorIntl
-    }],
+    providers: [
+        {provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl},
+
+    ],
     bootstrap   : [
         AppComponent
     ]

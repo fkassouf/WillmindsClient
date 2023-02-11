@@ -93,6 +93,13 @@
     "Updated-On" : "Updated On",
     "Mediation-Request-Aggreement" : "Mediation Request Aggreement",
     "Statement-Of-Reply" : "Statement Of Reply",
-    "Send-Registration-Fees-Invoice" : "Send Registration Fees Invoice"
+    "Send-Registration-Fees-Invoice" : "Send Registration Fees Invoice",
+    "Choose-Payment-Mode" : "Choose Payment Mode",
+    "Bank-Name" : "Bank Name",
+    "Name-Of-Account-Holder" : "Name Of Account Holder (transferee)",
+    "Account-Number" : "Account Number",
+    "Transfer-Date" : "Transfer Date",
+    "Payment-Amount" : "Payment Amount",
+    "Currency" : "Currency"
  
 }

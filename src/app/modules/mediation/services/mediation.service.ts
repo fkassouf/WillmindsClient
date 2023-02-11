@@ -4,6 +4,7 @@ import { DataTableRequest } from "app/modules/common/models";
 import { environment } from "environments/environment";
 import { Observable } from "rxjs";
 import { createMediationRequest } from "../models/create-mediation-request";
+import { MediationRegistrationPayment } from "../models/mediation-registration-payment";
 import { UpdateMediationRequest } from "../models/update-mediation-request";
 
 @Injectable({
@@ -119,5 +120,12 @@ export class MediationService
         return this._httpClient.post<any>(url, null, {headers : headers});
     }
 
+
+    submitRegistrationPayment(body : MediationRegistrationPayment)
+    {
+        const headers = {'content-type' : 'application/json'};
+        let url = environment.api + '/Case/SubmitRegistrationPayment';
+        return this._httpClient.post<any>(url, body, {headers : headers});
+    }
 
 }

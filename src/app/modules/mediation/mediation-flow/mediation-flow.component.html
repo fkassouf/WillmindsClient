@@ -4,7 +4,7 @@
         class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-2 sm:py-2 sm:px-10 border-b bg-card dark:bg-transparent">
         <!-- Title -->
         <div class="text-1xl font-extrabold tracking-tight"> <ng-container *transloco="let translate">
-                <span>{{translate(title)}}</span>&nbsp;{{currentMediationRequest?.caseNumber}}
+                <span>{{translate(title)}}</span>&nbsp;&nbsp;{{currentMediationRequest?.caseNumber}}&nbsp;&nbsp;{{currentMediationRequest?.statusName}}
 
                 <button mat-icon-button color="primary" (click)="adminApprove(currentMediationRequest?.id, true)"
                                     *ngIf="currentMediationRequest?.statusName === mediationCaseStatusEnum.SUBMITTED  && 
@@ -20,7 +20,7 @@
                                     </button>
                                     <button mat-stroked-button color="primary" (click)="sendRegistrationInvoice(currentMediationRequest?.id)"
                                     *ngIf="currentMediationRequest?.statusName === mediationCaseStatusEnum.REGISTRATION_PENDING  && 
-                                    (currentUser?.roles[0] === roles.SUPERADMIN || currentUser?.roles[0] === roles.ADMIN)"
+                                    (currentUser?.roles[0] === roles.SUPERADMIN || currentUser?.roles[0] === roles.ADMIN) && !currentMediationRequest?.registrationInvoiceSent"
                                     [disabled]="sendingRegistrationInvoice"
                                     >
                                     <span *ngIf="!sendingRegistrationInvoice">
@@ -264,7 +264,7 @@
                                        </a>                                
                                 </div>
                                 <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full" *ngIf="currentMediationRequest?.writtenCommunication">
-                                    <p class="text-md font-medium">Email written Communications between parties</p>
+                                    <p class="text-md font-medium">Email or any other written communications between parties</p>
                                     <a target="_blank" class="custom-link" [href]="apiPath + '/Utility/DownloadFile?fileName=' + currentMediationRequest?.writtenCommunication">
                                         {{currentMediationRequest?.writtenCommunication}}
                                        </a>                                
@@ -329,10 +329,12 @@
                     (reloadRequestEvent)="reloadRequest($event)"></app-statement-of-reply>
                  </mat-tab>
                 <!--Registration fees-->
-                <mat-tab label="Registration Fees" *ngIf="currentUser?.roles[0] === roles.PARTY
-                
-                && currentMediationRequest?.ownerId === currentUser?.entityId"> 
-                    <mediation-registration-payment></mediation-registration-payment>
+                <mat-tab label="Registration Fees" *ngIf="(currentUser?.roles[0] === roles.PARTY || 
+                currentUser?.roles[0] === roles.SUPERADMIN || currentUser?.roles[0] === roles.ADMIN)
+                && currentMediationRequest?.ownerId === currentUser?.entityId && 
+                currentMediationRequest?.registrationInvoiceSent"> 
+                    <mediation-registration-payment [request]="currentMediationRequest" (reloadRequestEvent)="reloadRequest($event)"></mediation-registration-payment>
+                    
                 </mat-tab>
                
             </mat-tab-group>

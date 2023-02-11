@@ -473,7 +473,7 @@
                         </div>
                         <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
                             <mat-form-field class="col-span-2 w-full">
-                                <mat-label>Email written Communications between parties (all in one document)</mat-label>
+                                <mat-label>Email or any other written communications between parties (all in one document)</mat-label>
                                 <ngx-mat-file-input #emailWrittenComm formControlName="emailWrittenComm" [accept]="'.pdf,.docx'"></ngx-mat-file-input>
                                 <button mat-icon-button *ngIf="!emailWrittenComm.empty" (click)="emailWrittenComm.clear($event)">
                                     <mat-icon>clear</mat-icon>

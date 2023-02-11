@@ -37,6 +37,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MediationFlowComponent } from './mediation-flow/mediation-flow.component';
 import { StatementOfReplyComponent } from './statement-of-reply/statement-of-reply.component';
 import { RegistrationPaymentComponent } from './registration-payment/registration-payment.component';
+import { DatePipe } from '@angular/common';
 
 const routes: Route[] = [
     {
@@ -100,7 +101,7 @@ const routes: Route[] = [
         MatDialogModule,
         SharedModule
     ],
-    providers: [{ provide: NGX_MAT_FILE_INPUT_CONFIG, useValue: config }]
+    providers: [{ provide: NGX_MAT_FILE_INPUT_CONFIG, useValue: config }, DatePipe]
 })
 export class MediationModule {
 }

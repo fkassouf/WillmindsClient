@@ -84,9 +84,9 @@ export class MediationCaseComponent implements OnInit {
         contractClause : new FormControl<File>(null, []),
         sendNoticeToOtherParties : new FormControl<boolean>(false, []),
         relevantInformation : new FormControl<string>(null, []),
-        disputeCategory : new FormControl<any>(null, []),
+        disputeCategory : new FormControl<any>(null, [Validators.required]),
         natureOfDispute : new FormControl<File>(null, []),
-        disputeDetails : new FormControl<string>(null, []),
+        disputeDetails : new FormControl<string>(null, [Validators.required]),
         monetaryValue : new FormControl<number>(null, []),
         requestedRelief : new FormControl<string>(null, []),
         otherInfo : new FormControl<string>(null, [])
