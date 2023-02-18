@@ -102,6 +102,7 @@
     "Transfer-Date" : "Transfer Date",
     "Payment-Amount" : "Payment Amount",
     "Currency" : "Currency",
-    "Approve-Registration-Fees-Payment" : "Approve Registration Fees Payment"
+    "Approve-Registration-Fees-Payment" : "Approve Registration Fees Payment",
+    "Payment-Mode" : "Payment Mode"
     
 }

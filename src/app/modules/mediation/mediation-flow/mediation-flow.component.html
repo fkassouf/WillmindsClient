@@ -349,6 +349,9 @@
                     (reloadRequestEvent)="reloadRequest($event)"></mediation-registration-payment>
                     
                 </mat-tab>
+                <mat-tab label="Mediation Track" *ngIf="currentMediationRequest?.statusName === mediationCaseStatusEnum.REGISTRATION_PAID">
+                        <app-mediation-track></app-mediation-track>
+                </mat-tab>
                
             </mat-tab-group>
         </div>

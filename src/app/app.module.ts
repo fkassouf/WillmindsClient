@@ -14,6 +14,7 @@ import { MatPaginatorIntl } from '@angular/material/paginator';
 import { CustomMatPaginatorIntl } from './core/transloco/custom-mat-paginator-intl';
 import { FuseMockApiModule } from '@fuse/lib/mock-api';
 import { mockApiServices } from './mock-api';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 
 const routerConfig: ExtraOptions = {
@@ -43,6 +44,7 @@ const routerConfig: ExtraOptions = {
     ],
     providers: [
         {provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl},
+        {provide : LocationStrategy , useClass: HashLocationStrategy}
 
     ],
     bootstrap   : [

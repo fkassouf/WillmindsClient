@@ -174,5 +174,38 @@ class="flex flex-col mt-1 px-8 pt-10 bg-card shadow rounded overflow-hidden">
         </p>
         <p class="text-md mb-6">{{request?.regTransferee}}</p>
     </div>
+     <div class="w-full">
+        <p class="text-md font-medium">
+            <ng-container *transloco="let translate">
+                {{translate('Account-Number')}}
+            </ng-container>
+        </p>
+        <p class="text-md mb-6">{{request?.regBankAccountNb}}</p>
+    </div>
+    <div class="w-full">
+        <p class="text-md font-medium">
+            <ng-container *transloco="let translate">
+                {{translate('Transfer-Date')}}
+            </ng-container>
+        </p>
+        <p class="text-md mb-6">{{request?.regTransferDate | date : 'dd/MM/yyyy'}}</p>
+    </div>
+    <div class="w-full">
+        <p class="text-md font-medium">
+            <ng-container *transloco="let translate">
+                {{translate('Payment-Amount')}}
+            </ng-container>
+        </p>
+        <p class="text-md mb-6">{{request?.regPaymentAmount | number : '1.2-2'}}</p>
+    </div>
+    <div class="w-full">
+        <p class="text-md font-medium">
+            <ng-container *transloco="let translate">
+                {{translate('Currency')}}
+            </ng-container>
+        </p>
+        <p class="text-md mb-6">{{request?.currencyCode}}</p>
+    </div>
+   
 </div>
 </div>

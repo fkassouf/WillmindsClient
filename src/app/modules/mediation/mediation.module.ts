@@ -38,6 +38,8 @@ import { MediationFlowComponent } from './mediation-flow/mediation-flow.componen
 import { StatementOfReplyComponent } from './statement-of-reply/statement-of-reply.component';
 import { RegistrationPaymentComponent } from './registration-payment/registration-payment.component';
 import { DatePipe } from '@angular/common';
+import { MediationTrackComponent } from './mediation-track/mediation-track.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 const routes: Route[] = [
     {
@@ -62,7 +64,8 @@ const routes: Route[] = [
      ConfirmSubmissionComponent,
      MediationFlowComponent,
      StatementOfReplyComponent,
-     RegistrationPaymentComponent
+     RegistrationPaymentComponent,
+     MediationTrackComponent
   ],
     imports: [
         RouterModule.forChild(routes),
@@ -99,6 +102,7 @@ const routes: Route[] = [
         MatTooltipModule,
         FuseDrawerModule,
         MatDialogModule,
+        MatAutocompleteModule,
         SharedModule
     ],
     providers: [{ provide: NGX_MAT_FILE_INPUT_CONFIG, useValue: config }, DatePipe]

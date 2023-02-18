@@ -135,5 +135,12 @@ export class MediationService
         return this._httpClient.post<any>(url, null, {headers : headers});
     }
 
+    getMediatorList(body : any) : Observable<any>
+    {
+        const headers = {'content-type' : 'application/json'};
+        let url = environment.api + '/Mediator/GetMediatorList';
+        return this._httpClient.post<any>(url, body, {headers : headers});
+    }
+
 
 }

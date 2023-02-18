@@ -1,5 +1,5 @@
 export const environment = {
     production: true,
-    api: 'https://exquitechportalapi.azurewebsites.net/api',
-    serverPath : 'https://localhost:44375/'
+    api: 'http://resolveapi.willminds.com/api',
+    serverPath : 'http://resolveapi.willminds.com/'
 };

@@ -1,0 +1,24 @@
+<form [formGroup]="mediationTrackForm" class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden">
+    <div class="grid sm:grid-cols-2 gap-3 pb-4 w-full">
+        <div class="w-full">
+            <mat-label id="payment-method-label">
+                <ng-container *transloco="let translate">
+                    {{translate('Select-Mediator')}}
+                </ng-container>
+            </mat-label>
+            <input matInput placeholder="Select mediator" [matAutocomplete]="auto" formControlName="mediator"
+            placeholder="Min 3 Characters Ex. Ant">
+        
+          <mat-autocomplete #auto="matAutocomplete" (optionsScroll)="onMediatorsScroll()"
+           >
+           
+            <ng-container *ngIf="!isLoading">
+              <mat-option *ngFor="let mediator of filteredMediators$ | async" [value]="mediator">
+                <span><b>{{mediator.fullName}}</b></span>
+              </mat-option>
+            </ng-container>
+          </mat-autocomplete>
+        </div>
+        
+    </div>
+</form>
