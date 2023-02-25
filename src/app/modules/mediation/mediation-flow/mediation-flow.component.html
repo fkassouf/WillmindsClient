@@ -19,7 +19,7 @@
                                         <mat-icon>cancel</mat-icon>
                                     </button>
                                     <button mat-stroked-button color="primary" (click)="sendRegistrationInvoice(currentMediationRequest?.id)"
-                                    *ngIf="currentMediationRequest?.statusName === mediationCaseStatusEnum.REGISTRATION_PENDING  && 
+                                    *ngIf="currentMediationRequest?.statusName === mediationCaseStatusEnum.APPROVED_BY_PARTY  && 
                                     (currentUser?.roles[0] === roles.SUPERADMIN || currentUser?.roles[0] === roles.ADMIN) && !currentMediationRequest?.registrationInvoiceSent"
                                     [disabled]="sendingRegistrationInvoice || !currentMediationRequest"
                                     >
@@ -341,16 +341,50 @@
                     (reloadRequestEvent)="reloadRequest($event)"></app-statement-of-reply>
                  </mat-tab>
                 <!--Registration fees-->
-                <mat-tab label="Registration Fees" *ngIf="(currentUser?.roles[0] === roles.PARTY || 
-                currentUser?.roles[0] === roles.SUPERADMIN || currentUser?.roles[0] === roles.ADMIN)
-                || (currentMediationRequest?.ownerId === currentUser?.entityId) && 
-                currentMediationRequest?.registrationInvoiceSent"> 
+                <mat-tab label="Registration Fees" *ngIf="showRegistrationFeesTab()"> 
                     <mediation-registration-payment [request]="currentMediationRequest" 
                     (reloadRequestEvent)="reloadRequest($event)"></mediation-registration-payment>
                     
                 </mat-tab>
-                <mat-tab label="Mediation Track" *ngIf="currentMediationRequest?.statusName === mediationCaseStatusEnum.REGISTRATION_PAID">
-                        <app-mediation-track></app-mediation-track>
+                <mat-tab label="Mediation Track" 
+                *ngIf="currentMediationRequest?.statusName === mediationCaseStatusEnum.REGISTRATION_PAID ||
+                currentMediationRequest?.statusName === mediationCaseStatusEnum.CO_MEDIATION_SELECTION_PENDING">
+                    
+                        <div class="w-full" *ngIf="currentUser?.roles[0] === this.roles.PARTY">
+                            <mat-label>
+                                <ng-container *transloco="let translate">
+                                    {{translate('Select-Mediation-Track')}}
+                                </ng-container>
+                            </mat-label>
+                            <mat-radio-group [(ngModel)]="mediationTrack">
+                                <mat-radio-button color="primary" value="fast">
+                                  <ng-container *transloco="let translate">
+                                    {{translate('Fast-Track')}}
+                                </ng-container>
+                                </mat-radio-button>
+                                <mat-radio-button color="primary" value="normal">
+                                  <ng-container *transloco="let translate">
+                                    {{translate('Normal-Track')}}
+                                </ng-container>
+                                </mat-radio-button>
+                               
+                            </mat-radio-group>
+                         
+                        </div>
+                        <div class="w-full" *ngIf="currentUser?.roles[0] === this.roles.SUPERADMIN || currentUser?.roles[0] === this.roles.ADMIN">
+                            <p class="text-md font-medium">
+                                <ng-container *transloco="let translate">
+                                    {{translate('Mediation-Track')}}
+                                </ng-container>
+                            </p>
+                            <p class="text-md mb-6" *ngIf="currentMediationRequest.isFastTrack != null">
+                                <ng-container *transloco="let translate">
+                                {{currentMediationRequest.isFastTrack == true? translate('Fast-Track') : translate('Normal-Track')}}
+                                </ng-container>
+                            </p>
+                        </div>
+                    
+                    <app-mediation-track *ngIf="mediationTrack" [request]="currentMediationRequest" [trackMode]="mediationTrack"></app-mediation-track>
                 </mat-tab>
                
             </mat-tab-group>

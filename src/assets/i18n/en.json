@@ -103,6 +103,12 @@
     "Payment-Amount" : "Payment Amount",
     "Currency" : "Currency",
     "Approve-Registration-Fees-Payment" : "Approve Registration Fees Payment",
-    "Payment-Mode" : "Payment Mode"
+    "Payment-Mode" : "Payment Mode",
+    "Select-Mediation-Track" : "Select Mediation Track",
+    "Fast-Track" : "Fast Track",
+    "Normal-Track" : "Normal Track",
+    "Mediation-Track" : "Mediation Track",
+    "Other-Language" : "Other Language",
+    "Co-Mediation" : "Co-Mediation"
     
 }

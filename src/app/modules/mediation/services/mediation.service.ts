@@ -142,5 +142,19 @@ export class MediationService
         return this._httpClient.post<any>(url, body, {headers : headers});
     }
 
+    submitMediationFastTrack(body : any) : Observable<any>
+    {
+        const headers = {'content-type' : 'application/json'};
+        let url = environment.api + '/Case/SubmitMediationFastTrack';
+        return this._httpClient.post<any>(url, body, {headers : headers});
+    }
+
+    suggestCoMediation(requestId : number, action : boolean)
+    {
+        const headers = {'content-type' : 'application/json'};
+        let url = environment.api + '/Case/SuggestCoMediation?requestId=' + requestId + '&action=' + action;
+        return this._httpClient.post<any>(url, null, {headers : headers});
+    }
+
 
 }

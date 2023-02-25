@@ -30,6 +30,7 @@ export class MediationFlowComponent implements OnInit {
   currentUser : User;
   sendingRegistrationInvoice : boolean = false;
   approvingRegFeesPay : boolean = false;
+  mediationTrack : string | null = null;
   
   constructor(private activatedRoute : ActivatedRoute, 
     private mediationService : MediationService, 
@@ -92,6 +93,12 @@ export class MediationFlowComponent implements OnInit {
                    this.getDisputeList(this.currentMediationRequest.disputeBackground);
                   //this.getDisputeList(this.currentMediationRequest?.disputeBackground);
                   //this.addOtherPartiesForEdit(this.currentMediationRequest?.parties);
+                  
+                  if(this.currentMediationRequest.isFastTrack != null)
+                  {
+                      this.mediationTrack = this.currentMediationRequest.isFastTrack == true? 'fast' : 'normal';
+                      
+                  }
               }
               else
               {
@@ -200,6 +207,20 @@ export class MediationFlowComponent implements OnInit {
           this.toastrService.error(resp.message);
         }
       })
+  }
+
+  showRegistrationFeesTab() : boolean
+  {
+      /*return (this.currentUser?.roles[0] === this.roles.PARTY || 
+        this.currentUser?.roles[0] === this.roles.SUPERADMIN || this.currentUser?.roles[0] === this.roles.ADMIN)
+        || (this.currentMediationRequest?.ownerId === this.currentUser?.entityId) && 
+        (this.currentMediationRequest?.registrationInvoiceSent) && 
+        (this.currentMediationRequest?.statusName === this.mediationCaseStatusEnum.REGISTRATION_PENDING || this.currentMediationRequest?.statusName === this.mediationCaseStatusEnum.REGISTRATION_PAID)*/
+
+        return ((this.currentMediationRequest?.registrationInvoiceSent) &&
+        (this.currentUser?.roles[0] === this.roles.SUPERADMIN || this.currentUser?.roles[0] === this.roles.ADMIN ||
+          this.currentMediationRequest?.ownerId === this.currentUser?.entityId)
+        );
   }
 
 

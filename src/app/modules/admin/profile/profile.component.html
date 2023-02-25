@@ -26,7 +26,7 @@
                     <img *ngIf="currentMediatorAccount?.image"
                     class="w-32 h-32 rounded-full ring-4 ring-bg-card image profile-image"
                     #profileImage
-                    [src]="environment.serverPath + 'Data/Images/' + currentMediatorAccount?.image"
+                    [src]="environment.serverPath + 'Data/Images/' + currentMediatorAccount?.image + '?size=256'"
                     alt="User avatar">
                     <div class="overlay">
                         <button mat-icon-button color="primary" class="overlay-icon-left camera_alt" title="Change" (click)="openBrowseFile()">

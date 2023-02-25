@@ -1,24 +1,94 @@
-<form [formGroup]="mediationTrackForm" class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden">
-    <div class="grid sm:grid-cols-2 gap-3 pb-4 w-full">
-        <div class="w-full">
-            <mat-label id="payment-method-label">
-                <ng-container *transloco="let translate">
-                    {{translate('Select-Mediator')}}
-                </ng-container>
-            </mat-label>
-            <input matInput placeholder="Select mediator" [matAutocomplete]="auto" formControlName="mediator"
-            placeholder="Min 3 Characters Ex. Ant">
-        
-          <mat-autocomplete #auto="matAutocomplete" (optionsScroll)="onMediatorsScroll()"
-           >
-           
-            <ng-container *ngIf="!isLoading">
-              <mat-option *ngFor="let mediator of filteredMediators$ | async" [value]="mediator">
-                <span><b>{{mediator.fullName}}</b></span>
-              </mat-option>
+
+<form [formGroup]="fastTrackForm" (ngSubmit)="submit()" *ngIf="(trackMode == 'fast')
+&& currentUser?.roles[0] === this.roles.PARTY"
+class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden">
+  
+
+  <div class="grid sm:grid-cols-2 gap-3 pb-4 w-full">
+    <mat-form-field class="w-full">
+      <mat-label>
+          <ng-container *transloco="let translate">
+              {{translate('Language')}}
+          </ng-container>
+      </mat-label>
+      <mat-select formControlName="language">
+          <mat-option *ngFor="let lang of languages" [value]="lang" >
+              <span>{{lang.name}}</span>
+          </mat-option>
+      </mat-select>
+      <button mat-icon-button *ngIf="f.language.value" (click)="f.language.setValue(null)">
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-error *ngIf="submitted && f.language.hasError('required')">
+          <ng-container *transloco="let translate">
+              {{translate('Field-Required')}}
+          </ng-container>
+      </mat-error>
+  </mat-form-field>
+  <mat-form-field class="w-full">
+    <mat-label>
+        <ng-container *transloco="let translate">
+            {{translate('Other-Language')}}
+        </ng-container>
+    </mat-label>
+    <input
+        matInput
+        formControlName="otherLanguage">
+        <mat-error *ngIf="submitted && f.otherLanguage.hasError('required')">
+            <ng-container *transloco="let translate">
+                {{translate('Field-Required')}}
             </ng-container>
-          </mat-autocomplete>
-        </div>
-        
-    </div>
+        </mat-error>
+</mat-form-field>
+  </div>
+  <div class="flex items-center justify-end border-t -mx-8 mt-8 px-8 py-5 bg-gray-50 dark:bg-gray-700">
+    <button
+    type="submit"
+    class="px-6 ml-3"
+    mat-flat-button
+    [color]="'primary'"
+    [disabled]="submitting">
+    <span *ngIf="!submitting">
+        <ng-container *transloco="let translate">
+            {{translate('Submit')}}
+        </ng-container>
+    </span>
+    <mat-progress-spinner
+        *ngIf="submitting"
+        [diameter]="24"
+        [mode]="'indeterminate'"></mat-progress-spinner>
+</button>
+</div>
 </form>
+
+<div *ngIf="currentUser?.roles[0] === this.roles.SUPERADMIN || currentUser?.roles[0] === this.roles.ADMIN">
+  <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
+    <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+        <p class="text-md font-medium"> 
+          <ng-container *transloco="let translate">
+          {{translate('Language')}}
+      </ng-container></p>
+     
+        <p class="text-md mb-6">{{getLangName(request?.languageId)}}</p>
+    </div>
+    <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+      <p class="text-md font-medium"> 
+        <ng-container *transloco="let translate">
+        {{translate('Other-Language')}}
+    </ng-container></p>
+   
+      <p class="text-md mb-6">{{request?.otherLanguageName}}</p>
+  </div>
+</div>
+<div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+  <div class="w-full">
+    <mat-label>
+        <ng-container *transloco="let translate">
+            {{translate('Co-Mediation')}}?
+        </ng-container>
+    </mat-label>
+    <mat-slide-toggle color="primary" [(ngModel)]="coMediation" (change)="suggestCoMediation()"></mat-slide-toggle>
+ 
+</div>
+</div>
+</div>
