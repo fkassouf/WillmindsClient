@@ -16,5 +16,6 @@ export enum MediationCaseStatusEnum
     SETTELED = 'Setteled',
     NOT_SETTELED = 'Not Setteled',
     CASE_CLOSE = 'Case Close',
-    CO_MEDIATION_SELECTION_PENDING = 'Co-Mediation Selection Pending'
+    CO_MEDIATION_SELECTION_PENDING = 'Co-Mediation Selection Pending',
+    CO_MEDIATOR_SELECTION_PENDING = 'Co-Mediator Selection Pending'
 }

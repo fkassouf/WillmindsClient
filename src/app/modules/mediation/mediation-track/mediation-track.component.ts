@@ -1,9 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from 'app/core/auth/authentication.service';
 import { ROLES } from 'app/core/enums/core-enum';
 import { AdminService } from 'app/modules/admin/admin.service';
 import { LanguageModel } from 'app/modules/admin/models/language-model';
+import { MediationCaseStatusEnum } from 'app/modules/common/models/_enums';
 import { ToastrService } from 'ngx-toastr';
 import { finalize, Observable } from 'rxjs';
 import { MediationService } from '../services/mediation.service';
@@ -16,6 +17,7 @@ import { MediationService } from '../services/mediation.service';
 export class MediationTrackComponent {
   @Input() trackMode : string;
   @Input() request : any = null;
+  @Output() reloadRequestEvent = new EventEmitter<boolean>();
   coMediation : boolean = false;
   isLoading : boolean = false;
   submitted : boolean = false;
@@ -25,6 +27,10 @@ export class MediationTrackComponent {
   languages : LanguageModel[] = [];
   currentUser : any;
   roles = ROLES;
+  mediationCaseStatusEnum = MediationCaseStatusEnum;
+
+  acceptingCoMediation : boolean = false;
+  rejectingCoMediation : boolean = false;
 
 
   constructor(private formBuilder : FormBuilder, 
@@ -41,7 +47,7 @@ export class MediationTrackComponent {
       language : new FormControl<LanguageModel>(null, [Validators.required]),
       otherLanguage : new FormControl<string>(this.request.otherLanguageName, []),
     });
-
+    
     this.getLanguages();
   }
 
@@ -107,6 +113,7 @@ export class MediationTrackComponent {
         if(resp.success)
         {
           this.toastrService.success('Operation completed');
+          this.reloadRequest(true);
         }
         else
         {
@@ -114,5 +121,44 @@ export class MediationTrackComponent {
           this.coMediation = !this.coMediation;
         }
      });
+  }
+
+  reloadRequest(value: boolean) {
+    this.reloadRequestEvent.emit(value);
+  }
+
+  acceptCoMediation(decision : boolean)
+  {
+     if(decision)
+     {
+        this.acceptingCoMediation = true;
+     }
+     else
+     {
+        this.rejectingCoMediation = true;
+     }
+
+     this.mediationService.approveMediationStyle(this.request.id, this.currentUser.entityId, decision)
+     .pipe(finalize(()=>{
+      this.acceptingCoMediation = false;
+      this.rejectingCoMediation = false;
+     }))
+     .subscribe(resp=>{
+        if(resp.success)
+        {
+            this.toastrService.success('Operation completed successfully');
+            this.reloadRequest(true);
+        }
+        else
+        {
+          this.toastrService.error(resp.message);
+        }
+     })
+  }
+
+  get isAcceptCoMediationVisible() : boolean
+  {
+     return (this.request.ownerId == this.currentUser.entityId && this.request.acceptCoMediationSelection == null)
+     || (this.request.parties.find(x=>x.entityId == this.currentUser.entityId && x.requestId == this.request.Id));
   }
 }

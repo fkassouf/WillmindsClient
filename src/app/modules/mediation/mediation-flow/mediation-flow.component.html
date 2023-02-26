@@ -56,7 +56,7 @@
     <!-- Main -->
     <div class="flex-auto p-3 sm:p-4 sm:overflow-y-auto">
         <div class="w-full">
-            <mat-tab-group mat-stretch-tabs class="bg-card mat-elevation-z4">
+            <mat-tab-group class="bg-card mat-elevation-z4">
                 <!--Step 1 submit a request-->
                 <mat-tab label="Request Info"> 
                     <p class="text-lg font-medium">SECTION 1 - DETAILS OF THE PARTIES</p>
@@ -337,20 +337,21 @@
                  <!--Statement Of reply-->
                  <mat-tab label="Statement Of Reply" *ngIf="currentUser?.roles[0] === roles.PARTY
                  && isSecondParty(currentUser?.entityId) && isStOfReplySubmitted(currentUser?.entityId)"> 
+                 <ng-template matTabContent>
                     <app-statement-of-reply [request]="currentMediationRequest"
                     (reloadRequestEvent)="reloadRequest($event)"></app-statement-of-reply>
+                </ng-template>
                  </mat-tab>
                 <!--Registration fees-->
                 <mat-tab label="Registration Fees" *ngIf="showRegistrationFeesTab()"> 
+                    <ng-template matTabContent>
                     <mediation-registration-payment [request]="currentMediationRequest" 
                     (reloadRequestEvent)="reloadRequest($event)"></mediation-registration-payment>
-                    
+                </ng-template>
                 </mat-tab>
-                <mat-tab label="Mediation Track" 
-                *ngIf="currentMediationRequest?.statusName === mediationCaseStatusEnum.REGISTRATION_PAID ||
-                currentMediationRequest?.statusName === mediationCaseStatusEnum.CO_MEDIATION_SELECTION_PENDING">
-                    
-                        <div class="w-full" *ngIf="currentUser?.roles[0] === this.roles.PARTY">
+                <mat-tab label="Mediation Track" *ngIf="currentMediationRequest?.statusOrder > 8">
+                <ng-template matTabContent>
+                        <div class="w-full" *ngIf="currentUser?.roles[0] === this.roles.PARTY && currentMediationRequest?.statusName === mediationCaseStatusEnum.REGISTRATION_PAID">
                             <mat-label>
                                 <ng-container *transloco="let translate">
                                     {{translate('Select-Mediation-Track')}}
@@ -371,7 +372,7 @@
                             </mat-radio-group>
                          
                         </div>
-                        <div class="w-full" *ngIf="currentUser?.roles[0] === this.roles.SUPERADMIN || currentUser?.roles[0] === this.roles.ADMIN">
+                        <div class="w-full" *ngIf="currentMediationRequest?.statusOrder > 9">
                             <p class="text-md font-medium">
                                 <ng-container *transloco="let translate">
                                     {{translate('Mediation-Track')}}
@@ -384,7 +385,10 @@
                             </p>
                         </div>
                     
-                    <app-mediation-track *ngIf="mediationTrack" [request]="currentMediationRequest" [trackMode]="mediationTrack"></app-mediation-track>
+                    <app-mediation-track *ngIf="mediationTrack" [request]="currentMediationRequest"
+                    (reloadRequestEvent)="reloadRequest($event)"
+                    [trackMode]="mediationTrack"></app-mediation-track>
+                    </ng-template> 
                 </mat-tab>
                
             </mat-tab-group>

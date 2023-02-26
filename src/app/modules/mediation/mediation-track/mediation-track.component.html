@@ -1,6 +1,6 @@
 
 <form [formGroup]="fastTrackForm" (ngSubmit)="submit()" *ngIf="(trackMode == 'fast')
-&& currentUser?.roles[0] === this.roles.PARTY"
+&& currentUser?.roles[0] === this.roles.PARTY && request?.statusName === mediationCaseStatusEnum.REGISTRATION_PAID"
 class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden">
   
 
@@ -61,7 +61,7 @@ class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden">
 </div>
 </form>
 
-<div *ngIf="currentUser?.roles[0] === this.roles.SUPERADMIN || currentUser?.roles[0] === this.roles.ADMIN">
+<div *ngIf="request?.statusOrder > 9">
   <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
     <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
         <p class="text-md font-medium"> 
@@ -80,7 +80,8 @@ class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden">
       <p class="text-md mb-6">{{request?.otherLanguageName}}</p>
   </div>
 </div>
-<div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+<div class="grid sm:grid-cols-1 gap-3 pb-4 w-full" 
+*ngIf="(currentUser?.roles[0] === this.roles.SUPERADMIN || currentUser?.roles[0] === this.roles.ADMIN) && request?.statusName === mediationCaseStatusEnum.CO_MEDIATION_SELECTION_PENDING">
   <div class="w-full">
     <mat-label>
         <ng-container *transloco="let translate">
@@ -91,4 +92,59 @@ class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden">
  
 </div>
 </div>
+
+<div class="grid sm:grid-cols-1 gap-3 pb-4 w-full" 
+*ngIf="(currentUser?.roles[0] === this.roles.SUPERADMIN || currentUser?.roles[0] === this.roles.ADMIN) && request?.statusName === mediationCaseStatusEnum.CO_MEDIATOR_SELECTION_PENDING">
+  <div class="w-full">
+
+ Set mediator and/or co mediator here
 </div>
+</div>
+</div>
+
+<div *ngIf="currentUser?.roles[0] === this.roles.PARTY && request?.statusName === mediationCaseStatusEnum.CO_MEDIATION_SELECTION_PENDING">
+    <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
+    <div class="w-full">
+        <p class="text-md font-medium"> 
+          <ng-container *transloco="let translate">
+          {{translate('Co-Mediation')}}
+      </ng-container></p>
+     
+        <p class="text-md mb-6">{{request?.coMediation ?  'Yes' : 'No'}}</p>
+        <div class="flex items-center" *ngIf="isAcceptCoMediationVisible">
+            <button mat-stroked-button color="primary" 
+            class="px-6 ml-3" (click)="acceptCoMediation(true)" [disabled]="acceptingCoMediation || rejectingCoMediation">
+                <mat-icon>check</mat-icon>
+                <span *ngIf="!acceptingCoMediation">
+                    <ng-container *transloco="let translate">
+                        {{translate('Accept')}}
+                    </ng-container>
+                </span>
+                
+                <mat-progress-spinner
+                    *ngIf="accepting"
+                    [diameter]="24"
+                    [mode]="'indeterminate'"></mat-progress-spinner>
+            </button>
+    
+            <button mat-stroked-button  class="px-6 ml-3" (click)="acceptCoMediation(false)"
+            [disabled]="accepting || rejecting">
+                <mat-icon>close</mat-icon>
+                <span *ngIf="!rejectingCoMediation">
+                    <ng-container *transloco="let translate">
+                        {{translate('Reject')}}
+                    </ng-container>
+                </span>
+                
+                <mat-progress-spinner
+                    *ngIf="rejecting"
+                    [diameter]="24"
+                    [mode]="'indeterminate'"></mat-progress-spinner>
+                </button>
+        </div>
+    </div>
+    
+    </div>
+</div>
+
+

@@ -156,5 +156,12 @@ export class MediationService
         return this._httpClient.post<any>(url, null, {headers : headers});
     }
 
+    approveMediationStyle(requestId : number, entityId : number, action : boolean)
+    {
+        const headers = {'content-type' : 'application/json'};
+        let url = environment.api + '/Case/ApproveMediationStyle?requestId=' + requestId + '&entityId=' + entityId + '&action=' + action;
+        return this._httpClient.post<any>(url, null, {headers : headers});
+    }
+
 
 }
