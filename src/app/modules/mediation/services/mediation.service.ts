@@ -135,11 +135,16 @@ export class MediationService
         return this._httpClient.post<any>(url, null, {headers : headers});
     }
 
-    getMediatorList(body : any) : Observable<any>
+    getMediatorList() : Observable<any>
     {
-        const headers = {'content-type' : 'application/json'};
         let url = environment.api + '/Mediator/GetMediatorList';
-        return this._httpClient.post<any>(url, body, {headers : headers});
+        return this._httpClient.get<any>(url);
+    }
+
+    getMediatorListException(id : number) : Observable<any>
+    {
+        let url = environment.api + '/Mediator/GetMediatorListException?mediatorId=' + id;
+        return this._httpClient.get<any>(url);
     }
 
     submitMediationFastTrack(body : any) : Observable<any>

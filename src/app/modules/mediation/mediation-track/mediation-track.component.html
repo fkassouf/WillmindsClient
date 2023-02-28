@@ -79,6 +79,14 @@ class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden">
    
       <p class="text-md mb-6">{{request?.otherLanguageName}}</p>
   </div>
+  <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full">
+    <p class="text-md font-medium"> 
+      <ng-container *transloco="let translate">
+      {{translate('Co-Mediation')}}
+  </ng-container></p>
+ 
+    <p class="text-md mb-6">{{request?.coMediation ? 'Yes' : 'No'}}</p>
+</div>
 </div>
 <div class="grid sm:grid-cols-1 gap-3 pb-4 w-full" 
 *ngIf="(currentUser?.roles[0] === this.roles.SUPERADMIN || currentUser?.roles[0] === this.roles.ADMIN) && request?.statusName === mediationCaseStatusEnum.CO_MEDIATION_SELECTION_PENDING">
@@ -93,13 +101,7 @@ class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden">
 </div>
 </div>
 
-<div class="grid sm:grid-cols-1 gap-3 pb-4 w-full" 
-*ngIf="(currentUser?.roles[0] === this.roles.SUPERADMIN || currentUser?.roles[0] === this.roles.ADMIN) && request?.statusName === mediationCaseStatusEnum.CO_MEDIATOR_SELECTION_PENDING">
-  <div class="w-full">
 
- Set mediator and/or co mediator here
-</div>
-</div>
 </div>
 
 <div *ngIf="currentUser?.roles[0] === this.roles.PARTY && request?.statusName === mediationCaseStatusEnum.CO_MEDIATION_SELECTION_PENDING">
@@ -146,5 +148,70 @@ class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden">
     
     </div>
 </div>
+<form [formGroup]="fastTrackMediatorForm" class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden"
+*ngIf="(currentUser?.roles[0] === this.roles.SUPERADMIN || currentUser?.roles[0] === this.roles.ADMIN) 
+&& request?.statusName === mediationCaseStatusEnum.CO_MEDIATOR_SELECTION_PENDING && trackMode == 'fast'">
+   <div class="grid sm:grid-cols-2 gap-3 pb-4 w-full">
+    <mat-form-field class="w-full">
+        <mat-label>
+            <ng-container *transloco="let translate">
+                {{translate('Mediator')}}
+            </ng-container>
+        </mat-label>
+        <mat-select formControlName="mediator" (selectionChange)="getCoMediators()">
+            <mat-option *ngFor="let mediator of mediators" [value]="mediator">
+
+                <span
+                class="z-20 flex items-center px-6 py-4 md:px-8 cursor-pointer"
+                >
+                <div class="flex flex-0 items-center justify-center rounded-full overflow-hidden">
+                    <ng-container>
+                        <img class="rounded-full" [src]="environment.serverPath + 'Data/Images/' + mediator?.image + '?size=80'">
+                    </ng-container>
+                    
+                </div>
+                <div class="min-w-0 ml-4">
+                    <div class="font-medium">{{mediator.fullName}}</div>
+                </div>
+            </span>
+
+            </mat-option>
+        </mat-select>
+        <button mat-icon-button *ngIf="fFastTrackMediatorForm.mediator.value" (click)="clearMediator()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-form-field>
+    <mat-form-field class="w-full">
+        <mat-label>
+            <ng-container *transloco="let translate">
+                {{translate('Co-Mediator')}}
+            </ng-container>
+        </mat-label>
+        <mat-select formControlName="coMediator">
+            <mat-option *ngFor="let mediator of coMediators" [value]="mediator">
+
+                <span
+                class="z-20 flex items-center px-6 py-4 md:px-8 cursor-pointer"
+                >
+                <div class="flex flex-0 items-center justify-center rounded-full overflow-hidden">
+                    <ng-container>
+                        <img class="rounded-full" [src]="environment.serverPath + 'Data/Images/' + mediator?.image + '?size=80'">
+                    </ng-container>
+                    
+                </div>
+                <div class="min-w-0 ml-4">
+                    <div class="font-medium">{{mediator.fullName}}</div>
+                </div>
+            </span>
+
+            </mat-option>
+        </mat-select>
+        <button mat-icon-button *ngIf="fFastTrackMediatorForm.coMediator.value" (click)="fFastTrackMediatorForm.coMediator.setValue(null)">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-form-field>
+   </div>
+   
+</form>
 
 

@@ -8,6 +8,7 @@ import { MediationCaseStatusEnum } from 'app/modules/common/models/_enums';
 import { ToastrService } from 'ngx-toastr';
 import { finalize, Observable } from 'rxjs';
 import { MediationService } from '../services/mediation.service';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-mediation-track',
@@ -18,13 +19,17 @@ export class MediationTrackComponent {
   @Input() trackMode : string;
   @Input() request : any = null;
   @Output() reloadRequestEvent = new EventEmitter<boolean>();
+  environment = environment;
   coMediation : boolean = false;
   isLoading : boolean = false;
   submitted : boolean = false;
   submitting : boolean = false;
   filteredMediators$ : Observable<any[]> | undefined;
   fastTrackForm : FormGroup;
+  fastTrackMediatorForm : FormGroup;
   languages : LanguageModel[] = [];
+  mediators : any[] = [];
+  coMediators : any[] = [];
   currentUser : any;
   roles = ROLES;
   mediationCaseStatusEnum = MediationCaseStatusEnum;
@@ -47,8 +52,18 @@ export class MediationTrackComponent {
       language : new FormControl<LanguageModel>(null, [Validators.required]),
       otherLanguage : new FormControl<string>(this.request.otherLanguageName, []),
     });
+
+    this.fastTrackMediatorForm = this.formBuilder.group({
+      mediator : new FormControl<any>(null, [Validators.required]),
+      coMediator : new FormControl<any>(null, [Validators.required]),
+    });
     
     this.getLanguages();
+
+    if(this.request?.statusName === this.mediationCaseStatusEnum.CO_MEDIATOR_SELECTION_PENDING)
+    {
+       this.getMediators();
+    }
   }
 
   getLanguages()
@@ -63,6 +78,27 @@ export class MediationTrackComponent {
     });
   }
 
+  getMediators()
+  {
+     this.mediationService.getMediatorList().subscribe(resp=>{
+        if(resp.success)
+        {
+            this.mediators = resp.result;
+        }
+     });
+  }
+
+  getCoMediators()
+  {
+    console.log('wwd');
+    this.mediationService.getMediatorListException(this.fFastTrackMediatorForm.mediator.value?.id).subscribe(resp=>{
+        if(resp.success)
+        {
+            this.coMediators = resp.result;
+        }
+    });
+  }
+
   getLangName(id : any) : string
   {
      return this.languages.find(x=>x.id === id)?.name;
@@ -70,6 +106,11 @@ export class MediationTrackComponent {
 
   get f(){
     return this.fastTrackForm.controls;
+  }
+
+  get fFastTrackMediatorForm()
+  {
+    return this.fastTrackMediatorForm.controls;
   }
 
   submit()
@@ -160,5 +201,12 @@ export class MediationTrackComponent {
   {
      return (this.request.ownerId == this.currentUser.entityId && this.request.acceptCoMediationSelection == null)
      || (this.request.parties.find(x=>x.entityId == this.currentUser.entityId && x.requestId == this.request.Id));
+  }
+
+  clearMediator()
+  {
+    this.fFastTrackMediatorForm.mediator.setValue(null);
+    this.fFastTrackMediatorForm.coMediator.setValue(null);
+    this.coMediators = [];
   }
 }
