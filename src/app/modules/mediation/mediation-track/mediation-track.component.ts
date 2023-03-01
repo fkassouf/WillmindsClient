@@ -36,6 +36,8 @@ export class MediationTrackComponent {
 
   acceptingCoMediation : boolean = false;
   rejectingCoMediation : boolean = false;
+  mediatorFormSubmitted : boolean = false;
+  submittingMediatorForm : boolean = false;
 
 
   constructor(private formBuilder : FormBuilder, 
@@ -55,7 +57,7 @@ export class MediationTrackComponent {
 
     this.fastTrackMediatorForm = this.formBuilder.group({
       mediator : new FormControl<any>(null, [Validators.required]),
-      coMediator : new FormControl<any>(null, [Validators.required]),
+      coMediator : new FormControl<any>(null, this.request.coMediation ? [Validators.required] : []),
     });
     
     this.getLanguages();
@@ -64,6 +66,16 @@ export class MediationTrackComponent {
     {
        this.getMediators();
     }
+  }
+
+  get currentMediator()
+  {
+    return this.mediators?.find(x=>x.id === this.request?.mediatorId);
+  }
+
+  get currentCoMediator()
+  {
+    return this.mediators?.find(x=>x.id === this.request?.coMediatorId);
   }
 
   getLanguages()
@@ -84,17 +96,23 @@ export class MediationTrackComponent {
         if(resp.success)
         {
             this.mediators = resp.result;
+            let mediator = this.mediators.find(x=>x.id === this.request.mediatorId);
+            
+            
+            this.fFastTrackMediatorForm.mediator.setValue(mediator);
+            this.getCoMediators()
         }
      });
   }
 
   getCoMediators()
   {
-    console.log('wwd');
     this.mediationService.getMediatorListException(this.fFastTrackMediatorForm.mediator.value?.id).subscribe(resp=>{
         if(resp.success)
         {
             this.coMediators = resp.result;
+            let coMediator = this.coMediators.find(x=>x.id === this.request.coMediatorId);
+            this.fFastTrackMediatorForm.coMediator.setValue(coMediator);
         }
     });
   }
@@ -208,5 +226,35 @@ export class MediationTrackComponent {
     this.fFastTrackMediatorForm.mediator.setValue(null);
     this.fFastTrackMediatorForm.coMediator.setValue(null);
     this.coMediators = [];
+  }
+
+  submitMediator()
+  {
+      this.mediatorFormSubmitted = true;
+      if(this.fastTrackMediatorForm.invalid)
+      {
+        return;
+      }
+
+      this.submittingMediatorForm = true;
+      this.fastTrackMediatorForm.disable();
+      this.mediationService.updateRequestMediator(this.request?.id,
+        this.fFastTrackMediatorForm.mediator.value.id,
+        this.fFastTrackMediatorForm.coMediator.value.id
+        )
+        .pipe(finalize(()=>{
+          this.submittingMediatorForm = false;
+          this.fastTrackMediatorForm.enable();
+        }))
+        .subscribe(resp=>{
+          if(resp.success)
+          {
+             this.toastrService.success('Mediator submitted succesfully');
+          }
+          else
+          {
+            this.toastrService.error(resp.message);
+          }
+        })
   }
 }

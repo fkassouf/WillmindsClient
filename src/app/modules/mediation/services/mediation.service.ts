@@ -168,5 +168,17 @@ export class MediationService
         return this._httpClient.post<any>(url, null, {headers : headers});
     }
 
+    updateRequestMediator(requestId : any, mediatorId : any, coMediatorId : any)
+    {
+        const headers = {'content-type' : 'application/json'};
+        const body = {
+            requestId : requestId,
+            mediatorId : mediatorId,
+            coMediatorId : coMediatorId
+        };
+        let url = environment.api + '/Case/UpdateRequestMediator';
+        return this._httpClient.post<any>(url, body, {headers : headers});
+    }
+
 
 }

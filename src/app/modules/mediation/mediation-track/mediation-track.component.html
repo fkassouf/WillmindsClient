@@ -150,7 +150,8 @@ class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden">
 </div>
 <form [formGroup]="fastTrackMediatorForm" class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden"
 *ngIf="(currentUser?.roles[0] === this.roles.SUPERADMIN || currentUser?.roles[0] === this.roles.ADMIN) 
-&& request?.statusName === mediationCaseStatusEnum.CO_MEDIATOR_SELECTION_PENDING && trackMode == 'fast'">
+&& request?.statusName === mediationCaseStatusEnum.CO_MEDIATOR_SELECTION_PENDING && trackMode == 'fast'"
+(ngSubmit)="submitMediator()">
    <div class="grid sm:grid-cols-2 gap-3 pb-4 w-full">
     <mat-form-field class="w-full">
         <mat-label>
@@ -180,6 +181,11 @@ class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden">
         <button mat-icon-button *ngIf="fFastTrackMediatorForm.mediator.value" (click)="clearMediator()">
             <mat-icon>close</mat-icon>
         </button>
+        <mat-error *ngIf="mediatorFormSubmitted && fFastTrackMediatorForm.mediator.hasError('required')">
+            <ng-container *transloco="let translate">
+                {{translate('Field-Required')}}
+            </ng-container>
+        </mat-error>
     </mat-form-field>
     <mat-form-field class="w-full">
         <mat-label>
@@ -209,9 +215,65 @@ class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden">
         <button mat-icon-button *ngIf="fFastTrackMediatorForm.coMediator.value" (click)="fFastTrackMediatorForm.coMediator.setValue(null)">
             <mat-icon>close</mat-icon>
         </button>
+        <mat-error *ngIf="mediatorFormSubmitted && fFastTrackMediatorForm.coMediator.hasError('required')">
+            <ng-container *transloco="let translate">
+                {{translate('Field-Required')}}
+            </ng-container>
+        </mat-error>
     </mat-form-field>
    </div>
-   
+   <div class="flex items-center justify-end border-t -mx-8 mt-8 px-8 py-5 bg-gray-50 dark:bg-gray-700">
+    <button
+    type="submit"
+    class="px-6 ml-3"
+    mat-flat-button
+    [color]="'primary'"
+    [disabled]="submittingMediatorForm">
+    <span *ngIf="!submittingMediatorForm">
+        <ng-container *transloco="let translate">
+            {{translate('Submit')}}
+        </ng-container>
+    </span>
+    <mat-progress-spinner
+        *ngIf="submittingMediatorForm"
+        [diameter]="24"
+        [mode]="'indeterminate'"></mat-progress-spinner>
+</button>
+</div>
 </form>
+
+<!--All parties must accept the co-mediator selection in case it's a co-mediation style mediation-->
+
+<div *ngIf="currentUser?.roles[0] === this.roles.PARTY && 
+request?.statusName === mediationCaseStatusEnum.CO_MEDIATOR_SELECTION_PENDING &&
+request?.coMediation && request?.mediatorId">
+    <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
+
+        <fuse-card class="flex flex-col max-w-80 w-full filter-article">
+            <div class="flex items-center">
+                <img
+                    class="w-40 rounded-lg object-cover"
+                    [src]="environment.serverPath + 'Data/Images/' + currentMediator?.image"
+                    alt="Mediator image">
+                <div class="flex flex-col ml-6">
+                    <div class="text-2xl font-semibold leading-tight">{{currentMediator?.fullName}}</div>
+                    <div class="text-secondary font-medium text-md">Mediator</div>
+                </div>
+            </div>
+        </fuse-card>
+        <fuse-card class="flex flex-col max-w-80 w-full filter-article">
+            <div class="flex items-center">
+                <img
+                    class="w-40 rounded-lg object-cover"
+                    [src]="environment.serverPath + 'Data/Images/' + currentCoMediator?.image"
+                    alt="Co-Mediator image">
+                <div class="flex flex-col ml-6">
+                    <div class="text-2xl font-semibold leading-tight">{{currentCoMediator?.fullName}}</div>
+                    <div class="text-secondary font-medium text-md">Co-Mediator</div>
+                </div>
+            </div>
+        </fuse-card>
+    </div>
+</div>
 
 
