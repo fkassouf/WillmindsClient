@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { DataTableRequest } from "app/modules/common/models";
 import { environment } from "environments/environment";
 import { Observable } from "rxjs";
+import { AdminFeesPayment } from "../models/admin-fees-payment";
 import { createMediationRequest } from "../models/create-mediation-request";
 import { MediationRegistrationPayment } from "../models/mediation-registration-payment";
 import { UpdateMediationRequest } from "../models/update-mediation-request";
@@ -177,6 +178,21 @@ export class MediationService
             coMediatorId : coMediatorId
         };
         let url = environment.api + '/Case/UpdateRequestMediator';
+        return this._httpClient.post<any>(url, body, {headers : headers});
+    }
+
+    approveCoMediator(requestId : number, entityId : number, action : boolean)
+    {
+        const headers = {'content-type' : 'application/json'};
+        let url = environment.api + '/Case/ApproveCoMediator?requestId=' + requestId + '&entityId=' + entityId + '&action=' + action;
+        return this._httpClient.post<any>(url, null, {headers : headers});
+    }
+
+    submitAdminFeesPayment(body : AdminFeesPayment)
+    {
+        const headers = {'content-type' : 'application/json'};
+        let url = environment.api + '/Case/SubmitAdminFeesPayment';
+       
         return this._httpClient.post<any>(url, body, {headers : headers});
     }
 

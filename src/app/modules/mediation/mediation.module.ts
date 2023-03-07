@@ -40,6 +40,7 @@ import { RegistrationPaymentComponent } from './registration-payment/registratio
 import { DatePipe } from '@angular/common';
 import { MediationTrackComponent } from './mediation-track/mediation-track.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { AdministrativeFeesComponent } from './administrative-fees/administrative-fees.component';
 
 const routes: Route[] = [
     {
@@ -65,7 +66,8 @@ const routes: Route[] = [
      MediationFlowComponent,
      StatementOfReplyComponent,
      RegistrationPaymentComponent,
-     MediationTrackComponent
+     MediationTrackComponent,
+     AdministrativeFeesComponent
   ],
     imports: [
         RouterModule.forChild(routes),

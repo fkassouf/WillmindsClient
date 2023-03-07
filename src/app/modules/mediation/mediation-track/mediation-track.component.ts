@@ -38,6 +38,8 @@ export class MediationTrackComponent {
   rejectingCoMediation : boolean = false;
   mediatorFormSubmitted : boolean = false;
   submittingMediatorForm : boolean = false;
+  acceptingCoMediator : boolean = false;
+  rejectingCoMediator : boolean = false;
 
 
   constructor(private formBuilder : FormBuilder, 
@@ -48,6 +50,7 @@ export class MediationTrackComponent {
 
   ngOnInit()
   {
+    
     this.currentUser = this.authService.user$;
     this.coMediation = this.request.coMediation;
     this.fastTrackForm = this.formBuilder.group({
@@ -62,7 +65,7 @@ export class MediationTrackComponent {
     
     this.getLanguages();
 
-    if(this.request?.statusName === this.mediationCaseStatusEnum.CO_MEDIATOR_SELECTION_PENDING)
+    if(this.request?.statusOrder > 9)
     {
        this.getMediators();
     }
@@ -256,5 +259,34 @@ export class MediationTrackComponent {
             this.toastrService.error(resp.message);
           }
         })
+  }
+
+  acceptCoMediator(decision : boolean)
+  {
+    if(decision)
+     {
+        this.acceptingCoMediator = true;
+     }
+     else
+     {
+        this.rejectingCoMediator = true;
+     }
+
+     this.mediationService.approveCoMediator(this.request.id, this.currentUser.entityId, decision)
+     .pipe(finalize(()=>{
+      this.acceptingCoMediator = false;
+      this.rejectingCoMediator = false;
+     }))
+     .subscribe(resp=>{
+        if(resp.success)
+        {
+            this.toastrService.success('Operation completed successfully');
+            this.reloadRequest(true);
+        }
+        else
+        {
+          this.toastrService.error(resp.message);
+        }
+     })
   }
 }

@@ -1,0 +1,146 @@
+<form class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden"
+[formGroup]="adminFeesForm" (ngSubmit)="submit()" *ngIf="request?.statusName === this.mediationCaseStatusEnum.ADMINISTRATIVE_FEES_PENDING">
+    <div class="grid sm:grid-cols-2 gap-3 pb-4 w-full">
+        <div class="w-full">
+            <mat-label id="payment-method-label">
+                <ng-container *transloco="let translate">
+                    {{translate('Choose-Payment-Mode')}}
+                </ng-container>
+            </mat-label>
+            <mat-radio-group formControlName="paymentMethod"
+            aria-labelledby="payment-method-label" (change)="selectPaymentMethod($event)"
+            >
+                <mat-radio-button color="primary" 
+                *ngFor="let p of paymentMethods; let i = index" [value]="p">
+                    {{p.type}}
+                </mat-radio-button>
+            </mat-radio-group>
+            <mat-error *ngIf="submitted && f.paymentMethod.hasError('required')">
+                <ng-container *transloco="let translate">
+                    {{translate('Field-Required')}}
+                </ng-container>
+            </mat-error>
+        </div>
+        
+    </div>
+    <div *ngIf="f.paymentMethod.value?.type === paymentMethodsEnum.BANK">
+        <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
+            <mat-form-field class="w-full">
+                <mat-label>
+                    <ng-container *transloco="let translate">
+                        {{translate('Bank-Name')}}
+                       
+                    </ng-container>
+                </mat-label>
+                <input matInput formControlName="bankName">
+                <mat-error *ngIf="submitted && f.bankName.hasError('required')">
+                    <ng-container *transloco="let translate">
+                        {{translate('Field-Required')}}
+                    </ng-container>
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="w-full">
+                <mat-label>
+                    <ng-container *transloco="let translate">
+                        {{translate('Name-Of-Account-Holder')}}
+                      
+                    </ng-container>
+                </mat-label>
+                <input matInput formControlName="nameOfAccountHolder">
+                <mat-error *ngIf="submitted && f.nameOfAccountHolder.hasError('required')">
+                    <ng-container *transloco="let translate">
+                        {{translate('Field-Required')}}
+                    </ng-container>
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="w-full">
+                <mat-label>
+                    <ng-container *transloco="let translate">
+                        {{translate('Account-Number')}}
+                    </ng-container>
+                </mat-label>
+                <input matInput formControlName="accountNumber">
+                <mat-error *ngIf="submitted && f.accountNumber.hasError('required')">
+                    <ng-container *transloco="let translate">
+                        {{translate('Field-Required')}}
+                    </ng-container>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-3 pb-4 w-full">
+            <mat-form-field class="w-full">
+                <mat-label>
+                    <ng-container *transloco="let translate">
+                        {{translate('Transfer-Date')}}
+                    </ng-container>
+                </mat-label>
+                <input
+                    id="paymentDate"
+                    [matDatepicker]="pickerPD"
+                    matInput
+                    [formControlName]="'paymentDate'">
+                    <mat-datepicker-toggle
+                        matSuffix
+                        [for]="pickerPD"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerPD></mat-datepicker>
+                    <mat-error *ngIf="submitted && f.paymentDate.hasError('required')">
+                        <ng-container *transloco="let translate">
+                            {{translate('Field-Required')}}
+                        </ng-container>
+                    </mat-error>
+               
+            </mat-form-field>
+            <mat-form-field class="w-full">
+                <mat-label>
+                    <ng-container *transloco="let translate">
+                        {{translate('Payment-Amount')}}
+                    </ng-container>
+                </mat-label>
+                <input
+                    matInput
+                    formControlName="paymentAmount">
+                    <mat-error *ngIf="submitted && f.paymentAmount.hasError('required')">
+                        <ng-container *transloco="let translate">
+                            {{translate('Field-Required')}}
+                        </ng-container>
+                    </mat-error>
+            </mat-form-field>
+            <mat-form-field class="w-full">
+                <mat-label>
+                    <ng-container *transloco="let translate">
+                        {{translate('Currency')}}
+                    </ng-container>
+                </mat-label>
+                <mat-select formControlName="paymentCurrency">
+                    <mat-option *ngFor="let c of currencies" [value]="c" >
+                        <span>{{c.code}}</span>
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="submitted && f.paymentCurrency.hasError('required')">
+                    <ng-container *transloco="let translate">
+                        {{translate('Field-Required')}}
+                    </ng-container>
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    
+    <div class="flex items-center justify-end border-t -mx-8 mt-8 px-8 py-5 bg-gray-50 dark:bg-gray-700">
+        <button
+        type="submit"
+        class="px-6 ml-3"
+        mat-flat-button
+        [color]="'primary'"
+        [disabled]="submitting">
+        <span *ngIf="!submitting">
+            <ng-container *transloco="let translate">
+                {{translate('Submit')}}
+            </ng-container>
+        </span>
+        <mat-progress-spinner
+            *ngIf="submitting"
+            [diameter]="24"
+            [mode]="'indeterminate'"></mat-progress-spinner>
+    </button>
+    </div>
+</form>

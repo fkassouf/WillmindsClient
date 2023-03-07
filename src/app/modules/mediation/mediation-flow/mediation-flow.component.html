@@ -390,6 +390,9 @@
                     [trackMode]="mediationTrack"></app-mediation-track>
                     </ng-template> 
                 </mat-tab>
+                <mat-tab label="Administrative Fees" *ngIf="currentMediationRequest?.statusOrder > 10">
+                    <app-administrative-fees [request]="currentMediationRequest"  (reloadRequestEvent)="reloadRequest($event)"></app-administrative-fees>
+                </mat-tab>
                
             </mat-tab-group>
         </div>

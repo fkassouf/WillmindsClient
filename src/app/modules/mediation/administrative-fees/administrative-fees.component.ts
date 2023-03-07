@@ -1,45 +1,43 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AuthenticationService } from 'app/core/auth/authentication.service';
 import { PAYMENTMETHODS } from 'app/core/enums/core-enum';
 import { MediationCaseStatusEnum } from 'app/modules/common/models/_enums';
 import { SharedService } from 'app/shared/services/shared.service';
 import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs';
-import { MediationRegistrationPayment } from '../models/mediation-registration-payment';
-
+import { AdminFeesPayment } from '../models/admin-fees-payment';
 import { MediationService } from '../services/mediation.service';
 
 @Component({
-  selector: 'mediation-registration-payment',
-  templateUrl: './registration-payment.component.html',
-  styleUrls: ['./registration-payment.component.scss']
+  selector: 'app-administrative-fees',
+  templateUrl: './administrative-fees.component.html',
+  styleUrls: ['./administrative-fees.component.scss']
 })
-export class RegistrationPaymentComponent {
+export class AdministrativeFeesComponent {
   @Input() request : any = null;
   @Output() reloadRequestEvent = new EventEmitter<boolean>();
-
-  paymentForm : FormGroup;
-  paymentMethodsEnum = PAYMENTMETHODS;
-  mediationCaseStatusEnum = MediationCaseStatusEnum;
+  adminFeesForm : FormGroup;
   submitted : boolean = false;
   submitting : boolean = false;
+  mediationCaseStatusEnum = MediationCaseStatusEnum;
+  paymentMethodsEnum = PAYMENTMETHODS;
   currencies : any[] = [];
   paymentMethods : any[] = [];
 
-  constructor(private formBuilder : FormBuilder, 
-    private sharedService : SharedService, 
-    private mediationService : MediationService,
+  constructor(private sharedService : SharedService, private formBuilder : FormBuilder,
+    private authService : AuthenticationService, private mediationService : MediationService,
     private toastrService : ToastrService){}
 
   ngOnInit()
   {
-    this.paymentForm = this.formBuilder.group({
+    this.adminFeesForm = this.formBuilder.group({
       paymentMethod : new FormControl<any>(null, [Validators.required]),
-      bankName : new FormControl<string>(this.request?.regBankName, []),
-      nameOfAccountHolder : new FormControl<string>(this.request?.regTransferee, []),
-      accountNumber : new FormControl<string>(this.request?.regBankAccountNb, []),
-      transferDate : new FormControl<Date>(this.request?.regTransferDate, []),
-      paymentAmount : new FormControl<number>(this.request?.regPaymentAmount, []),
+      bankName : new FormControl<string>(null, []),
+      nameOfAccountHolder : new FormControl<string>(null, []),
+      accountNumber : new FormControl<string>(null, []),
+      paymentDate : new FormControl<Date>(null, []),
+      paymentAmount : new FormControl<number>(null, []),
       paymentCurrency : new FormControl<any>(null, []),
     });
 
@@ -51,39 +49,15 @@ export class RegistrationPaymentComponent {
     this.getPaymentMethods();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    let previousRequest = changes.request.previousValue;
-    let currentRequest = changes.request.currentValue;
-  
-    let currentPaymentMode =  this.paymentMethods.find(x=>x.id == currentRequest.regPaymentMode);
-    let currentCurrency =  this.currencies.find(x=>x.code == currentRequest?.currencyCode);
-    this.paymentForm?.patchValue({
-      paymentMethod : currentPaymentMode,
-      bankName : currentRequest?.regBankName,
-      nameOfAccountHolder : currentRequest?.regTransferee,
-      accountNumber : currentRequest?.regBankAccountNb,
-      transferDate : currentRequest?.regTransferDate,
-      paymentAmount : currentRequest?.regPaymentAmount,
-      paymentCurrency : currentCurrency
-    });
-    this.paymentForm?.markAsPristine();
-    this.paymentForm?.markAsUntouched();
-    this.submitted = false;
-    /*if(currentRequest?.statusName === this.mediationCaseStatusEnum.REGISTRATION_PAID)
-    {
-      this.paymentForm?.disable();
-    }*/
-  }
-
   getCurrencyList()
   {
       this.sharedService.getCurrwencyList().subscribe(resp=>{
          if(resp.success)
          {
             this.currencies = resp.result;
-            let currentCurrency =  this.currencies.find(x=>x.code == this.request?.currencyCode);
+            //let currentCurrency =  this.currencies.find(x=>x.code == this.request?.currencyCode);
             
-            this.f.paymentCurrency.setValue(currentCurrency);
+            //this.f.paymentCurrency.setValue(currentCurrency);
             
          }
       })
@@ -95,23 +69,23 @@ export class RegistrationPaymentComponent {
          if(resp.success)
          {
             this.paymentMethods = resp.result;
-            let currentPaymentMode =  this.paymentMethods.find(x=>x.id == this.request?.regPaymentMode);
+            //let currentPaymentMode =  this.paymentMethods.find(x=>x.id == this.request?.regPaymentMode);
         
-            this.f.paymentMethod.setValue(currentPaymentMode);
+            //this.f.paymentMethod.setValue(currentPaymentMode);
          }
       })
   }
 
   get f(){
 
-    return this.paymentForm.controls;
+    return this.adminFeesForm.controls;
   }
 
   selectPaymentMethod(event : any)
   {
     this.submitted = false;
-    this.paymentForm.markAsPristine();
-    this.paymentForm.markAsUntouched();
+    this.adminFeesForm.markAsPristine();
+    this.adminFeesForm.markAsUntouched();
     let paymentMethod = event.value;
     if(paymentMethod.type === this.paymentMethodsEnum.BANK)
     {
@@ -119,7 +93,7 @@ export class RegistrationPaymentComponent {
         this.f.bankName.setValidators(Validators.required);
         this.f.accountNumber.setValidators(Validators.required);
         this.f.nameOfAccountHolder.setValidators(Validators.required);
-        this.f.transferDate.setValidators(Validators.required);
+        this.f.paymentDate.setValidators(Validators.required);
         this.f.paymentAmount.setValidators(Validators.required);
         this.f.paymentCurrency.setValidators(Validators.required);
 
@@ -138,7 +112,7 @@ export class RegistrationPaymentComponent {
         this.f.bankName.clearValidators();
         this.f.accountNumber.clearValidators();
         this.f.nameOfAccountHolder.clearValidators();
-        this.f.transferDate.clearValidators();
+        this.f.paymentDate.clearValidators();
         this.f.paymentAmount.clearValidators();
         this.f.paymentCurrency.clearValidators();
     }
@@ -146,7 +120,7 @@ export class RegistrationPaymentComponent {
     this.f.bankName.updateValueAndValidity();
     this.f.accountNumber.updateValueAndValidity();
     this.f.nameOfAccountHolder.updateValueAndValidity();
-    this.f.transferDate.updateValueAndValidity();
+    this.f.paymentDate.updateValueAndValidity();
     this.f.paymentAmount.updateValueAndValidity();
     this.f.paymentCurrency.updateValueAndValidity();
   }
@@ -157,44 +131,42 @@ export class RegistrationPaymentComponent {
     return date;
   }
 
-
-  submit()
-  {
-     this.submitted = true;
+  submit(){
+    this.submitted = true;
      
-     if(this.paymentForm.invalid)
+     if(this.adminFeesForm.invalid)
      {
         return;
      }
 
      this.submitting = true;
-     this.paymentForm.disable();
-     let body : MediationRegistrationPayment = new MediationRegistrationPayment();
-    
+     this.adminFeesForm.disable();
+     let body : AdminFeesPayment = new AdminFeesPayment();
      body.paymentModeId = this.f.paymentMethod.value.id;
      body.requestId = this.request?.id;
+     body.entityId = this.authService.user$?.entityId;
      if(this.f.paymentMethod.value.type === this.paymentMethodsEnum.BANK)
      {
-       let d = new Date(this.f.transferDate.value);
+       let d = new Date(this.f.paymentDate.value);
       
     
         body.amount = this.f.paymentAmount.value;
         body.bankAccountNb = this.f.accountNumber.value;
         body.bankName = this.f.bankName.value;
         body.currency = this.f.paymentCurrency.value.code;
-        body.transferDate = this.convertToUTC(d);
+        body.paymentDate = this.convertToUTC(d);
         body.transferee = this.f.nameOfAccountHolder.value;
      }
-     
-     this.mediationService.submitRegistrationPayment(body)
+
+     this.mediationService.submitAdminFeesPayment(body)
      .pipe(finalize(()=>{
         this.submitting = false;
-        this.paymentForm.enable();
+        this.adminFeesForm.enable();
      }))
      .subscribe(resp=>{
         if(resp.success)
         {
-            this.toastrService.success('Payment submitted successfully');
+            this.toastrService.success('Admin Fees Payment submitted successfully');
             this.reloadRequest(true);
         }
         else
@@ -202,10 +174,10 @@ export class RegistrationPaymentComponent {
           this.toastrService.error(resp.message);
         }
      });
+
   }
 
   reloadRequest(value: boolean) {
     this.reloadRequestEvent.emit(value);
   }
-
 }
