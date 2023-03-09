@@ -24,6 +24,7 @@ export class AdministrativeFeesComponent {
   paymentMethodsEnum = PAYMENTMETHODS;
   currencies : any[] = [];
   paymentMethods : any[] = [];
+  currentPayment : any = null;
 
   constructor(private sharedService : SharedService, private formBuilder : FormBuilder,
     private authService : AuthenticationService, private mediationService : MediationService,
@@ -41,37 +42,66 @@ export class AdministrativeFeesComponent {
       paymentCurrency : new FormControl<any>(null, []),
     });
 
+    this.getAdminFeesPayment();
     
-   
-  
-
-    this.getCurrencyList();
-    this.getPaymentMethods();
   }
 
-  getCurrencyList()
+  getAdminFeesPayment()
+  {
+     this.mediationService.getAdminFeesPaymentByEntity(this.request?.id, this.authService.user$?.entityId)
+     .subscribe(resp=>{
+        if(resp.success)
+        {
+            this.currentPayment = resp.result;
+            if(this.currentPayment)
+            {
+              this.adminFeesForm.patchValue(
+                {
+                  bankName : this.currentPayment?.bankName,
+                  nameOfAccountHolder : this.currentPayment?.transferee,
+                  accountNumber : this.currentPayment?.bankAccountNumber,
+                  paymentDate : this.currentPayment?.paymentDate,
+                  paymentAmount : this.currentPayment?.amount
+
+
+                });
+              this.getPaymentMethods(this.currentPayment?.paymentMethodId);
+              this.getCurrencyList(this.currentPayment?.currencyCode);
+              
+            }
+            else
+            {
+              this.getPaymentMethods(null);
+              this.getCurrencyList(null);
+             
+            }
+        }
+     });
+  }
+
+  getCurrencyList(currencyCode : any)
   {
       this.sharedService.getCurrwencyList().subscribe(resp=>{
          if(resp.success)
          {
             this.currencies = resp.result;
-            //let currentCurrency =  this.currencies.find(x=>x.code == this.request?.currencyCode);
+            let currentCurrency =  this.currencies.find(x=>x.code == currencyCode);
             
-            //this.f.paymentCurrency.setValue(currentCurrency);
+            this.f.paymentCurrency.setValue(currentCurrency);
             
          }
       })
   }
 
-  getPaymentMethods()
+  getPaymentMethods(id : any)
   {
       this.sharedService.getPaymentMethods().subscribe(resp=>{
          if(resp.success)
          {
             this.paymentMethods = resp.result;
-            //let currentPaymentMode =  this.paymentMethods.find(x=>x.id == this.request?.regPaymentMode);
+            let currentPaymentMode =  this.paymentMethods.find(x=>x.id == id);
         
-            //this.f.paymentMethod.setValue(currentPaymentMode);
+            this.f.paymentMethod.setValue(currentPaymentMode);
          }
       })
   }
@@ -142,6 +172,7 @@ export class AdministrativeFeesComponent {
      this.submitting = true;
      this.adminFeesForm.disable();
      let body : AdminFeesPayment = new AdminFeesPayment();
+  
      body.paymentModeId = this.f.paymentMethod.value.id;
      body.requestId = this.request?.id;
      body.entityId = this.authService.user$?.entityId;
@@ -149,13 +180,14 @@ export class AdministrativeFeesComponent {
      {
        let d = new Date(this.f.paymentDate.value);
       
-    
+
         body.amount = this.f.paymentAmount.value;
         body.bankAccountNb = this.f.accountNumber.value;
         body.bankName = this.f.bankName.value;
         body.currency = this.f.paymentCurrency.value.code;
         body.paymentDate = this.convertToUTC(d);
         body.transferee = this.f.nameOfAccountHolder.value;
+        body.paymentMethodId = this.f.paymentMethod.value.id
      }
 
      this.mediationService.submitAdminFeesPayment(body)

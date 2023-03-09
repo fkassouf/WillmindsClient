@@ -10,4 +10,5 @@ export class AdminFeesPayment
     paymentDate : any = null;
     amount : number = null;
     currency : string = null;
+    paymentMethodId : number = null;
 }

@@ -196,5 +196,17 @@ export class MediationService
         return this._httpClient.post<any>(url, body, {headers : headers});
     }
 
+    getAdminFeesPaymentsList(requestId : number) : Observable<any>
+    {
+        let url = environment.api + '/Case/GetAdminFeesPaymentsList?RequestId=' + requestId;
+        return this._httpClient.get<any>(url);
+    }
+
+    getAdminFeesPaymentByEntity(requestId : number, entityId : number) : Observable<any>
+    {
+        let url = environment.api + '/Case/GetAdminFeesPaymentByEntity?requestId=' + requestId + '&entityId=' + entityId;
+        return this._httpClient.get<any>(url);
+    }
+
 
 }
